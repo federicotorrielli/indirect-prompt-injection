@@ -92,6 +92,7 @@ def main():
                 review_stats.append(
                     {
                         "paperhash": row["paperhash"],
+                        "openreview_submission_id": row["openreview_submission_id"],
                         "title": row["title"],
                         "decision": row["decision"],
                         "mean_score": row["mean_score"],
