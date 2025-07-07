@@ -1,15 +1,33 @@
 from urllib.request import urlretrieve
-from datasets import load_dataset
+import pandas as pd
 import os
+from tqdm import tqdm
 
 
 # Create pdfs directory if it doesn't exist
+print("Creating pdfs directory...")
 os.makedirs("pdfs", exist_ok=True)
+print("✓ pdfs directory ready")
 
-dataset = load_dataset("nhop/OpenReview")
+# Load the local CSV dataset
+print("Loading dataset from dataset/selected_100_papers.csv...")
+dataset = pd.read_csv("dataset/selected_100_papers.csv")
+print(f"✓ Loaded dataset with {len(dataset)} papers")
 
-for sample in dataset["train"]:
-  if sample["openreview_submission_id"] is not None:
-      idd = sample["openreview_submission_id"]
-      url = f"https://openreview.net/pdf?id={idd}"
-      urlretrieve(url, f"pdfs/{idd}.pdf")
+# Filter papers with valid OpenReview submission IDs
+valid_papers = dataset[dataset["openreview_submission_id"].notna()]
+print(f"✓ Found {len(valid_papers)} papers with valid OpenReview submission IDs")
+
+print("\nStarting PDF downloads...")
+for _, sample in tqdm(valid_papers.iterrows(), total=len(valid_papers), desc="Downloading PDFs"):
+    idd = sample["openreview_submission_id"]
+    url = f"https://openreview.net/pdf?id={idd}"
+    filename = f"pdfs/{idd}.pdf"
+    
+    try:
+        urlretrieve(url, filename)
+        tqdm.write(f"✓ Downloaded: {idd}.pdf")
+    except Exception as e:
+        tqdm.write(f"✗ Failed to download {idd}.pdf: {str(e)}")
+
+print("\n✓ PDF download process completed!")
