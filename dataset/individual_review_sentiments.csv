@@ -1,0 +1,994 @@
+paperhash,decision,review_index,text_length,sentiment_polarity,sentiment_subjectivity,text
+novak|bayesian_deep_convolutional_networks_with_many_channels_are_gaussian_processes|ICLR_cc_2019_Conference,True,0,6353,0.06886217948717949,0.5086458333333332,This paper extends the recent results concerning GP equivalence of infinitely wide FC nets to the convolutional case. This paper is generally of a high quality (notwithstanding the lack of keys on fig...
+novak|bayesian_deep_convolutional_networks_with_many_channels_are_gaussian_processes|ICLR_cc_2019_Conference,True,1,5092,0.1977761380034107,0.439000393545848,The paper establishes a connection between  infinite channel Bayesian convolutional neural network and Gaussian processes. The authors prove that taking the number of channels in a Bayesian CNN to inf...
+novak|bayesian_deep_convolutional_networks_with_many_channels_are_gaussian_processes|ICLR_cc_2019_Conference,True,2,28279,0.04201505998147788,0.46147476901208245,"****Reply to authors' rebuttal****
+
+Dear Authors,
+
+I greatly appreciate the effort you have put into the rebuttal. The changes you have made have addressed most of my concerns and I believe that the f..."
+novak|bayesian_deep_convolutional_networks_with_many_channels_are_gaussian_processes|ICLR_cc_2019_Conference,True,3,3822,0.15809425423061788,0.5449093907535464,"Overall Score: 7/10.
+Confidence Score: 3/10. (This paper includes so many ideas that I have not been able to prove that are right due to
+my limited knowledge, but I think that there are correct).
+
+Sum..."
+kuciski|catalytic_role_of_noise_and_necessity_of_inductive_biases_in_the_emergence_of_compositional_communication|NeurIPS_cc_2021_Conference,True,0,31111,0.14416038450104976,0.4729384742582165,"# Main review
+
+The paper provides a theoretical justification showing that, under fairly limitating constraints, noise introduced into the utterances of a sender-receiver emergent communications archi..."
+kuciski|catalytic_role_of_noise_and_necessity_of_inductive_biases_in_the_emergence_of_compositional_communication|NeurIPS_cc_2021_Conference,True,1,1723,-0.004029304029304032,0.4308913308913308,"Originality: I am not aware of other work attempting to give a definition for compositionality, even in this limited form.
+
+Quality:
+ I find this definition of compositionality potentially useful, per..."
+kuciski|catalytic_role_of_noise_and_necessity_of_inductive_biases_in_the_emergence_of_compositional_communication|NeurIPS_cc_2021_Conference,True,2,1332,0.15789473684210523,0.3223684210526315,"In addition to the summary above:
+
+# Minor questions
+
+* Why was a feed-forward instead of recurrent network?
+
+* Fig 4(b): what about accuracy for this setting?  Does it still decline in higher noise v..."
+kuciski|catalytic_role_of_noise_and_necessity_of_inductive_biases_in_the_emergence_of_compositional_communication|NeurIPS_cc_2021_Conference,True,3,1851,0.17075320512820513,0.40186298076923066,I thought this paper was fairly interesting. It adds to the many other papers that investigate factors that affect the emergence of compositional communication. This paper is unique in that the main c...
+gontijolopes|tradeoffs_in_data_augmentation_an_empirical_study|ICLR_cc_2021_Conference,True,0,23243,0.11999794555726762,0.4645949935187226,"## Edit after authors' responses
+
+I have upgraded my score (from 4 to 5) based on the clarifications provided by the authors and the updated manuscript. Please see the details in my extended comments:..."
+gontijolopes|tradeoffs_in_data_augmentation_an_empirical_study|ICLR_cc_2021_Conference,True,1,3161,0.11611784511784512,0.4922142857142857,"This paper empirically investigates two crucial factors: affinity and diversity in useful data augmentation strategies. Through extensive experiments on existing image augmentation methods, it demonst..."
+gontijolopes|tradeoffs_in_data_augmentation_an_empirical_study|ICLR_cc_2021_Conference,True,2,2395,0.09216589861751151,0.49416282642089093,"# Summary
+
+This paper analyzes data augmentation for image classification using two measures: Affinity and Diversity. These measures depend on both training data and model and are easy to compute. The..."
+gontijolopes|tradeoffs_in_data_augmentation_an_empirical_study|ICLR_cc_2021_Conference,True,3,3286,0.26818831168831164,0.541881673881674,"##########################################################################
+
+Summary:
+
+This paper studies the problem of data augmentation that obtains new training examples by modifying existing ones...."
+fu|actorcritic_policy_optimization_in_a_largescale_imperfectinformation_game|ICLR_cc_2022_Conference,True,0,9127,0.06386054421768708,0.43926770708283314,"The paper has a number of strong things to recommend it. The Mahjong results are impressive.  While there a couple of questions below regarding the experiments, in general the experimental design was ..."
+fu|actorcritic_policy_optimization_in_a_largescale_imperfectinformation_game|ICLR_cc_2022_Conference,True,1,852,0.15438311688311687,0.46282467532467536,"What I would like to see most in this paper is two things: more tabular analysis and experiments and better comparisons to existing methods. 
+
+This method is essentially doing regression on a weighted..."
+fu|actorcritic_policy_optimization_in_a_largescale_imperfectinformation_game|ICLR_cc_2022_Conference,True,2,3022,-0.0135006236701152,0.4175137574290116,"Actor-Critic Policy Optimization in a Large-Scale Imperfect-Information Game 
+
+
+Positive: 
+
+I like that the paper uses 1v1 Mahjong, sounds like an interesting game that is not commonly used in the com..."
+fu|actorcritic_policy_optimization_in_a_largescale_imperfectinformation_game|ICLR_cc_2022_Conference,True,3,16989,0.04298994630142169,0.4207545005085991,"I found the paper to be clear, well organized, and easy to read. The proposed technique, ACH, looks like a good addition to the CFR family of algorithms, separated from Deep CFR in that it can run mod..."
+carbonnelle|intraclass_clustering_an_implicit_learning_ability_that_regularizes_dnns|ICLR_cc_2021_Conference,True,0,3035,0.21195622895622893,0.48919624819624824,"### 1. Brief summary
+The authors note that in classification tasks there typically exist within-class groups of similar images that are not explicitly encoded in the coarse class label -- they call th..."
+carbonnelle|intraclass_clustering_an_implicit_learning_ability_that_regularizes_dnns|ICLR_cc_2021_Conference,True,1,17458,0.11524325891972956,0.4630947570947573,"Summary:
+This work investigates whether intra-class separation in the latent space of a neural network correlates with its generalization capabilities. To perform this, the authors design 4 measures t..."
+carbonnelle|intraclass_clustering_an_implicit_learning_ability_that_regularizes_dnns|ICLR_cc_2021_Conference,True,2,5451,0.173065268065268,0.4923800678488177,"**Summary**:
+
+This paper introduces a notion coined “intraclass clustering” that describes a deep neural network’s implicit ability to cluster within data. 4 different quantities that measure the netw..."
+carbonnelle|intraclass_clustering_an_implicit_learning_ability_that_regularizes_dnns|ICLR_cc_2021_Conference,True,3,3668,0.061572535991140674,0.4322148394241418,This paper studies the intraclass clustering ability of neural networks trained in supervised learning and found that networks show intraclass clustering ability despite not explicitly enforced by the...
+foong|how_tight_can_pacbayes_be_in_the_small_data_regime|NeurIPS_cc_2021_Conference,True,0,2879,0.1119832041343669,0.3958979328165375,"I have concerns about the clarity of the paper. 
+
+Originality. The paper chooses to address an important and unsolved theoretical problem, which is characterizing how Delta, a design choice in PAC-Bay..."
+foong|how_tight_can_pacbayes_be_in_the_small_data_regime|NeurIPS_cc_2021_Conference,True,1,3356,0.14436718941435922,0.42666183397315466,"Originality: While the bounds studied here are not new, and the open problems that result from the study are also existing ones, the questions formulated and the methodology to pursue them are origina..."
+foong|how_tight_can_pacbayes_be_in_the_small_data_regime|NeurIPS_cc_2021_Conference,True,2,21211,0.021079785722642862,0.4417135363563937,"ORIGINALITY
+
+The generalisation bounds (PAC-Bayes and other) that appear in this paper are all known. An novel thing that this submission does is leverage the generic PAC-Bayes theorem which holds for..."
+foong|how_tight_can_pacbayes_be_in_the_small_data_regime|NeurIPS_cc_2021_Conference,True,3,1958,0.037500000000000006,0.4397727272727272,"Focusing on the small dataset regime, the paper investigates the relation between test set bounds (Langford, 2002) and PAC-Bayesian bounds, notably, (1) the family of bounds due to Catoni (parameteriz..."
+tasse|generalisation_in_lifelong_reinforcement_learning_through_logical_composition|ICLR_cc_2022_Conference,True,0,1458,0.07788367546432061,0.4524437927663735,"This work is sound and can potentially shape future lifelong reinforcement learning (LRL) research.
+I'm a bit skeptical however about its applicability in any use cases. 
+
+**Strengths:**
+- The introdu..."
+tasse|generalisation_in_lifelong_reinforcement_learning_through_logical_composition|ICLR_cc_2022_Conference,True,1,7533,0.08422609026775695,0.4812208085124754,"Goal-based tasks: I think this is an interesting subset of RL problems, and that it is great to study this class of problems.  However, not mentioning this limitation in the abstract (and not even in ..."
+tasse|generalisation_in_lifelong_reinforcement_learning_through_logical_composition|ICLR_cc_2022_Conference,True,2,7341,0.09617908407382088,0.4603187514240146,"## Strengths
+
+* This work extends the previous results of (Nangue Tasse et al. 2020) to handle stochastic transitions.
+* The topic area is relevant for ICLR.
+* Lifelong learning is an important and ch..."
+tasse|generalisation_in_lifelong_reinforcement_learning_through_logical_composition|ICLR_cc_2022_Conference,True,3,9178,0.09323887163561079,0.509572121718861,"Positives:
+
+- The idea of using logical composition to autonomously determine whether a given task can be immediately solved using existing policies or whether a new policy has to be learned and added..."
+tasse|generalisation_in_lifelong_reinforcement_learning_through_logical_composition|ICLR_cc_2022_Conference,True,4,1736,0.12012422360248445,0.40299171842650106,"Good work on this paper. I appreciate the background session as I had forgotten lots of details from the boolean task algebra, since I read it. The papar is very sound and the concern about the number..."
+tasse|generalisation_in_lifelong_reinforcement_learning_through_logical_composition|ICLR_cc_2022_Conference,True,5,1896,0.10255102040816327,0.4681802721088435,"### Strengths
+* The paper is generally well written and easy to follow, and explanations are intuitive.
+* The chosen research problem, lifelong and multi-task RL, is both important and insufficiently ..."
+yoon|scalable_and_orderrobust_continual_learning_with_additive_parameter_decomposition|ICLR_cc_2020_Conference,True,0,18835,0.11134768865495741,0.51449858878273,Summary: The paper addresses continual learning challenges such as catastrophic forgetting and task-order robustness by introducing a new hybrid algorithm that uses architecture growth as well as para...
+yoon|scalable_and_orderrobust_continual_learning_with_additive_parameter_decomposition|ICLR_cc_2020_Conference,True,1,1980,0.1895833333333333,0.6184934318555009,"The paper introduces an additive parameter decomposition (APD) approach to continual learning in the sequential task classification setting and evaluates it across a number of dimensions, including ta..."
+yoon|scalable_and_orderrobust_continual_learning_with_additive_parameter_decomposition|ICLR_cc_2020_Conference,True,2,6411,0.04822273497646632,0.4788342254760165,"The paper proposes a training framework that: 
+(i) can efficiently handle catastrophic forgetting in a large number of tasks
+(ii) is robust to the ordering of the tasks
+
+The high-level idea is to deco..."
+barrett|implicit_gradient_regularization|ICLR_cc_2021_Conference,True,0,18230,0.10814120806152669,0.4343701882446905,"## Edit after rebuttal
+
+I have updated my evaluation (from 4 to 6) based on the changes made in the manuscript and the responses by the authors. See details in my response to the authors: https://open..."
+barrett|implicit_gradient_regularization|ICLR_cc_2021_Conference,True,1,2314,0.05203497023809523,0.3918824404761905,"The authors show the discrete steps of gradient descent implicitly regularize models by penalizing trajectories that have large loss-gradients, which is called Implicit Gradient Regularization in the ..."
+barrett|implicit_gradient_regularization|ICLR_cc_2021_Conference,True,2,5953,0.09601133180544939,0.473382098293863,This paper provides a unique perspective on the implicit regularization effect of gradient descent that has been observed and studied previously. The authors point out that the discrete steps taken by...
+kent|modified_frank_wolfe_in_probability_space|NeurIPS_cc_2021_Conference,True,0,2896,0.09428571428571428,0.3753968253968254,"## Main Points
+### Originality and significance: 
+I am not an expert in the area of Distributionally Robust Optimization (DRO) and Variational method which are the areas addressed in the related work ..."
+kent|modified_frank_wolfe_in_probability_space|NeurIPS_cc_2021_Conference,True,1,2316,0.1683928571428572,0.5860119047619047,The paper aims to optimize a functional of probability measures. This problem is very important and has a lot of applications in machine learning. The paper is well written and has a nice logical flow...
+kent|modified_frank_wolfe_in_probability_space|NeurIPS_cc_2021_Conference,True,2,20859,0.04122444759541534,0.48440978376462246,"The paper originally proposes an algorithm based on LLMO in the context of Probability space. However, I find the paper hard to read with many inaccurate/incomplete statements, missing references, and..."
+kent|modified_frank_wolfe_in_probability_space|NeurIPS_cc_2021_Conference,True,3,120,-0.03333333333333333,0.6333333333333333,The methods and perspectives are novel. Potential applications of the proposed algorithms are wide are and remain open. 
+wan|nbdt_neuralbacked_decision_tree|ICLR_cc_2021_Conference,True,0,1093,0.08975168350168353,0.41853956228956224,"This paper proposes a neural-backed decision tree that aims to improve both the accuracy and the interpretability of deep learning models. Training under a newly introduced tree supervision loss, the ..."
+wan|nbdt_neuralbacked_decision_tree|ICLR_cc_2021_Conference,True,1,12706,0.10165144721179209,0.45390387390387416,"The authors did a fantastic job of answering questions, revising their manuscript in accord with reviewer feedback (Sec 3.4 title), and even adding new experimental results based on reviewer suggestio..."
+wan|nbdt_neuralbacked_decision_tree|ICLR_cc_2021_Conference,True,2,5598,0.08010847975553859,0.483432560903149,"The paper proposes a method to make neural networks more accurate and interpretable by replacing their final layers with a probabilistic decision tree. As a result, the network can produce a sequence ..."
+wan|nbdt_neuralbacked_decision_tree|ICLR_cc_2021_Conference,True,3,3433,0.10533008658008658,0.44881854256854253,"Significance:
+This article seems to be a useful contribution to the literature on interpretable deep networks. However, the paper could be strengthened by demonstrating and analyzing the interpretabil..."
+wan|nbdt_neuralbacked_decision_tree|ICLR_cc_2021_Conference,True,4,3121,0.12723958333333335,0.4932291666666666,"Aim to improve the interpretability and the accuracy of the neural network, this paper takes a step further on the integration of NN with a decision tree. It will replace the final linear layer of the..."
+otto|differentiable_trust_region_layers_for_deep_reinforcement_learning|ICLR_cc_2021_Conference,True,0,11575,0.07266794557148888,0.4567915876774144,"### Summary
+In trust-region-based policy optimization methods such as TRPO and PPO, it is difficult to tune and lots of approximations are required. The authors try to solve this issue by introducing ..."
+otto|differentiable_trust_region_layers_for_deep_reinforcement_learning|ICLR_cc_2021_Conference,True,1,908,0.3205952380952381,0.5947172619047619,"The authors explore the use of KL, 2-Wasserstein, and Frobenius norm in order to derive trust region projections in DRL. The topic is relevant and novel - specially given the prevalence of TRPO and PP..."
+otto|differentiable_trust_region_layers_for_deep_reinforcement_learning|ICLR_cc_2021_Conference,True,2,7980,0.1045654345654346,0.44091413721665823,"I’m terribly sorry but I noticed that somehow my review of this paper was not successfully submitted as I checked my submission tasks. After double checking with the area chair, we decide to add my re..."
+otto|differentiable_trust_region_layers_for_deep_reinforcement_learning|ICLR_cc_2021_Conference,True,3,5040,0.09921497584541061,0.4367753623188406,"### Summary
+The paper proposes a way to impose trust region restrictions via projections when doing policy optimisation in Reinforcement Learning. The projections have a closed form and enforce a trus..."
+yang|hit_and_lead_discovery_with_explorative_rl_and_fragmentbased_molecule_generation|NeurIPS_cc_2021_Conference,True,0,6453,0.10730067400953476,0.46588662392459856,The originality of this paper lies in a new combination of the used machine-learning techniques to achieve an ambitious goal of designing realistic compounds that can be developed as potential drugs. ...
+yang|hit_and_lead_discovery_with_explorative_rl_and_fragmentbased_molecule_generation|NeurIPS_cc_2021_Conference,True,1,1983,0.001384032634032637,0.4333158508158509,"The proposed framework named FREED integrates fragment-based molecular representation, docking scores, and soft actor-critic method for drug design. Overall, the originality of this work is mild. The ..."
+yang|hit_and_lead_discovery_with_explorative_rl_and_fragmentbased_molecule_generation|NeurIPS_cc_2021_Conference,True,2,9702,0.12285244007692994,0.47043076198178224,"### ===== Detailed pros: ===== 
+
+1. The problem setup is highly relevant to real-world drug discovery:
+- The property being optimized is docking score, which is better than toy-ish tasks commonly used..."
+yang|hit_and_lead_discovery_with_explorative_rl_and_fragmentbased_molecule_generation|NeurIPS_cc_2021_Conference,True,3,7278,0.12479340822013232,0.4325450315967557,"## Review Summary
+Overall I found the paper interesting and the experimental results seem to validate the proposed approach. Code is provided to allow the method to be built upon in the future. A more..."
+kumar|metalearning_of_structured_task_distributions_in_humans_and_machines|ICLR_cc_2021_Conference,True,0,7083,0.14424122807017542,0.49867502088554716,"This work is an exploration of model behaviour upon meta-learning tasks with compositional structure. The authors discover that, unlike humans, machine learning models do not readily pick up on the un..."
+kumar|metalearning_of_structured_task_distributions_in_humans_and_machines|ICLR_cc_2021_Conference,True,1,3159,0.1323155019583591,0.37955318491032775,"This paper sets out to determine something about the form of the bias acquired by a standard meta-learning algorithm, and compare the form of that bias to the inherent bias that humans have.    The au..."
+kumar|metalearning_of_structured_task_distributions_in_humans_and_machines|ICLR_cc_2021_Conference,True,2,6277,0.14216839562876146,0.4841910833069369,"*Summarize what the paper claims to contribute. Be positive and generous.*
+
+This paper offers an interesting comparison between humans and a meta-learning algorithm [1,2] learning to uncover structure..."
+kumar|metalearning_of_structured_task_distributions_in_humans_and_machines|ICLR_cc_2021_Conference,True,3,8821,0.15215802368927367,0.5230077861952862,"Post revision update
+-------------------------------
+
+The authors have been very helpful and addressed many of my concerns, and I think the revised paper is a substantial improvement. I have rated the..."
+farid|generalization_bounds_for_metalearning_via_pacbayes_and_uniform_stability|NeurIPS_cc_2021_Conference,True,0,3484,0.05627869605142333,0.5167262451353362,"The paper's contributions build on works on bi-level generalization guarantees. To the best of my knowledge, the combination of uniform stability and PAC-Bayes frameworks is new in the meta-learning l..."
+farid|generalization_bounds_for_metalearning_via_pacbayes_and_uniform_stability|NeurIPS_cc_2021_Conference,True,1,13855,0.04942387904066736,0.4809813463098136,"ORIGINALITY
+
+Generalization bounds for meta-learning have been proposed before. There are stability-based approaches (works of Maurer) and approaches that are based on PAC-Bayes bounds (Amit and Meir)..."
+farid|generalization_bounds_for_metalearning_via_pacbayes_and_uniform_stability|NeurIPS_cc_2021_Conference,True,2,7152,0.15451884390119683,0.47541295306001197,"Originality
+---------
+Understanding fewshot learning methods is still challenging and results going in this direction are important. The proposed contribution combines an existing uniform stability fr..."
+farid|generalization_bounds_for_metalearning_via_pacbayes_and_uniform_stability|NeurIPS_cc_2021_Conference,True,3,793,0.12180555555555556,0.48958333333333326,The theoretical study of meta-learning algorithms is a very relevant topic in machine learning due to the wide range of potential applications. This work proposes a novel PAC-Bayes bounds that builds ...
+yu|dense_keypoints_via_multiview_supervision|NeurIPS_cc_2021_Conference,True,0,2225,0.12404545454545456,0.44687373737373737,"This paper's contributions are:
+
+- A novel formulation of probabilistic epipolar constraints that can be used to enforce multiview consistency on continuous dense keypoints fields
+- A new neural netwo..."
+yu|dense_keypoints_via_multiview_supervision|NeurIPS_cc_2021_Conference,True,1,2598,0.15140751092878754,0.44521926654905375,"I was not very excited with the paper. I initially liked 2 ideas of the paper: 1) Using epipolar errors does not require extra labels. 2) The keypoint detection engine uses only a single image, and th..."
+yu|dense_keypoints_via_multiview_supervision|NeurIPS_cc_2021_Conference,True,2,11649,0.10152818772136954,0.49618386453613733,"**Main paper**
+
+1. Motivation: It might be good to elaborate a bit on what the applications of the proposed method would look like, in order to motivate the method soundly. Typically, keypoint matchin..."
+yu|dense_keypoints_via_multiview_supervision|NeurIPS_cc_2021_Conference,True,3,1119,0.15512820512820513,0.6243589743589744,"The proposed method is reasonable, well written, and well studied. I cannot comment much about the originality of the work since this is out of my field of research, however the paper was easy to foll..."
+yu|dense_keypoints_via_multiview_supervision|NeurIPS_cc_2021_Conference,True,4,1689,0.03815789473684211,0.4609649122807018,"This paper studies an important problem of learning keypoint detectors by using multi-view supervision. Compared to prior works, the key contribution is the learning of dense keypoints and using epipo..."
+yu|dense_keypoints_via_multiview_supervision|NeurIPS_cc_2021_Conference,True,5,5771,0.0804937018999519,0.4645408449575115,The paper proposes an interesting technique that introduces multi-view consistency for dense pose estimation. What I would have liked to see is that multi-view consistency allows one to further increa...
+faccio|parameterbased_value_functions|ICLR_cc_2021_Conference,True,0,1386,0.06666666666666667,0.2791666666666667,"On page 2, in the background section: the discounted state distribution, what you wrote is not a distribution (doesn't sum to 1). In order to define this $d^{\pi_\theta}$ properly, you can multiply ev..."
+faccio|parameterbased_value_functions|ICLR_cc_2021_Conference,True,1,2661,0.18035846267553587,0.39889135254988906,"— idea:
+	
+A new class of value functions is introduced where the value function takes the parameters of the policy as input, in addition to its common inputs (state or state-action). The proposed type..."
+faccio|parameterbased_value_functions|ICLR_cc_2021_Conference,True,2,16246,0.11836806604248463,0.45140491291654056,"**Update**
+
+I have updated my score to 7.
+One of the points that was not explained in the original paper was that (ignoring function approximation effects) an optimal solution for $J_b$ (the OffPAC ob..."
+faccio|parameterbased_value_functions|ICLR_cc_2021_Conference,True,3,3837,0.09324950806768988,0.41975521448248715,"### Summary:
+The paper proposes passing the parameters of a policy to the value function attempting to learn estimates of the return for that policy. This allows the value function to generalize acros..."
+guo|machine_versus_human_attention_in_deep_reinforcement_learning_tasks|NeurIPS_cc_2021_Conference,True,0,3194,0.13318452380952384,0.3925595238095238,"Originality: Coincidentally two years ago, I wanted to explore the same research question as the paper: ""How similar are the visual features learned by RL agents and humans when performing the same ta..."
+guo|machine_versus_human_attention_in_deep_reinforcement_learning_tasks|NeurIPS_cc_2021_Conference,True,1,2088,0.08936666666666668,0.401925,"Originality: As the authors state, they are the first to undertake research like this, to the best of my knowledge. The results are also novel, though many reaffirm findings from elsewhere. Overall, t..."
+guo|machine_versus_human_attention_in_deep_reinforcement_learning_tasks|NeurIPS_cc_2021_Conference,True,2,4135,0.09931592039800996,0.45603233830845774,"*Related work:*
+
+The related work covers different aspects of previous work and acknowledge dual aspect of this work, namely explainable reinforcement learning and studies of human attention. 
+
+*Origi..."
+guo|machine_versus_human_attention_in_deep_reinforcement_learning_tasks|NeurIPS_cc_2021_Conference,True,3,14569,0.024683683525146945,0.3794188986262155,"**Post-discussion notes:** Following the authors' responses and discussion with the other reviewers, I'm revising my rating to 7. I still believe there's room to ablate some of the decisions on how yo..."
+cucala|explainable_gnnbased_models_over_knowledge_graphs|ICLR_cc_2022_Conference,True,0,14009,0.10730140230140227,0.5208094498094495,"### Clarity and technical correctness
+Overall, the paper is well written. I was able to follow the majority of the main paper, and the authors anticipated many of my technical questions and answered t..."
+cucala|explainable_gnnbased_models_over_knowledge_graphs|ICLR_cc_2022_Conference,True,1,4278,0.11056152181152179,0.4383183483183485,"The proposed method is very interesting since it provides a theoretically motivated model that is able to learn tasks on knowledge graphs, having the possibility to extract explanations. The MGNN just..."
+cucala|explainable_gnnbased_models_over_knowledge_graphs|ICLR_cc_2022_Conference,True,2,3159,0.11083333333333333,0.5269444444444444,"Pros:
+
+* It first transforms the original knowledge graph into a colored graph where each vertex is labeled by a feature vector and represents the facts of the corresponding entity or entity pairs. It..."
+cucala|explainable_gnnbased_models_over_knowledge_graphs|ICLR_cc_2022_Conference,True,3,2198,0.02254901960784315,0.4598039215686275,"Strengths:
+
+- This paper studies how to improve the interpretability of GNN-based predictions, which is an important research direction.
+- The authors provide a detailed theoretical analysis of the mo..."
+tsirtsis|counterfactual_explanations_in_sequential_decision_making_under_uncertainty|NeurIPS_cc_2021_Conference,True,0,1128,0.15745535714285716,0.3725892857142857,"Originality:
+The idea of applying counterfactual explanations in decision making process with multiple, dependent actions taken sequentially overtime is referred as original.
+The algorithm is not repl..."
+tsirtsis|counterfactual_explanations_in_sequential_decision_making_under_uncertainty|NeurIPS_cc_2021_Conference,True,1,14975,0.0803074311728158,0.45760097096635577,"This paper extends existing counterfactual explanations on DNN to MDP and generates explanations for target policies acting in the corresponding MDPs. First of all, I like the idea of generating count..."
+tsirtsis|counterfactual_explanations_in_sequential_decision_making_under_uncertainty|NeurIPS_cc_2021_Conference,True,2,1354,0.18725490196078431,0.4666666666666667,"Originality: 
+This is an exciting piece of work. The idea of using an MDP to do something similar has been introduced recently elsewhere, but the model introduced in this paper is novel.
+
+A slightly r..."
+tsirtsis|counterfactual_explanations_in_sequential_decision_making_under_uncertainty|NeurIPS_cc_2021_Conference,True,3,6042,0.1631722085385878,0.488096422255905,"Overall this is a nice and fairly well-written paper. It is clear in what it does, the formalization and algorithms make sense, and the experiments are insightful and effective. Downsides are a limite..."
+lim|finding_regions_of_heterogeneity_in_decisionmaking_via_expected_conditional_covariance|NeurIPS_cc_2021_Conference,True,0,2188,-0.04345238095238098,0.598015873015873,"I found the paper clear and well written, the topic relevant, and the presented method interesting. However, there are a few concerns which I have listed below.
+
+### Major
+* On overlap. In Assumption~..."
+lim|finding_regions_of_heterogeneity_in_decisionmaking_via_expected_conditional_covariance|NeurIPS_cc_2021_Conference,True,1,4176,0.09886894923258559,0.46267178276269183,"Originality:
+This paper presents an original estimation problem and algorithm to solve it. To the best of my knowledge, this paper provides a new formalization of the problem of wanting to learn about..."
+lim|finding_regions_of_heterogeneity_in_decisionmaking_via_expected_conditional_covariance|NeurIPS_cc_2021_Conference,True,2,9201,0.07604644728704878,0.4170263320639262,"Overall, I found this paper to be interesting. The authors study a potentially important, policy relevant problem -- in many empirical settings such as the criminal justice and health care, it is usef..."
+lim|finding_regions_of_heterogeneity_in_decisionmaking_via_expected_conditional_covariance|NeurIPS_cc_2021_Conference,True,3,7774,0.04552105470287286,0.4702346845074118,"## General Points
+
+Finding regions of ""disagreement"" or ""heterogeneity"" in the decisions made by human experts is important to diagnose decision-making issues. For example, if we find that judges are ..."
+wu|taking_notes_on_the_fly_helps_language_pretraining|ICLR_cc_2021_Conference,True,0,6509,0.11085240447625766,0.4979482138656449,"The paper proposes an external memory architecture. When encountering the rare words (with a frequency between 100-500), the method will store the average contextualized word embedding of nearby words..."
+wu|taking_notes_on_the_fly_helps_language_pretraining|ICLR_cc_2021_Conference,True,1,10489,0.1830673400673401,0.5354042809042809,"This paper proposes Taking Notes on the Fly, a technique to improve the training efficiency of language-modeling style pretraining. It works by identifying rare words in the pre-training and adding a ..."
+wu|taking_notes_on_the_fly_helps_language_pretraining|ICLR_cc_2021_Conference,True,2,2054,0.1810682583409856,0.5549838208929118,This work aims at accelerating pre-training by leveraging the contextual embeddings for the rare words. It is argued that the inadequate training of rare words slows down the pre-training. The authors...
+wu|taking_notes_on_the_fly_helps_language_pretraining|ICLR_cc_2021_Conference,True,3,3835,0.16959424756034921,0.5355388020642258,*Summary*: This paper proposes a method for improving pretraining convergence speed by augmenting the representations of rare words with the mean-pooled representations from their previously-occuring ...
+burda|exploration_by_random_network_distillation|ICLR_cc_2019_Conference,True,0,8963,0.08902623131099949,0.4320720026845854,"The algorithm proposed in this paper consists in driving exploration in RL through an intrinsic reward, computed as the prediction error of a neural network whose target is the output of a randomly in..."
+burda|exploration_by_random_network_distillation|ICLR_cc_2019_Conference,True,1,4072,0.13429383116883117,0.4799154491341991,"This paper presents an approach to exploration in RL via random network distillation.
+The agent generates a random neural network, and adds an ""intrinsic reward"" based on the regression error of this ..."
+burda|exploration_by_random_network_distillation|ICLR_cc_2019_Conference,True,2,6070,0.07418499867479461,0.48632727533237746,"My apologies for posting late, I was seriously injured around the reviewer deadline.
+
+---------------------------------
+
+The authors propose ""random network distillation,"" a method that adds an additi..."
+burda|exploration_by_random_network_distillation|ICLR_cc_2019_Conference,True,3,3389,0.06771428571428571,0.45397619047619053,The paper presents a simple but remarkably efficient exploration strategy obtaining state-of-art results in a well known hard-exploration problem (Montezuma's Revenge). The idea consists of several pa...
+wang|shapley_explanation_networks|ICLR_cc_2021_Conference,True,0,8007,0.09677956513183789,0.47482167453758345,This work proposes a new model class designed to make SHAP value calculations more efficient. The proposed method exploits sparsity and additivity among intermediate values to provide fast exact SHAP ...
+wang|shapley_explanation_networks|ICLR_cc_2021_Conference,True,1,12248,0.12237057341565533,0.4830723511461215,"(I am raising my score by 2 points after the author response)
+
+--
+
+SUMMARY
+
+The authors present a new type of network architecture where the each intermediate layer outputs the shapely contributions o..."
+wang|shapley_explanation_networks|ICLR_cc_2021_Conference,True,2,2016,0.09625000000000002,0.43222222222222223,"##########################################################################
+
+Summary:
+
+The paper proposes to incorporate Shapley values as latent representations in deep models. Specifically, the paper..."
+menick|practical_real_time_recurrent_learning_with_a_sparse_approximation|ICLR_cc_2021_Conference,True,0,6183,0.14684407989671147,0.4390547581073896,"## Post response update
+The author's response has clarified most of the missing details in the paper. I still have an issue with reporting results for 3 runs --- even if the variance is small for 3 ru..."
+menick|practical_real_time_recurrent_learning_with_a_sparse_approximation|ICLR_cc_2021_Conference,True,1,3205,1.3528138528133434e-05,0.4395968614718614,"This work presents a method, named SnAp, that takes Real-time Recurrent Learning derivations and proposes to approximate its computations with sparse approximations to make them more computational tra..."
+menick|practical_real_time_recurrent_learning_with_a_sparse_approximation|ICLR_cc_2021_Conference,True,2,4926,0.07664565826330533,0.45152310924369726,"## Second Review
+The author's thoughtful response has clarified most of the missing details in the paper. It is true that idea is interesting and theoretical analysis are promising. However, I still h..."
+menick|practical_real_time_recurrent_learning_with_a_sparse_approximation|ICLR_cc_2021_Conference,True,3,7548,0.1970231601731602,0.47309902597402603,"## Second review
+
+Thanks for taking all my comments seriously. After clarification of the difference with RFLO I see that this work is even richer than I thought and I increase my grade to 8. It seems..."
+antonakopoulos|adaptive_extragradient_methods_for_minmax_optimization_and_games|ICLR_cc_2021_Conference,True,0,11225,0.09906375156375155,0.45742820992820965,"In this paper the authors propose a variant of the extragradient method that i) achieves optimal convergence in the smooth and nonsmooth regimes, ii) allows one to work with singular operators. The pa..."
+antonakopoulos|adaptive_extragradient_methods_for_minmax_optimization_and_games|ICLR_cc_2021_Conference,True,1,2864,0.11880511463844802,0.42309082892416233,"In this paper, the authors present an adaptive stepsize strategy for extragradient in order to recover both the ergodic 1/sqrt(T) in the nonsmooth case and 1/T in the smooth case (without the knowledg..."
+antonakopoulos|adaptive_extragradient_methods_for_minmax_optimization_and_games|ICLR_cc_2021_Conference,True,2,2260,0.07,0.32666666666666666,This paper propose a novel algorithm that solves the min-max problems and games based on the extra gradient (EG) framework. One of the main goal of this paper is to achieve the optimal convergence rat...
+antonakopoulos|adaptive_extragradient_methods_for_minmax_optimization_and_games|ICLR_cc_2021_Conference,True,3,5495,0.15380116959064322,0.5121136173767752,"### Summary. 
+This work proposed a stepsize for the extragradient/mirror-prox method that works both in smooth and non-smooth settings. The stepsize is based on the empirical values of gradient/operat..."
+deng|generative_scene_graph_networks|ICLR_cc_2021_Conference,True,0,8048,0.15789015987691482,0.4407074529591088,"=====Post-Rebuttal Comment=====
+
+I thank the authors for the detailed response and the updated results. While my overall opinion of the work is slightly more positive post-rebuttal, I still maintain t..."
+deng|generative_scene_graph_networks|ICLR_cc_2021_Conference,True,1,2613,0.1658246225319396,0.5068137824235385,Generative Scene Graph Networks (GSGN) is a variational auto-encoder with the intermediate representation being tree-like scene graphs. The leaf nodes stand for primitive parts and edges stand for pos...
+deng|generative_scene_graph_networks|ICLR_cc_2021_Conference,True,2,7843,0.15177051904324623,0.48617750375326124,"**PAPER SUMMARY**
+
+The paper presents a generative model for scenes that uses tree-structured latent variables to recursively decompose images into objects and parts, without any object or part superv..."
+deng|generative_scene_graph_networks|ICLR_cc_2021_Conference,True,3,3339,0.157091341991342,0.5862870129870129,"== Update ==
+
+Thank you for your response and clarifications. I have left my score as is.
+
+== Original Review ==
+
+The paper presents an unsupervised method for inferring scene graphs from images. Buil..."
+diffenderfer|a_winning_hand_compressing_deep_networks_can_improve_outofdistribution_robustness|NeurIPS_cc_2021_Conference,True,0,4367,0.14310412224591326,0.4456254442075338,"**Originality**:
+
+The paper tries to show that compact, accurate, and robust deep neural networks (CARDs) exist and to develop efficient algorithms to design CARDs that give comparable or better OOD r..."
+diffenderfer|a_winning_hand_compressing_deep_networks_can_improve_outofdistribution_robustness|NeurIPS_cc_2021_Conference,True,1,1486,0.20773809523809528,0.5198015873015873,"The direction this paper studied is interesting while there are several important points regarding the significancy of the result needs discussions.
+
+1. To draw the main conclusion on what kind of pru..."
+diffenderfer|a_winning_hand_compressing_deep_networks_can_improve_outofdistribution_robustness|NeurIPS_cc_2021_Conference,True,2,13910,0.13007044382044386,0.49109960609960646,"### Pros:
+
+I think the question of achieving robustness and efficiency at the same time is interesting and very relevant. I also think that this is an under-explored question and agree with the author..."
+diffenderfer|a_winning_hand_compressing_deep_networks_can_improve_outofdistribution_robustness|NeurIPS_cc_2021_Conference,True,3,1885,0.1138879588879589,0.47886455886455886,"
+Strengths:
+
+* The paper explores an important problem with promising conclusions: the compact, accurate and robust deep neural networks do empirically exist.
+
+* The authors not only answer the existe..."
+tripuraneni|overparameterization_improves_robustness_to_covariate_shift_in_high_dimensions|NeurIPS_cc_2021_Conference,True,0,3415,0.037505922767116805,0.5250829187396352,"One concern is whether the partial ordering in Definition 1 can capture interesting shifts. Most of the results depend on the partial ordering, so it is crucial for this to be the case. However, at fi..."
+tripuraneni|overparameterization_improves_robustness_to_covariate_shift_in_high_dimensions|NeurIPS_cc_2021_Conference,True,1,1559,0.18055555555555555,0.5432291666666668,"Originality: The paper is original. They proposed a way to quantify the hardness of covariate shift and related this to the Bayes risk in kernel ridge regression.
+
+Quality: The quality is good. Theore..."
+tripuraneni|overparameterization_improves_robustness_to_covariate_shift_in_high_dimensions|NeurIPS_cc_2021_Conference,True,2,4942,0.08469941516816518,0.44310403138528137,"### Originality
+I am not too familiar with works related to analysing test error when there is covariate shift. Nonetheless, I find the results and the technique of working with random features intere..."
+tripuraneni|overparameterization_improves_robustness_to_covariate_shift_in_high_dimensions|NeurIPS_cc_2021_Conference,True,3,2371,-0.016388888888888887,0.4863888888888888,"The authors did hard work to derive analytically the asymptotic limit of the test error for random feature regression with covariate shift, and the experimental results seem to agree with the theory w..."
+tripuraneni|overparameterization_improves_robustness_to_covariate_shift_in_high_dimensions|NeurIPS_cc_2021_Conference,True,4,9152,0.1499139209555876,0.4964794773128105,"
+### Positive aspects
+
+**Problem setting.**  The setting is very interesting here.  I haven't seen any theoretical work that has done much of anything with this setting.  As covariate shift is known t..."
+gray|humanlevel_performance_in_nopress_diplomacy_via_equilibrium_search|ICLR_cc_2021_Conference,True,0,11325,0.07468644288316419,0.4036638043195423,"This paper proposes a combination of imitation learning and search applied to the multiplayer, simultaneous-move game of no-press Diplomacy. While both techniques have been used before, even in concer..."
+gray|humanlevel_performance_in_nopress_diplomacy_via_equilibrium_search|ICLR_cc_2021_Conference,True,1,1999,0.12012414056531705,0.342038451744334,"The authors consider ""no-press Diplomacy"", a complex game played by humans which involves (limited) cooperation and competition.
+
+The method uses a policy and value function learned from human games, ..."
+gray|humanlevel_performance_in_nopress_diplomacy_via_equilibrium_search|ICLR_cc_2021_Conference,True,2,5019,0.11952245670995673,0.45546866177300965,"# Summary
+
+The paper addresses the problem of No Press Diplomacy. It applies existing search techniques to improve on an imitation policy, which is learned with improvements on existing supervised lea..."
+gray|humanlevel_performance_in_nopress_diplomacy_via_equilibrium_search|ICLR_cc_2021_Conference,True,3,2930,0.12505708343943636,0.45363643437172846,"In this paper, the authors apply an interesting twist on 1-ply search to the problem of playing no-press Diplomacy. Diplomacy is an especially interesting application, because it is neither zero-sum n..."
+rahaman|spatially_structured_recurrent_modules|ICLR_cc_2021_Conference,True,0,4081,0.1546099290780142,0.4891843971631204,"The authors propose a recurrent state space model for partially observed data, where at any given time, only a partial subset of observations are accessible to the model to make future predictions. Th..."
+rahaman|spatially_structured_recurrent_modules|ICLR_cc_2021_Conference,True,1,7875,0.1028968253968254,0.4312016769073221,"### Summary
+
+This paper is concerned with making predictions about the (global) state of a dynamical system in a partially observable setting, where only local observations are available. Concretely, ..."
+rahaman|spatially_structured_recurrent_modules|ICLR_cc_2021_Conference,True,2,4651,0.11994293900543902,0.4731591556591555,"
+### Summary of the paper
+
+The authors propose a novel architecture for synthesizing information from multiple local observations and making predictions into the future.
+Given a set of observations, e..."
+rahaman|spatially_structured_recurrent_modules|ICLR_cc_2021_Conference,True,3,4613,0.11103296703296703,0.3983479853479853,"This paper models noisy observations from complex dynamical systems, consisting of multiple interacting subsystems, by a set of sparsely interacting recurrent networks. The interactions between the re..."
+saunshi|a_mathematical_exploration_of_why_language_models_help_solve_downstream_tasks|ICLR_cc_2021_Conference,True,0,2559,0.0519615800865801,0.5010669191919191,Summary: This paper presents an explanation of why pretraining on language modeling (LM) helps performance on downstream text classification tasks. The explanation relies on formulating classification...
+saunshi|a_mathematical_exploration_of_why_language_models_help_solve_downstream_tasks|ICLR_cc_2021_Conference,True,1,6137,0.11552404295051352,0.4145413165266105,"This paper studies why language model pre-training has been such an effective technique in improving downstream performance across a wide range of NLP tasks recently.  In particular, it considers lang..."
+saunshi|a_mathematical_exploration_of_why_language_models_help_solve_downstream_tasks|ICLR_cc_2021_Conference,True,2,3789,0.16756548536209553,0.44365048793014883,"Summary.
+
+This work tries to understand why features from trained language models can be used to solve classification tasks effectively. A language model (LM) in the analysis is modeled as a feature m..."
+saunshi|a_mathematical_exploration_of_why_language_models_help_solve_downstream_tasks|ICLR_cc_2021_Conference,True,3,4037,0.11512775842044136,0.38532713898567555,"**Summary**
+This work relates a pre-training performance with a downstream performance for tasks that _can_ be reformulated as next word prediction tasks. The authors show that for such tasks, if the ..."
+saunshi|a_mathematical_exploration_of_why_language_models_help_solve_downstream_tasks|ICLR_cc_2021_Conference,True,4,4601,0.08550109529025193,0.3754870129870131,"Summary of review:
+
+There have been lots of interests to understand why self-supervised learning approaches such as the next word prediction task learn a useful representation for downstream tasks. Th..."
+nye|representing_partial_programs_with_blended_abstract_semantics|ICLR_cc_2021_Conference,True,0,4913,0.11272503951075383,0.46985415378272527,"### Summary
+
+This paper proposes a novel top-down program synthesis for programming-by-example which combines concrete evaluation with neural embeddings. The authors take inspiration from abstract exe..."
+nye|representing_partial_programs_with_blended_abstract_semantics|ICLR_cc_2021_Conference,True,1,4959,0.13226997578692495,0.4480326876513318,"# Positives
+
+* (+1) Blended neural semantics is an elegant and intuitive construct.
+* (+2) Performance seems to be good for interesting and non-trivial DSLs.
+
+# Negatives
+* (-1) Although the high-leve..."
+nye|representing_partial_programs_with_blended_abstract_semantics|ICLR_cc_2021_Conference,True,2,7422,0.09002457822551281,0.4448451470647731,"Update:
+
+The authors have addressed many of my comments below. As such, I am increasing my score.
+
+High-level view:
+
+I’m slightly negative on this paper. The ideas within it seem novel to me, but the ..."
+nye|representing_partial_programs_with_blended_abstract_semantics|ICLR_cc_2021_Conference,True,3,3736,0.1225378787878788,0.45056818181818187,This paper proposes an embedding mechanism for partial programs for search space exploration in example-driven synthesis. It executes a sub-expression concretely whenever possible and applies neural m...
+camuto|fractal_structure_and_generalization_properties_of_stochastic_optimization_algorithms|NeurIPS_cc_2021_Conference,True,0,14858,0.09041373346279889,0.4491520006473275,{\bf General assessment:} The article is well-written and the topic is interesting. It bridges topics in fractal geometry and stochastic optimization and generally does both fields justice. While it i...
+camuto|fractal_structure_and_generalization_properties_of_stochastic_optimization_algorithms|NeurIPS_cc_2021_Conference,True,1,1514,0.06681168831168831,0.46422943722943727,"The paper is well written and relatively easy to follow, although the notation is a bit heavy for a paper of this length. The results are interesting and I appreciate the various examples given as the..."
+camuto|fractal_structure_and_generalization_properties_of_stochastic_optimization_algorithms|NeurIPS_cc_2021_Conference,True,2,2309,0.1734848484848485,0.505050505050505,"This paper provides a novel view on generalization of models trained by stochastic algorithms, specifically SGD and its variants. This perspective is very interesting and I think this is a good contri..."
+camuto|fractal_structure_and_generalization_properties_of_stochastic_optimization_algorithms|NeurIPS_cc_2021_Conference,True,3,2308,0.17373737373737375,0.553314393939394,"Generalization in modern machine learning (with overparameterized deep nets) remains a mystery, and this paper provides some new ideas to tackle the problem. The generalization bound given in the pape..."
+huang|learning_with_noisy_correspondence_for_crossmodal_matching|NeurIPS_cc_2021_Conference,True,0,1482,0.06120129870129868,0.4869227994227994,"Overall, the paper is generally well written and easy to read. The main strengths and weaknesses of this paper are summarized as follows.
+
+Strengths：
+1.	The experiments are comprehensive. To show the ..."
+huang|learning_with_noisy_correspondence_for_crossmodal_matching|NeurIPS_cc_2021_Conference,True,1,1503,0.07847222222222226,0.4488425925925925,"In brief, this paper did a good job for solving the noisy problem in cross-modal matching. The proposed method is well verified with dense experiments on three benchmark datasets. Here are some detail..."
+huang|learning_with_noisy_correspondence_for_crossmodal_matching|NeurIPS_cc_2021_Conference,True,2,11509,0.17152228889254204,0.46065447421776534,"# Strengths
+The problem tackled by the authors is a good one - many cross-modal retrieval methods that exist assume some sort of label space is either available, or can be predicted on the data. Howev..."
+huang|learning_with_noisy_correspondence_for_crossmodal_matching|NeurIPS_cc_2021_Conference,True,3,6429,0.0882095709570957,0.4805280528052803,"## Pros
+
+- (+) The introduced noisy correspondence is an interesting and important problem. Although a few previous works [A, B] tackle similar motivation in cross-modal retrieval tasks, as far as the..."
+yao|linking_emergent_and_natural_languages_via_corpus_transfer|ICLR_cc_2022_Conference,True,0,1034,0.24695652173913044,0.5327777777777779,"Strengths:
+- I think this research question is important and interesting, and that the study of what EC agents output and how they might relate to natural language is important for both EC and NLP
+- T..."
+yao|linking_emergent_and_natural_languages_via_corpus_transfer|ICLR_cc_2022_Conference,True,1,8094,0.1450946983665104,0.43255904609931445,"The paper's very clearly written, well-organized, and much of the discussion was grounded in a broad range of references to previous work.  My concerns with this paper are in regards the experimental ..."
+yao|linking_emergent_and_natural_languages_via_corpus_transfer|ICLR_cc_2022_Conference,True,2,7471,0.1397434834668877,0.46273157102944334,"# Strengths
+
+- This is a great idea, and one of those ideas that I (and others) will wish they had come up with. The idea of pretraining on emergent corpora neatly brings together new ideas about tran..."
+yao|linking_emergent_and_natural_languages_via_corpus_transfer|ICLR_cc_2022_Conference,True,3,4319,0.13193140193140193,0.4804761904761904,"# Summary
+
+The authors propose to use corpora generated from _emergent communication_ as a fine-tuning signal for NLP tasks (language modeling and image captioning in particular).  They show that, esp..."
+fromherz|fast_geometric_projections_for_local_robustness_certification|ICLR_cc_2021_Conference,True,0,4526,0.18862244897959182,0.4669353741496598,"The paper proposes Fast Geometric Projections (FGP), a method to certify the robustness of neural networks with ReLU as activation exploiting the fact the such networks are piecewise affine functions...."
+fromherz|fast_geometric_projections_for_local_robustness_certification|ICLR_cc_2021_Conference,True,1,5099,0.21556776556776555,0.5536813186813186,"Summary:
+This paper proposes an algorithm to verify whether or not there exists an adversarial example in an Lp ball of size espilon around a given training sample. As opposed to the more common used ..."
+fromherz|fast_geometric_projections_for_local_robustness_certification|ICLR_cc_2021_Conference,True,2,9785,0.11357125578823693,0.46393496440666276,"Title before Rebuttal: _Novel idea for accelerating verification hampered by concerns on correctness of algorithm_
+
+# Summary of Contributions
+The paper proposes a method to verify local robustness ne..."
+fromherz|fast_geometric_projections_for_local_robustness_certification|ICLR_cc_2021_Conference,True,3,1481,0.16892857142857146,0.4794642857142858,"The authors propose a systematic search over the convex polyhedral regions on which the network is linear, to find the decision boundary, so to certify local $\ell_p$ robustness. The method is fairly ..."
+ritter|sparse_uncertainty_representation_in_deep_learning_with_inducing_weights|NeurIPS_cc_2021_Conference,True,0,3256,0.09734555984555986,0.4244208494208494,"**Pros:**
+
+This paper is generally well written, though not without blemishes (see below). The method is solid and can be seen as a ""natural"" counterpart of the standard inducing weight method in func..."
+ritter|sparse_uncertainty_representation_in_deep_learning_with_inducing_weights|NeurIPS_cc_2021_Conference,True,1,2130,0.2165966386554622,0.5112978524743231,"Originality
+
+The paper proposes a novel idea (best to my knowledge) of using inducing points known from sparse variational GPs in the context of Bayesian neural networks.
+The paper adequately cites an..."
+ritter|sparse_uncertainty_representation_in_deep_learning_with_inducing_weights|NeurIPS_cc_2021_Conference,True,2,3107,0.10411501377410469,0.5278581267217632,"**Quality and Clarity**
+
+The overall idea is clear but quite heavy on notation and hence may require multiple readings to process entirely. I would recommend adding a table of symbols either in the bo..."
+ritter|sparse_uncertainty_representation_in_deep_learning_with_inducing_weights|NeurIPS_cc_2021_Conference,True,3,12287,0.10317879045557617,0.4716239349275061,"tldr: This method has a lot of promise, but the methodological writing is close to impenetrable currently, so I tend to reject it. Another round of revision to clean up the experiments and focus the w..."
+kaushik|explaining_the_efficacy_of_counterfactually_augmented_data|ICLR_cc_2021_Conference,True,0,7888,0.08214475727834507,0.44546239384025665,"Update after author response:
+
+I appreciate the authors' efforts to address my concerns. I still find the paper's insights lacking in the critical middle ground between theory and practice, but unders..."
+kaushik|explaining_the_efficacy_of_counterfactually_augmented_data|ICLR_cc_2021_Conference,True,1,7087,0.14969561688311683,0.4779491341991342,"# Edit after author response
+I thank the authors for their detailed response and for taking into account many of my comments. One issue that remains is the disconnect between toy and natural scenarios..."
+kaushik|explaining_the_efficacy_of_counterfactually_augmented_data|ICLR_cc_2021_Conference,True,2,4281,0.15495526695526696,0.47927549302549294,This paper presents a perspective on counterfactually augmented data (CAD) and experiments providing evidence that CAD elicited from humans indeed bears resemblance to interventions on labels or varia...
+kaushik|explaining_the_efficacy_of_counterfactually_augmented_data|ICLR_cc_2021_Conference,True,3,1409,0.11769179894179893,0.519808201058201,This paper proposes an analysis of the benefits when using counterfactually augmented data (CAD) for classification purposes. The proposed framework is causal inference and DAGs. They focus on the pro...
+flennerhag|transferring_knowledge_across_learning_processes|ICLR_cc_2019_Conference,True,0,2874,0.00557248873575404,0.368609859528227,"This paper proposes Leap, a meta-learning procedure that finds better initialization for new tasks. Leap is based on past training/optimization trajectories and updates the initialization to minimize ..."
+flennerhag|transferring_knowledge_across_learning_processes|ICLR_cc_2019_Conference,True,1,1141,0.08863636363636362,0.5015151515151515,"In this paper, the authors study an important transfer learning problem, i.e., knowledge transfer between distinct tasks, which is usually called 'far transfer' (instead of 'near transfer'). Specifica..."
+flennerhag|transferring_knowledge_across_learning_processes|ICLR_cc_2019_Conference,True,2,16526,0.05048246006866696,0.45242842215256,"\documentclass[10pt]{article}
+\usepackage{geometry}[1in]
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{enumerate}
+\usepackage{indentfirst}
+
+\begin{document}
+	
+	\section*{..."
+veeriah|discovery_of_options_via_metalearned_subgoals|NeurIPS_cc_2021_Conference,True,0,6463,0.06945802005012532,0.42677109440267347,"The paper introduces an interesting novel method for meta-learning of options. It is clearly written and experiments show that the approach works well on both simple and challenging baseline. However,..."
+veeriah|discovery_of_options_via_metalearned_subgoals|NeurIPS_cc_2021_Conference,True,1,6379,0.061088676948051944,0.49362272276334784,"I think this is a very natural instantiation of the meta-learning for discovery idea proposed by [Veeriah et. al. 2019] to the option discovery problem. Many of the algorithms features are shared, and..."
+veeriah|discovery_of_options_via_metalearned_subgoals|NeurIPS_cc_2021_Conference,True,2,4811,0.15075757575757578,0.46477530406101825,Meta-gradients have been used previously for different settings in RL but this paper seems to be the first to apply it in a HRL setting. The combination of the two could lead to more flexible options ...
+veeriah|discovery_of_options_via_metalearned_subgoals|NeurIPS_cc_2021_Conference,True,3,1028,0.28450487012987014,0.5107454004329004,"Strengths:
++ Very clear exposition of the method and good writing overall.
++ Detailed appendix with hyperparameter settings and method implementation details.
++ Strong experimental results for options..."
+veeriah|discovery_of_options_via_metalearned_subgoals|NeurIPS_cc_2021_Conference,True,4,1838,0.14411764705882357,0.4480392156862744,"I warmly thank the authors for their work.
+
+Soundness of the claims, significance and novelty of the contribution, and relevance to the NeurIPS community:
+
+- Discovering options, in an automated manne..."
+erdemir|adversarial_robustness_with_nonuniform_perturbations|NeurIPS_cc_2021_Conference,True,0,3445,0.1285757006151743,0.3901458190931876,"I overall like the paper, the need to consider attacks adjusted to specific features is intuitive and makes sense. The results showing how the attacks end up looking more like benign samples is compel..."
+erdemir|adversarial_robustness_with_nonuniform_perturbations|NeurIPS_cc_2021_Conference,True,1,459,0.26666666666666666,0.4250000000000001,"
+Cost, utility, and feature importance are reasonable concerns for adversaries in practice. This paper tackles the challenge of optimizing attacks with non-uniform perturbation, in which features are ..."
+erdemir|adversarial_robustness_with_nonuniform_perturbations|NeurIPS_cc_2021_Conference,True,2,5806,0.1128862126245847,0.43727990033222586,"The paper hits an important gap in the literature.  However, it seems to miss some of the closely related work in the malware and image classification space.  Moreover, while the authors appear to mak..."
+erdemir|adversarial_robustness_with_nonuniform_perturbations|NeurIPS_cc_2021_Conference,True,3,2992,0.178968253968254,0.4615079365079366,"Pros:
+* the intuition of using non-isotropic perturbation is clear and very useful, especially in domains where data are more complex (e.g. malware)
+* the authors tested many different domains to prov..."
+erdemir|adversarial_robustness_with_nonuniform_perturbations|NeurIPS_cc_2021_Conference,True,4,2209,0.12830250557523287,0.48504635095544185,"I like the intuition behind the paper: not all directions equally matter for classification, and we can focus on the more important ones for robustness.
+
+Writing-wise, the paper is on the dense end wi..."
+erdemir|adversarial_robustness_with_nonuniform_perturbations|NeurIPS_cc_2021_Conference,True,5,5453,0.14023281205973515,0.4688017751479291,"I very much liked reading this paper. Unlike “normal” papers on adversarial attacks, what sets it apart is assuming a “more realistic” perspective where the perturbations are subject to realistic cons..."
+malinin|ensemble_distribution_distillation|ICLR_cc_2020_Conference,True,0,9225,0.09709595959595965,0.4537193362193361,"
+
+========= Post Rebuttal ========= 
+
+
+I appreciate the authors' effort in addressing the raised issues. I think the revised paper has higher quality in that the additional ablation studies are very u..."
+malinin|ensemble_distribution_distillation|ICLR_cc_2020_Conference,True,1,4914,0.13913717001952297,0.40504364916129626,"This paper notes that ensemble distillation (EnD) loses the distributional information from the original ensemble, which prevents users of the distilled model from being able to obtain estimates of it..."
+malinin|ensemble_distribution_distillation|ICLR_cc_2020_Conference,True,2,6169,0.1138697647733792,0.4294606999426276,"Summary:
+
+Ensembles of probabilistic models (e.g. for classification) provide measures of both data uncertainty (i.e. how uncertain each model is on average) and model uncertainty (i.e. how much the m..."
+montero|the_role_of_disentanglement_in_generalisation|ICLR_cc_2021_Conference,True,0,8191,0.1399164534959989,0.4742771874590056,"Post-revision update
+------------------------
+
+Thanks to the authors, I think that the revision provided by the authors makes the paper substantially stronger. The inclusion of the more complex Shapes..."
+montero|the_role_of_disentanglement_in_generalisation|ICLR_cc_2021_Conference,True,1,2325,-0.013888888888888886,0.43253968253968267,"Summary:
+This paper studies the performance of models producing disentangled representations in the downstream task of combinatorial generalization. The experiments suggest that models producing disen..."
+montero|the_role_of_disentanglement_in_generalisation|ICLR_cc_2021_Conference,True,2,3355,0.1407294832826748,0.4697061803444782,"Summary
+
+Learning disentangled representation is often considered an important step to achieve human-like generalization. This paper studies how the degree of disentanglement affects various forms of ..."
+montero|the_role_of_disentanglement_in_generalisation|ICLR_cc_2021_Conference,True,3,6419,0.14937565990919646,0.45256269137366695,"
+Summary
+---
+A large body of work creates disentangled representations to improve
+combinatorial generalization. This paper distinguishes between 4 types of
+generalization and shows that existing unsup..."
+charpentier|natural_posterior_network_deep_bayesian_predictive_uncertainty_for_exponential_family_distributions|ICLR_cc_2022_Conference,True,0,2054,-0.019250440917107585,0.40474426807760144,"# Pros 
+
+- Utilizing normalizing flows for density estimation for calibration and OOD detection is intuitive 
+- NatPN can be used for both regression and classification tasks. The majority of previous..."
+charpentier|natural_posterior_network_deep_bayesian_predictive_uncertainty_for_exponential_family_distributions|ICLR_cc_2022_Conference,True,1,5385,0.07665422339335384,0.39095039421126393,"_Edit: Postrebuttal Update: The authors clarify most points in the rebuttal/include them in the new version. I increase my score from 5 $\to$ 6._
+_________________
+
+## Strengths
+- While prior work in ..."
+charpentier|natural_posterior_network_deep_bayesian_predictive_uncertainty_for_exponential_family_distributions|ICLR_cc_2022_Conference,True,2,4164,0.12872126436781609,0.4088505747126437,"**Update:** changed my score (see comment) from 6 to 8.
+
+**Strengths**:
+
+The paper makes three claims. 
+Firstly, NatPN can be applied to all problems with an exponential family likelihood distribution..."
+charpentier|natural_posterior_network_deep_bayesian_predictive_uncertainty_for_exponential_family_distributions|ICLR_cc_2022_Conference,True,3,3452,0.17478269085411943,0.45556815318720084,"**Relevance**:
+Uncertainty estimation is a highly active research area. Methods that don’t require calculating an average over multiple forward passes are arguably particularly relevant for practical ..."
+charpentier|natural_posterior_network_deep_bayesian_predictive_uncertainty_for_exponential_family_distributions|ICLR_cc_2022_Conference,True,4,5216,0.12067763347763347,0.4394862914862914,"Strengths:
+
+- The paper is well written and clear.
+- The theoretical contribution, Theorem 1, is a nice addition to the empirical results.
+- NatPN performs on par or better than similar prior methods ..."
+zhou|evaluating_the_disentanglement_of_deep_generative_models_through_manifold_topology|ICLR_cc_2021_Conference,True,0,1902,0.019230769230769235,0.35000000000000003,"The paper presents a disentanglement metric to measure the intrinsic properties of a generative model with respect to the factor of variation in the dataset. Toward this, the paper first assumes disen..."
+zhou|evaluating_the_disentanglement_of_deep_generative_models_through_manifold_topology|ICLR_cc_2021_Conference,True,1,2481,0.12450000000000001,0.5363333333333333,"Summary: Introduces unsupervised disentangling metric that measures homeomorphic similarity between submanifolds conditioned on a given factor, and homeomorphic dissimilarity on submanifolds condition..."
+zhou|evaluating_the_disentanglement_of_deep_generative_models_through_manifold_topology|ICLR_cc_2021_Conference,True,2,12229,0.12817258916952173,0.45956984392567196,"# Synopsis of the paper
+
+This paper presents a new model for assessing to what extent a deep
+generative model is disentangled. In contrast to existing methods, this
+paper proposes an approach founded ..."
+zhou|evaluating_the_disentanglement_of_deep_generative_models_through_manifold_topology|ICLR_cc_2021_Conference,True,3,1154,0.170203081232493,0.5983193277310923,"Summary
+
+The paper proposes a novel metric for evaluating disentanglement by taking a manifold-topological perspective on the representations learnt. The key insight is that for a disentangled represe..."
+zhou|evaluating_the_disentanglement_of_deep_generative_models_through_manifold_topology|ICLR_cc_2021_Conference,True,4,2465,0.1712655971479501,0.4409670231729055,"This paper proposes a new metric to quantify disentanglement by leveraging ideas from manifold topology, more precisely the homology of conditional submanifolds. It has a strong theoretical grounding ..."
+pabbaraju|estimating_lipschitz_constants_of_monotone_deep_equilibrium_models|ICLR_cc_2021_Conference,True,0,2217,0.05330550859397014,0.3937588052972669,"This paper analyzes the Lipschitz constant of a recently proposed implicit-depth model, the monotone deep equilibrium model (monDEQ). Simple-form bounds on the Lipschitz constant w.r.t both the inputs..."
+pabbaraju|estimating_lipschitz_constants_of_monotone_deep_equilibrium_models|ICLR_cc_2021_Conference,True,1,7564,0.10536896576812539,0.43037699928456224,"#### Summary
+The authors of this paper derive analytic expressions for the Lipschitz constants (LCs) of monotone deep equilibrium networks (mDEQs) with respect to their inputs and learnable parameters..."
+pabbaraju|estimating_lipschitz_constants_of_monotone_deep_equilibrium_models|ICLR_cc_2021_Conference,True,2,6373,0.09326012529137527,0.4527930402930401,**after rebuttal**: The authors have addressed some of my major concerns in an updated version. for this reason I raise my score to a point where I can recommend acceptance. I now add after-rebuttal c...
+pabbaraju|estimating_lipschitz_constants_of_monotone_deep_equilibrium_models|ICLR_cc_2021_Conference,True,3,1982,0.14787296037296038,0.4251748251748252,This work analyses the Lipschitz constant of monotone Deep Equlibrium models by exploiting the fixed point formulation of the input/output relation. They derive analytical upper bounds to the Lipschit...
+pabbaraju|estimating_lipschitz_constants_of_monotone_deep_equilibrium_models|ICLR_cc_2021_Conference,True,4,2059,0.19339080459770114,0.4304597701149426,The authors consider the problem of estimating the Lipschitz constant of a specific type of network known as a Monotone Deep Equilibrium Model (monDEQ). These models are a recursive model designed suc...
+kim|emergent_communication_under_varying_sizes_and_connectivities|NeurIPS_cc_2021_Conference,True,0,2578,0.15252964426877474,0.4578524374176547,"The signalling game variant proposed in the paper is interesting, in that it has different information requirements than the more common fully observed one. The speaker does not know the target exactl..."
+kim|emergent_communication_under_varying_sizes_and_connectivities|NeurIPS_cc_2021_Conference,True,1,916,-0.010821005917159749,0.49114398422090727,"The paper is well-written and well-organised. 
+
+The problem understudy is an interesting and can be an impactful problem to study. The idea of the paper is not novel and it was studied in previous pap..."
+kim|emergent_communication_under_varying_sizes_and_connectivities|NeurIPS_cc_2021_Conference,True,2,9194,0.042978465271458904,0.4494032453745827,"Overall, this is a fairly well-written paper with a number of interesting findings on how group size effects learned communication protocols in multi-agent environments. However, I also see several we..."
+kim|emergent_communication_under_varying_sizes_and_connectivities|NeurIPS_cc_2021_Conference,True,3,7420,0.05103593096017338,0.46279110059413087,"## Originality, novelty & relevance
+
+The paper addresses a relevant problem by providing a new take on a well-studied referential game setup.
+Although the setup explored in the paper is quite close to..."
+chen|the_decomposition_of_the_higherorder_homology_embedding_constructed_from_the_klaplacian|NeurIPS_cc_2021_Conference,True,0,1847,0.05909090909090908,0.4431818181818182,"
+Clarity:
+Overall, the paper is well written. It manages to remain concise while preserving mathematical rigor (required due to the theoretical content of the paper), and give enlightening interpretat..."
+chen|the_decomposition_of_the_higherorder_homology_embedding_constructed_from_the_klaplacian|NeurIPS_cc_2021_Conference,True,1,7244,0.13403159340659346,0.45730120573870575,"# Summary of the Review
+
+This paper deals with a highly interesting and intriguing subject,
+namely the utility of higher-order Laplacian operators (or Hodge
+Laplacians in general) for data analysis. I..."
+chen|the_decomposition_of_the_higherorder_homology_embedding_constructed_from_the_klaplacian|NeurIPS_cc_2021_Conference,True,2,6212,0.05153038847117794,0.44913324979114444,"**Originality**: I believe this paper makes an important, foundational step in the study of ""spectral topological data analysis"" by obtaining recovery guarantees for a nice homology basis as described..."
+chen|the_decomposition_of_the_higherorder_homology_embedding_constructed_from_the_klaplacian|NeurIPS_cc_2021_Conference,True,3,4738,0.18207521645021646,0.5029928404928405,"Major problems,
+
+1)	The claim that “Analysis of the eigenfunctions of H0 of the graph Laplacian L0 is pivotal in providing guarantees for spectral clustering and community detection algorithms” is not..."
+angelopoulos|uncertainty_sets_for_image_classifiers_using_conformal_prediction|ICLR_cc_2021_Conference,True,0,8970,0.05959517045454546,0.5034821710407646,"=== Summary ===
+
+In this paper, the authors propose a regularized conformal score for use in a conformal prediction framework. This regularizer is motivated by the instabilities of top-p variations on..."
+angelopoulos|uncertainty_sets_for_image_classifiers_using_conformal_prediction|ICLR_cc_2021_Conference,True,1,4723,0.07843537414965986,0.5338775510204082,"##########################################################################
+
+Summary:
+
+ Prediction sets are used to quantify the uncertainty of classification. The naive approach which include the labe..."
+angelopoulos|uncertainty_sets_for_image_classifiers_using_conformal_prediction|ICLR_cc_2021_Conference,True,2,3914,0.14589773862501132,0.5357241748150839,"## Summary
+The paper proposes a new conformalized procedure for computing uncertainty sets in classification tasks. The key feature of the method is that the size of the uncertainty sets are regulariz..."
+angelopoulos|uncertainty_sets_for_image_classifiers_using_conformal_prediction|ICLR_cc_2021_Conference,True,3,2378,0.18616141001855285,0.47013667285095856,This paper proposes a regularized generalization of adaptive prediction sets (APS by Romano et al 2020) that results in smaller prediction sets that still maintain the correct coverage level for stati...
+gan|noisy_agents_selfsupervised_exploration_by_predicting_auditory_events|ICLR_cc_2021_Conference,False,0,3219,0.1808652210884354,0.5101105442176871,"The manuscript proposes a novel method on how to include audio signals as rewards for image-based reinforcement learning (RL) exploration. More specifically, the agent collects audio signals, identifi..."
+gan|noisy_agents_selfsupervised_exploration_by_predicting_auditory_events|ICLR_cc_2021_Conference,False,1,19824,0.0914939373492005,0.45267927491611704,"# Summary
+
+This paper investigates the incorporation auditory events into reinforcement learning. Specifically, it proposes a new algorithm that uses event prediction as an intrinsic reward. This algo..."
+gan|noisy_agents_selfsupervised_exploration_by_predicting_auditory_events|ICLR_cc_2021_Conference,False,2,3965,0.1609681302304254,0.4184420770486345,"Summary:
+This paper proposes a novel type of intrinsic rewards for RL agents based on audio events prediction. A two stage method is proposed that includes sound clustering and auditory event predicti..."
+gan|noisy_agents_selfsupervised_exploration_by_predicting_auditory_events|ICLR_cc_2021_Conference,False,3,3021,0.06397849462365593,0.3989247311827957,"The paper introduces an approach for using auditory event prediction to drive exploration, specifically by using the prediction error of auditory events as a shaping reward which is used along with th..."
+gan|noisy_agents_selfsupervised_exploration_by_predicting_auditory_events|ICLR_cc_2021_Conference,False,4,4056,0.16051251008878134,0.48194108151735277,"**Update**: Other reviewers have pointed out issues with this paper's ablation study. Additionally, it is difficult to trust the empirical results because they are based on only three runs. In light o..."
+gan|noisy_agents_selfsupervised_exploration_by_predicting_auditory_events|ICLR_cc_2021_Conference,False,5,9206,0.11999821484357566,0.3902552773686793,"Summary:
+This work proposes the use of sound prediction as intrinsic reward to guide reinforcement learning (RL) exploration. Sounds are often directly related to causal effects of actions and interac..."
+zhang|bebold_exploration_beyond_the_boundary_of_explored_regions|ICLR_cc_2021_Conference,False,0,6767,0.06140176313048655,0.4612676714538416,"------------------------------------        
+**Summary:**
+
+This paper proposes BeBold, a new definition of intrinsic reward to guide exploration in sparse reward problems. This intrinsic reward combin..."
+zhang|bebold_exploration_beyond_the_boundary_of_explored_regions|ICLR_cc_2021_Conference,False,1,2277,0.05157575757575759,0.441030303030303,"BeBold: Exploration Beyond the boundaries of Explored Regions
+
+The authors address the problem of exploring efficiently for a reinforcement learning agent when the reward function is sparse. They prop..."
+zhang|bebold_exploration_beyond_the_boundary_of_explored_regions|ICLR_cc_2021_Conference,False,2,2752,0.06696969696969697,0.52721706864564,Summary: This paper focuses on exploration with intrinsic rewards and proposes to use the difference of inverse visitation count as the intrinsic rewards. The method outperforms some existing baseline...
+zhang|bebold_exploration_beyond_the_boundary_of_explored_regions|ICLR_cc_2021_Conference,False,3,25227,0.08824983560743052,0.4716803774636054,"**Summary**
+This paper is a presentation of BeBold, a new method using an intrinsic reward for exploration, meant for procedurally generated, episodic environments. The method includes two major compo..."
+zhang|bebold_exploration_beyond_the_boundary_of_explored_regions|ICLR_cc_2021_Conference,False,4,3464,0.10782520325203253,0.49902729384436706,"Summary 
+
+The authors propose a novel intrinsic reward based on the difference of inverse visitation counts for consecutive states. This reward encourages the agent to explore beyond the boundary of a..."
+prat|peril_probabilistic_embeddings_for_hybrid_metareinforcement_and_imitation_learning|ICLR_cc_2021_Conference,False,0,10824,0.08591513347763348,0.5290798761423762,"Summary:
+
+This paper introduces PERIL, a meta RL method that combines demonstration trajectories and trajectories collected by the policy, in order to adapt to a new task. To this end, the authors com..."
+prat|peril_probabilistic_embeddings_for_hybrid_metareinforcement_and_imitation_learning|ICLR_cc_2021_Conference,False,1,11128,0.07821121791594232,0.4723201077138082,"## Summary of the Work
+The work propose a method which allows us to synthesize meta-RL and meta-IL, by pre-training and conditioning a context-based off-policy meta-RL algorithm on imitation data. Str..."
+prat|peril_probabilistic_embeddings_for_hybrid_metareinforcement_and_imitation_learning|ICLR_cc_2021_Conference,False,2,6901,0.11709778194314276,0.47717588253670706,"Summary: This work seeks to efficiently learn new tasks by combining meta-RL and imitation learning (IL). Such a combination is a natural thing to try, as both lines of work improve sample complexity ..."
+prat|peril_probabilistic_embeddings_for_hybrid_metareinforcement_and_imitation_learning|ICLR_cc_2021_Conference,False,3,5987,0.09774187452758881,0.4232898715041572,"## Summary of work
+This work proposes PERIL, a method for combined Meta Imitation Learning and Meta Reinforcement Learning using context-based meta-learning. Given a set of demonstrations, a latent va..."
+ju|stochastic_inverse_reinforcement_learning|ICLR_cc_2021_Conference,False,0,8281,0.017776575276575283,0.44099104599104627,"Summary
+--------
+The paper describes a method for inverse reinforcement learning---called stochastic IRL---that learns a distribution over reward functions. In that sense, the method is similar to Bay..."
+ju|stochastic_inverse_reinforcement_learning|ICLR_cc_2021_Conference,False,1,7331,0.11255135387488321,0.4614507469654528,The paper proposes a novel method for inverse reinforcement learning: inferring a (distribution over) reward functions from a set of expert demonstrations. Prior work has either learned a point-estima...
+ju|stochastic_inverse_reinforcement_learning|ICLR_cc_2021_Conference,False,2,3063,0.03346590909090908,0.46378787878787886,"The authors propose to solve underspecified IRL problem  using an MCEM approach. They claim it is the first succint, robust and transferrable solution and have some results on a Gridworld-like environ..."
+ju|stochastic_inverse_reinforcement_learning|ICLR_cc_2021_Conference,False,3,1977,0.1541666666666667,0.5025,The authors propose an approach to model-based inverse reinforcement learning which estimates a Gaussian mixture model over reward-function parameters. The method uses MCEM and samples reward function...
+ju|stochastic_inverse_reinforcement_learning|ICLR_cc_2021_Conference,False,4,11832,0.026850718065003783,0.405076283504855,"### Summary
+
+The authors proposed inverse reinforcement learning (IRL) algorithm based on Monte Carlo expectation-maximization (MCEM) that maximizes the predictive distribution of trajectories given t..."
+feng|the_remarkable_effectiveness_of_combining_policy_and_value_networks_in_abased_deep_rl_for_ai_planning|ICLR_cc_2022_Conference,False,0,19714,0.09229189385677933,0.42550701948602687,"# Thank you
+
+Thank you for your comments. I see the new manuscript clarified many points.
+Unfortunately, I cannot honestly change my general opinion about the acceptance of the paper.
+The Sokoban part..."
+feng|the_remarkable_effectiveness_of_combining_policy_and_value_networks_in_abased_deep_rl_for_ai_planning|ICLR_cc_2022_Conference,False,1,1576,0.017701863354037266,0.4256728778467909,"Strength: 
+	1. This paper created an abstract model which explains the right- and left- heavy tail issues for best-first search algorithms. 
+	2. Experiments seem to demonstrate the effectiveness of th..."
+feng|the_remarkable_effectiveness_of_combining_policy_and_value_networks_in_abased_deep_rl_for_ai_planning|ICLR_cc_2022_Conference,False,2,6296,0.07356220939554274,0.41240719157385813,"## Strengths
+
+* There are a lot of interesting ideas raised in this work.
+* The topic areas are relevant to ICLR, although the paper may find a larger pool of interested readers in venues like AAAI, I..."
+feng|the_remarkable_effectiveness_of_combining_policy_and_value_networks_in_abased_deep_rl_for_ai_planning|ICLR_cc_2022_Conference,False,3,4765,0.13031746031746028,0.4266349206349206,"This paper empirically studies the behavior of the A* search when it is combined with the DNN heuristic generator (A*+DNN). This paper focuses on the Sokoban domain covering more than 10,000 instances..."
+shi|human_perceptionbased_evaluation_criterion_for_ultrahigh_resolution_cell_membrane_segmentation|ICLR_cc_2021_Conference,False,0,2953,0.18815151515151515,0.5253522727272728,"# pros:
+
+- To the author's and reviewer's best knowledge, this paper includes the largest annotated public EM data set for cell membrane segmentation (in case it is published with this paper). Until n..."
+shi|human_perceptionbased_evaluation_criterion_for_ultrahigh_resolution_cell_membrane_segmentation|ICLR_cc_2021_Conference,False,1,2138,0.030287490287490282,0.49540986790986796,"Strength: (1) This work proposed an ultra-high-resolution image segmentation dataset for the cell membrane, named U-RISC. The proposed U-RISC is the largest annotated Electron Microscopy (EM) dataset ..."
+shi|human_perceptionbased_evaluation_criterion_for_ultrahigh_resolution_cell_membrane_segmentation|ICLR_cc_2021_Conference,False,2,22510,0.07252489963627975,0.41560112016044215,"Summary:
+
+This work presents two contributions towards cell membrane segmentation. First, it introduces a new labelled database for this purpose. The authors claim that this is the largest labelled da..."
+shi|human_perceptionbased_evaluation_criterion_for_ultrahigh_resolution_cell_membrane_segmentation|ICLR_cc_2021_Conference,False,3,1492,0.1120064162028448,0.47738675015460724,This paper presents a large high-resolution cell membrane segmentation dataset and also proposes a new evaluation metric that is more consistent with human perception.  The new metric is called Percep...
+zhu|lia_latently_invertible_autoencoder_with_adversarial_learning|ICLR_cc_2020_Conference,False,0,1869,0.14084101382488481,0.49583973374295964,"The work in the paper is interesting and seems to show some empirical progress on image generation. However, the work in this paper can be seen as adding the losses from GANs and VAEs together to help..."
+zhu|lia_latently_invertible_autoencoder_with_adversarial_learning|ICLR_cc_2020_Conference,False,1,24093,0.10565060066579822,0.4587061562213538,"LIA: Latently Invertible Autoencoder Review
+
+This paper proposes a novel generative autoencoder, and a two-stage scheme for training it. A typical VAE is trained with a variational approximation: duri..."
+zhu|lia_latently_invertible_autoencoder_with_adversarial_learning|ICLR_cc_2020_Conference,False,2,2080,0.03719135802469137,0.40308641975308646,"Summary: 
+
+the authors of this paper propose a two-stage model consisting of a Wasserstein GAN and an autoencoder. The goal is to learn an encoding of data within the GAN framework. 
+The idea is inspi..."
+zhu|lia_latently_invertible_autoencoder_with_adversarial_learning|ICLR_cc_2020_Conference,False,3,663,0.23735795454545455,0.3693181818181818,This paper develops a new generative model called latently invertible autodecoder (LIA). The major aim is to conduct variational inference for VAE and encoding real-world samples for GAN. My understan...
+ye|outofdistribution_generalization_analysis_via_influence_function|ICLR_cc_2021_Conference,False,0,4833,0.1261633178142612,0.47815445560728587,"Summary:
+     This paper tries to understand the following question - a) Given a set of environments - when would we expect an ERM solution to be completely bad in the out of distribution (OOD) genera..."
+ye|outofdistribution_generalization_analysis_via_influence_function|ICLR_cc_2021_Conference,False,1,7963,0.1251712454212454,0.48431410256410284,**OBJECTIVE**: Develop a method to reliably determine 1) if a model will generalize to out-of-distribution (OOD) samples 2) if it is advantageous to use algorithms that explicitly promote OOD generali...
+ye|outofdistribution_generalization_analysis_via_influence_function|ICLR_cc_2021_Conference,False,2,6870,0.1711220238095238,0.4425773809523812,"
+
+=================================
+
+**Update after discussion period**
+
+My feeling is still that the proposed method has a lot of interesting potential, but that the paper still needs some improvemen..."
+ye|outofdistribution_generalization_analysis_via_influence_function|ICLR_cc_2021_Conference,False,3,8316,0.10189140999485827,0.5319964837206216,"Summary
+
+The authors study the problem of out-of-distribution (OoD) generalization. The key question authors seek to answer is when given access to data from multiple training environments, can one on..."
+sun|latent_causal_invariant_model|ICLR_cc_2021_Conference,False,0,13218,0.08057516155342241,0.4941091930843483,"I would like to thank the authors for the interesting work they proposed. I tried to explain my concerns below and I am open to changing my score with their feedback. 
+
+1) My main concern is whether t..."
+sun|latent_causal_invariant_model|ICLR_cc_2021_Conference,False,1,6835,0.06243784786641928,0.5197877241805814,"# Summary of the review
+- The authors make a strong case regarding their approach to causally robust supervised learning. Their contributions are thorough and carefully situated in the relevant subfie..."
+sun|latent_causal_invariant_model|ICLR_cc_2021_Conference,False,2,5560,0.1431603449460592,0.46569951212808347,"### Summary
+
+In this manuscript, the authors introduce a method for supervised learning in an out-of-distribution (o.o.d.) setting.
+
+In particular, the authors consider the case where labelled data pa..."
+sun|latent_causal_invariant_model|ICLR_cc_2021_Conference,False,3,1712,0.0878125,0.44973214285714286,"This paper proposes a VAE based model for learning latent causal factors given data from multiple domains. Similar to [Kingma and Hyv¨arinen, 2020], it utilizes additional labels as supervision signal..."
+sanchez|closed_loop_deep_bayesian_inversion_uncertainty_driven_acquisition_for_fast_mri|ICLR_cc_2020_Conference,False,0,2080,0.11203282828282828,0.47084595959595965,This paper proposes an active data acquisition framework for magnectic resonance imaging. A generative adversarial network is used to estimate the posterior distribution of the latent MRI image in a c...
+sanchez|closed_loop_deep_bayesian_inversion_uncertainty_driven_acquisition_for_fast_mri|ICLR_cc_2020_Conference,False,1,17366,0.05405009709916248,0.45725866812315474,The paper describes a method for accelerating MRI scans by proposing lines in k-space to acquire next. The proposals are based on posterior uncertainty estimates obtained from GAN-based reconstruction...
+sanchez|closed_loop_deep_bayesian_inversion_uncertainty_driven_acquisition_for_fast_mri|ICLR_cc_2020_Conference,False,2,3386,0.06543367346938776,0.32127267573696144,The paper proposes an uncertainty driven acquisition for MRI reconstruction. Contrary to most previous approaches (which try to get best reconstruction for a fixed sampling pattern) the method incorpo...
+sanchez|closed_loop_deep_bayesian_inversion_uncertainty_driven_acquisition_for_fast_mri|ICLR_cc_2020_Conference,False,3,4423,0.009289617486338799,0.471775956284153,"The paper is quite well written and the idea is novel. However, the results are rather weak. The authors present a method to perform adaptive MR compressed sensing, i.e. decide online which readout to..."
+shah|benefits_of_assistance_over_reward_learning|ICLR_cc_2021_Conference,False,0,4198,0.11671174978867287,0.45826289095519884,"Summary:
+This work proposes learning a single control policy for human-in-the-loop learning rather than having a reward learning component and a control component. The key difference is that the actio..."
+shah|benefits_of_assistance_over_reward_learning|ICLR_cc_2021_Conference,False,1,1674,0.11409774436090227,0.393671679197995,"### Overview
+
+The paper addresses the problem of learning from human feedback. It provides an analysis of reward learning---where human feedback is used to extract a task description in the form of a ..."
+shah|benefits_of_assistance_over_reward_learning|ICLR_cc_2021_Conference,False,2,8482,0.013022593844511654,0.3274269109885549,"#### Summary
+
+The submission provides a survey of two paradigms for ‘agents learning from human feedback.’ The two paradigms are unified under a new formalism (assistance games), which subsumes them a..."
+shah|benefits_of_assistance_over_reward_learning|ICLR_cc_2021_Conference,False,3,8415,0.17184263578148465,0.47293472913976536,"UPDATE:
+After extensive discussion with the authors, I'm raising my score to a 7.  
+I believe their revision will adequately address the concerns I've raised.
+I think this paper clearly identifies and..."
+shah|benefits_of_assistance_over_reward_learning|ICLR_cc_2021_Conference,False,4,4353,0.06764690227804983,0.4049827904336103,"------------------------------------------------------------
+Post-rebuttal
+-----------------------------------------------------------
+Given the effort of the authors of improving their manuscript, I ..."
+savarese|winning_the_lottery_with_continuous_sparsification|ICLR_cc_2020_Conference,False,0,1038,0.09269781144781145,0.4805976430976431,This work propose a new iterative pruning methods named Continuous Sparsification. It will continuously prune the current weight until it reaches the target ratio instead of iterative prune the weight...
+savarese|winning_the_lottery_with_continuous_sparsification|ICLR_cc_2020_Conference,False,1,1554,0.10620833333333335,0.4893333333333333,This paper proposes a novel objective function that can be used to jointly optimize a classification objective while at the same time encourage sparsification in a network. The lottery ticket hypothes...
+savarese|winning_the_lottery_with_continuous_sparsification|ICLR_cc_2020_Conference,False,2,24360,0.15626513223841462,0.5036469107652318,"
+To the authors of paper 2504: I have posted a private comment for the reviewer/AC discussion period based on your author responses and your revised paper. I want you to be able to see my full respons..."
+gutiérrezfandiño|persistent_homology_captures_the_generalization_of_neural_networks_without_a_validation_set|ICLR_cc_2022_Conference,False,0,9281,0.07476151264194743,0.4050835215509128,"One merit of the paper is, to put it in very broad terms, the idea of
+applying tools from topological data analysis to the problem of
+understanding generalization in deep neural networks. In principle..."
+gutiérrezfandiño|persistent_homology_captures_the_generalization_of_neural_networks_without_a_validation_set|ICLR_cc_2022_Conference,False,1,1316,0.04411458333333333,0.3905208333333333,"I think the subject of the paper is interesting itself and using PH techniques to discover insights about deep learning models is indeed an interesting topic. However, I find the paper to be still in ..."
+gutiérrezfandiño|persistent_homology_captures_the_generalization_of_neural_networks_without_a_validation_set|ICLR_cc_2022_Conference,False,2,6388,0.06877368516257407,0.41913350367054075,"# Strengths and Weaknesses
+
+## Strengths: 
+- The paper is well written overall (aside for few typos, see Minor comments).
+- Experimental report is extensive given the amount of complementary plots in ..."
+gutiérrezfandiño|persistent_homology_captures_the_generalization_of_neural_networks_without_a_validation_set|ICLR_cc_2022_Conference,False,3,9863,0.0868749556454474,0.4338009190263286,"I enjoyed the ideas presented in this paper; the analysis of
+generalisation performance is a highly relevant and timely, and indeed
+constitutes one of the largest obstacle toward employing machine
+lea..."
+guo|outofdistribution_prediction_with_invariant_risk_minimization_the_limitation_and_an_effective_fix|ICLR_cc_2021_Conference,False,0,3256,0.022916666666666672,0.4533695652173913,"**Summary.** This paper advances generalizable machine learning via addressing a major limitation of invariant risk minimization (IRM). In particular, the author(s) identified and discussed the issue ..."
+guo|outofdistribution_prediction_with_invariant_risk_minimization_the_limitation_and_an_effective_fix|ICLR_cc_2021_Conference,False,1,1845,0.1267543859649123,0.5302631578947368,This paper attacks the problem of OOD learning from the angle of invariant causal feature learning. The key idea is to capture domain invariant causal features and use the extracted causality relation...
+guo|outofdistribution_prediction_with_invariant_risk_minimization_the_limitation_and_an_effective_fix|ICLR_cc_2021_Conference,False,2,10022,0.17001417596488014,0.49295861024734283,"### Summary of Paper
+
+This paper identifies and tries to fix a limitation of the recent work of Invariant Risk Minimization (Arjovsky et al., '19). IRM is a solution framework for the OoD prediction p..."
+guo|outofdistribution_prediction_with_invariant_risk_minimization_the_limitation_and_an_effective_fix|ICLR_cc_2021_Conference,False,3,11334,0.12098781498574891,0.47443323435058976,"Summary:
+In this work, the authors focus on the out-of-distribution generalization problem. The input is dataset from multiple environments and the goal is to learn a model that generalizes well to an..."
+sontakke|causal_curiosity_rl_agents_discovering_selfsupervised_experiments_for_causal_representation_learning|ICLR_cc_2021_Conference,False,0,11303,0.12462214235799139,0.44631526405111316,"#### **Summary**
+
+This paper develops an intrinsic reward to help identify factors of variation within a family of MDPs. This intrinsic reward takes a form of curiosity and is used to develop initial ..."
+sontakke|causal_curiosity_rl_agents_discovering_selfsupervised_experiments_for_causal_representation_learning|ICLR_cc_2021_Conference,False,1,9507,0.035574374079528716,0.4361209294714449,"**Summary**
+
+This paper describes the definition of an intrinsic reward designed to encourage an agent to behave in such a way that they can distinguish between MDPs that have different values of some..."
+sontakke|causal_curiosity_rl_agents_discovering_selfsupervised_experiments_for_causal_representation_learning|ICLR_cc_2021_Conference,False,2,3014,0.20567765567765567,0.5221153846153846,"## Summary
+
+The authors introduce *causal curiosity*, an intrinsic reward that allows an agent to discover causal factors in an environment. The authors run experiment on `Causal World Simulation`  , ..."
+sontakke|causal_curiosity_rl_agents_discovering_selfsupervised_experiments_for_causal_representation_learning|ICLR_cc_2021_Conference,False,3,2463,0.0382077922077922,0.4152987012987014,This paper considers the problem of skill discovery in settings where the data appears to be a Markov Decision Process and part of the state is unobservable. The hidden state variables are interpreted...
+azarian|learned_threshold_pruning|ICLR_cc_2021_Conference,False,0,2538,0.13679971988795517,0.5051120448179272,"This paper proposes soft pruning and soft l0 regularization. 
+
+The soft pruning learns a binarization function based on a sigmoid. I am curious to understand how the algorithm can let some low magnitu..."
+azarian|learned_threshold_pruning|ICLR_cc_2021_Conference,False,1,7508,0.09800637958532693,0.4906864699627858,"## Summary
+
+The paper introduces a new type of soft threshold operator in conjunction with appropriate weight regularization that can be used in the context of neural network pruning to obtain sparse,..."
+azarian|learned_threshold_pruning|ICLR_cc_2021_Conference,False,2,1102,0.06791125541125541,0.5251984126984128,"The paper proposed a new method to prune a neural network. The method is interesting, innovative and effective. It makes it possible to learn tunning parameter via back propagation, hence learn togeth..."
+azarian|learned_threshold_pruning|ICLR_cc_2021_Conference,False,3,14804,0.10774613923348099,0.4946492572125482,"My overall feeling about this paper is that I really liked it. I felt it was clearly written, nice pacing, didn't bombard us with things we already know, nor did it skip over things we don't know abou..."
+du|interpreting_molecule_generative_models_for_interactive_molecule_discovery|ICLR_cc_2022_Conference,False,0,13256,0.10256732313070338,0.467196190611684,"## Overview
+
+This paper addresses an important problem which few prior works have addressed before in the literature. Their rough approach is reasonable. However, I had a lot of questions and doubts, ..."
+du|interpreting_molecule_generative_models_for_interactive_molecule_discovery|ICLR_cc_2022_Conference,False,1,1809,-0.07601010101010103,0.5993265993265994,The paper uses linear models trained on latent dimensions of an existing deep generative model for molecular property prediction. The normal directions of the learned decision boundaries are then used...
+du|interpreting_molecule_generative_models_for_interactive_molecule_discovery|ICLR_cc_2022_Conference,False,2,8582,0.09733016983016979,0.45626158563658553,"### ===== Detailed pros: ===== 
+
+ 
+
+1. Interpreting and dissecting generative models of molecules is an interesting and important direction, and one that so far has not been sufficiently explored. Mor..."
+du|interpreting_molecule_generative_models_for_interactive_molecule_discovery|ICLR_cc_2022_Conference,False,3,2086,0.14772727272727273,0.4143939393939394,My first concern about this study is that there are many methods that have simlar concepts (model-agnostic and does not require re-training of the molecule generative model). Some examples are list be...
+bai|improved_uncertainty_postcalibration_via_rank_preserving_transforms|ICLR_cc_2021_Conference,False,0,15535,0.08934662337662336,0.45485541125541135,"**Justification for Score**
+The paper is missing a thorough literature review and there are many missing citations and comparisons. Overall, unfortunately there are multiple misleading (and sometimes ..."
+bai|improved_uncertainty_postcalibration_via_rank_preserving_transforms|ICLR_cc_2021_Conference,False,1,3999,0.19464726631393298,0.47226505416981607,"Overview: 
+
+This paper proposes a post-calibration technique that is meant to be more powerful than temperature scaling without introducing overfitting. The authors argue that previous attempts to gen..."
+bai|improved_uncertainty_postcalibration_via_rank_preserving_transforms|ICLR_cc_2021_Conference,False,2,2330,0.18282654127481715,0.37261904761904757,"This paper introduces a new post-processing calibration method that can keep classification ranking, like the simple (local) temperature scaling methods, but has larger capacity, comparable to matrix ..."
+bai|improved_uncertainty_postcalibration_via_rank_preserving_transforms|ICLR_cc_2021_Conference,False,3,3830,0.08105386416861825,0.5072716627634661,"**Summary**
+This work proposes a method for calibrating outputs of deep neural networks using higher capacity learning than previously possible. This is accomplished by a “Neural Rank Preserving Trans..."
+zhu|gradient_descent_temporal_differencedifference_learning|ICLR_cc_2021_Conference,False,0,1982,0.05218614718614719,0.46768398268398276,"This paper proposes a variant of the GTD2 algorithm by adding an additional regularization term to the objective function, and the new algorithm is named as Gradient-DD (GDD). The regularization ensur..."
+zhu|gradient_descent_temporal_differencedifference_learning|ICLR_cc_2021_Conference,False,1,6691,0.04508340391492566,0.36559676736307173,"EDIT: After reading the other reviews, the author's responses, and thinking more about the concerns raised, I have increased my score. However, I still recommend rejection because of questions around ..."
+zhu|gradient_descent_temporal_differencedifference_learning|ICLR_cc_2021_Conference,False,2,3991,0.13170793895370167,0.4006060041653262,"### Summary of Contributions
+
+The paper proposes the gradient descent TD difference learning (GDD) algorithm which adds a term to the MSPBE objective to constrain how quickly a value function can chan..."
+zhu|gradient_descent_temporal_differencedifference_learning|ICLR_cc_2021_Conference,False,3,12653,0.06171482363790056,0.3838697200235663,"## Summary of paper
+This paper introduces a novel regularized mean-squared projected bellman objective and corresponding GTD2-like algorithm which minimizes the objective. The paper analytically inves..."
+he|neural_networks_behave_as_hash_encoders_an_empirical_study|ICLR_cc_2021_Conference,False,0,1989,0.022672619047619046,0.4515138888888888,This draft proposes to use the relu activation pattern of the neurons in the neural network as the hash code for the input. Essentially the input features are bucketized into small piecewise linear re...
+he|neural_networks_behave_as_hash_encoders_an_empirical_study|ICLR_cc_2021_Conference,False,1,5117,0.13205871212121215,0.5263013618326119,**Update after rebuttal:** I thank the authors for their detailed responses and the additional experiments. The responses addressed most of my concerns. I noticed that I had the wrong notion of redund...
+he|neural_networks_behave_as_hash_encoders_an_empirical_study|ICLR_cc_2021_Conference,False,2,14645,0.12599254386604988,0.5097303946606736,"**Update after authors' response**
+I am very happy to see the additional results on CIFAR-10, and the layer-wise ablations and other control experiments. To me, these results have shed a lot of light ..."
+he|neural_networks_behave_as_hash_encoders_an_empirical_study|ICLR_cc_2021_Conference,False,3,3482,0.1365,0.48450396825396813,"In this paper, the problem of linear partition in the linear spaces of neural networks with ReLU-like activations is studied. It demonstrates that such a partition exhibits two properties, including d..."
+matusch|evaluating_agents_without_rewards|ICLR_cc_2021_Conference,False,0,2206,0.07657624633431086,0.3388563049853372,"This work studies four task-agnostic metrics for evaluating reinforcement learning agents: human similarity, curiosity, empowerment and information gain. Experiments were conducted with three selected..."
+matusch|evaluating_agents_without_rewards|ICLR_cc_2021_Conference,False,1,3703,0.09081137909709343,0.40898608534322817,"Thanks for this paper. The curiosity and exploration is an important topic for RL research and we need more in-depth analysis of existing methods. The paper as it stands, provide useful, but expected ..."
+matusch|evaluating_agents_without_rewards|ICLR_cc_2021_Conference,False,2,8434,0.12276548672566372,0.4366234723978087,"**Summary**
+
+The goal of this paper is to improve our understanding of reward-agnostic metrics drawn from the literature through comparison with human behaviour and task reward. This paper compares tw..."
+matusch|evaluating_agents_without_rewards|ICLR_cc_2021_Conference,False,3,10602,0.06338634276650806,0.4405647382920111,"------------------------------------        
+**Summary:**
+
+This paper proposes to study three types of intrinsic motivations: curiosity, empowerment and information gain. They propose to compute these..."
+mendonca|metareinforcement_learning_robust_to_distributional_shift_via_model_identification_and_experience_relabeling|ICLR_cc_2021_Conference,False,0,5708,0.12229452054794523,0.42529893622359377,- Summary: this paper proposes a novel meta-RL method that works as a 2-stage pipeline (with the 2nd stage being optional). The first stage does model identification by having a network doing meta-SL ...
+mendonca|metareinforcement_learning_robust_to_distributional_shift_via_model_identification_and_experience_relabeling|ICLR_cc_2021_Conference,False,1,3823,0.11872069754145227,0.4688406300198754,This paper proposes a new meta-RL algorithm containing two main components: 1. Model Identification 2. Experience Relabeling. Model Identification models the next state and reward function condition o...
+mendonca|metareinforcement_learning_robust_to_distributional_shift_via_model_identification_and_experience_relabeling|ICLR_cc_2021_Conference,False,2,4131,0.20077077394150564,0.4933745116671946,The authors propose a novel meta-RL algorithm that can both meta-train and adapt to new tasks in an off-policy way. Multiple ideas are incorporated into the algorithm. Meta-learning parameters for bot...
+mendonca|metareinforcement_learning_robust_to_distributional_shift_via_model_identification_and_experience_relabeling|ICLR_cc_2021_Conference,False,3,10842,0.16341942518634242,0.47076346168451466,"Summary:
+This paper presents MIER, a novel meta-RL method that is designed specifically to be able to deal with out-of-distribution test tasks. The idea is to learn two separate modules: a dynamics/re..."
+zhang|why_flatness_does_and_does_not_correlate_with_generalization_for_deep_neural_networks|ICLR_cc_2022_Conference,False,0,8119,0.008823094223484847,0.42035122646450784,"First, its extremely easy to determine the authors. They self-cite collectively over 50 times if you include the publications where the authors are co-authored. Furthermore, they have the current and ..."
+zhang|why_flatness_does_and_does_not_correlate_with_generalization_for_deep_neural_networks|ICLR_cc_2022_Conference,False,1,1968,0.25504079254079254,0.5307983682983681,**Strength**: This paper is relatively well written and easy to follow. It studies an interesting and important question that characterizes the generalization performance of a trained neural network. ...
+zhang|why_flatness_does_and_does_not_correlate_with_generalization_for_deep_neural_networks|ICLR_cc_2022_Conference,False,2,5119,0.11799472690430135,0.34799207884314265,"Strengths:
+- The empirical observation that Adam and Entropy-SGD could break the correlation between flatness and generalization is interesting.
+- The empirical observation that the Bayesian prior is ..."
+zhang|why_flatness_does_and_does_not_correlate_with_generalization_for_deep_neural_networks|ICLR_cc_2022_Conference,False,3,3996,0.07512820512820513,0.3987179487179487,"There are several recent works, which looked into the connection between generalization and the sharpness of the local minimum. Here, 'sharpness"" is often defined using the spectrum of the Hessian (in..."
+zhang|why_flatness_does_and_does_not_correlate_with_generalization_for_deep_neural_networks|ICLR_cc_2022_Conference,False,4,4923,0.14522357723577234,0.49072831978319786,"## Strengths:
+
+1. In the specific settings considered, the correlation between generalization and the proposed Bayesian prior is extremely strong, and robustly outperforms the flatness measure.
+
+1. Ap..."
+duan|federated_learning_with_decoupled_probabilisticweighted_gradient_aggregation|ICLR_cc_2021_Conference,False,0,10157,0.009945980743394539,0.4307784743991638,"In this work, the authors propose new ways of averaging updates received at the server from a subset of clients in a federated scenario. Specifically the authors aim to address issues arising from the..."
+duan|federated_learning_with_decoupled_probabilisticweighted_gradient_aggregation|ICLR_cc_2021_Conference,False,1,4267,0.09290229885057472,0.4372701149425287,"##########################################################################
+
+Summary:
+ 
+The paper proposed FedDEC, a novel approach to conduct model updates aggregation in federated learning. The main ..."
+duan|federated_learning_with_decoupled_probabilisticweighted_gradient_aggregation|ICLR_cc_2021_Conference,False,2,4657,0.05865182611506142,0.4394378905408317,"1/ Summary
+
+This paper introduces an aggregation mechanism designed for neural networks with batch normalisation layers. This mechanism relies on two parts: probabilistic mixing weights of the loss fu..."
+duan|federated_learning_with_decoupled_probabilisticweighted_gradient_aggregation|ICLR_cc_2021_Conference,False,3,4972,0.03543915343915344,0.3967718454385121,"PAPER SUMMARY
+
+This paper presents a new federated learning scheme for neural network that accounts simultaneously for different layer types and different (heterogeneous) local data distributions. In ..."
+bagatella|temporl_temporal_priors_for_exploration_in_offpolicy_reinforcement_learning|ICLR_cc_2022_Conference,False,0,4133,0.05339703153988869,0.4245439600082457,"The paper is well written and clear. The main contributions are novel, interesting, and well motivated. The experimental results seem informative and in support of the claims made throughout the paper..."
+bagatella|temporl_temporal_priors_for_exploration_in_offpolicy_reinforcement_learning|ICLR_cc_2022_Conference,False,1,1393,0.15882352941176472,0.3910364145658264,"The idea is novel, simple and shows good empirical results. They use a good choice for the baselines and show that their methods outperforms them on environment from the meta-world suite.
+
+On the weak..."
+bagatella|temporl_temporal_priors_for_exploration_in_offpolicy_reinforcement_learning|ICLR_cc_2022_Conference,False,2,1094,-0.008333333333333335,0.5509259259259259,"Strengths:
+1. The paper tackles a difficult but prevalent problem in RL: solving control environments with long horizons and sparse rewards.
+2. The proposed learned priors showed good transfer propert..."
+bagatella|temporl_temporal_priors_for_exploration_in_offpolicy_reinforcement_learning|ICLR_cc_2022_Conference,False,3,4414,0.09272360703812318,0.3942649420472002,"Overall, the empirical results are impressive, but I feel that the potential weakness of the method is neither tested nor discussed.
+
+# Strength
+- S1. The empirical results of the proposed method are ..."
+bagatella|temporl_temporal_priors_for_exploration_in_offpolicy_reinforcement_learning|ICLR_cc_2022_Conference,False,4,1895,0.0214781746031746,0.44542658730158724,The general premise of the paper is that learning priors on actions conditioned on past actions allow the agent to have a reasonable directed behaviour even when the observation space of the data used...
+bagatella|temporl_temporal_priors_for_exploration_in_offpolicy_reinforcement_learning|ICLR_cc_2022_Conference,False,5,3381,0.14026587301587298,0.453420634920635,"The proposed solution is benchmarked against a rather large set of related approaches and it is shown to perform very well, for tasks that differ significantly from the original tasks in particular. I..."
+bagatella|temporl_temporal_priors_for_exploration_in_offpolicy_reinforcement_learning|ICLR_cc_2022_Conference,False,6,7458,0.12303884711779445,0.40096992481203003,"__Strengths__:
+
+1. The paper is well-written and easy to follow.
+
+2. The authors provide an appropriate and concise overview of the most related prior work and its limitations.
+
+3. The proposed idea o..."
+zhang|intrinsically_guided_exploration_in_meta_reinforcement_learning|ICLR_cc_2021_Conference,False,0,4806,0.10211864406779665,0.45562146892655364,"*SUMMARY*
+
+The paper presents a method for efficient task identification to improve adaptation in a meta RL setting. The approach is based on learning an exploration policy to quickly discriminate the..."
+zhang|intrinsically_guided_exploration_in_meta_reinforcement_learning|ICLR_cc_2021_Conference,False,1,5307,0.07930506993006992,0.42636946386946384,"Summary: This paper aims to facilitate meta-reinforcement learning by improving sample efficiency during meta-training as well as adaptation. Towards this goal, the paper proposes to use an intrinsic ..."
+zhang|intrinsically_guided_exploration_in_meta_reinforcement_learning|ICLR_cc_2021_Conference,False,2,11476,0.10044864226682411,0.4331499308772036,"This paper proposes a novel meta-learning method, aimed at solving the following problem: at test time, the agent has N episodes to gather information [exploration phase], and we care about its return..."
+zhang|intrinsically_guided_exploration_in_meta_reinforcement_learning|ICLR_cc_2021_Conference,False,3,2122,0.08921568627450979,0.4360294117647059,"This paper introduces the use of intrinsically motivated exploration in meta-training and adaptation phase in meta Reinforcement Learning. The proposed framework consists of using task-inference, alre..."
+zhang|stochastic_optimization_with_nonstationary_noise_the_power_of_moment_estimation|ICLR_cc_2021_Conference,False,0,4206,0.026902515723270442,0.37423854447439353,"The objective of the paper is to provide a theoretical justification for the value of using adaptive learning steps. The paper presents two results. The first is essentially of theoretical interest, a..."
+zhang|stochastic_optimization_with_nonstationary_noise_the_power_of_moment_estimation|ICLR_cc_2021_Conference,False,1,2068,0.16180803571428573,0.3359821428571428,This paper studies gradient-based stochastic optimization algorithms which incorporate (estimates of) the noise statistics in the adaptive stepsize design. Starting from the standard analysis of SGD w...
+zhang|stochastic_optimization_with_nonstationary_noise_the_power_of_moment_estimation|ICLR_cc_2021_Conference,False,2,13051,0.1056459686147186,0.441892709563164,"## Summary
+
+The authors provide a new analysis of SGD and versions of RMSprop, taking into account possible non-stationarity of the gradient noise. In particular, the authors propose. 
+(i) the converg..."
+zhang|stochastic_optimization_with_nonstationary_noise_the_power_of_moment_estimation|ICLR_cc_2021_Conference,False,3,4322,0.0681662087912088,0.48234890109890105,This paper studies the problem of stochastic optimization where the gradient noise process is non-stationary. Based on a general convergence results based on a general sequence for the second moments ...
+pritz|jointlytrained_stateaction_embedding_for_efficient_reinforcement_learning|ICLR_cc_2021_Conference,False,0,3918,0.10618669690098262,0.3962698412698412,Learning on environments with large state-action spaces can be difficult. This paper addresses this issue by learning a joint state-action embedding and learn an internal policy(\pi_i) on this embedde...
+pritz|jointlytrained_stateaction_embedding_for_efficient_reinforcement_learning|ICLR_cc_2021_Conference,False,1,2912,0.10791396103896102,0.4514378478664191,The paper presents a method to take advantage of joint state-action representation. It proposes to use an environment model to obtain embeddings for state and action and then such representation shoul...
+pritz|jointlytrained_stateaction_embedding_for_efficient_reinforcement_learning|ICLR_cc_2021_Conference,False,2,3131,0.09611416361416361,0.516309523809524,"### Summary
+The paper proposes a method to jointly learn: (a) a latent state embedding; (b) a latent action embedding; (c) a state transition model; and (d) an RL policy.  The latent models should all..."
+pritz|jointlytrained_stateaction_embedding_for_efficient_reinforcement_learning|ICLR_cc_2021_Conference,False,3,5816,0.044057067271352994,0.3773431594860165,"This paper explores the idea of using state and action embeddings for more scalable learning. The idea has merit so I encourage the authors to continue working in this direction, but unfortunately the..."
+pritz|jointlytrained_stateaction_embedding_for_efficient_reinforcement_learning|ICLR_cc_2021_Conference,False,4,7796,0.0777517361111111,0.3749847056878306,"The paper proposes a framework of jointly learning a state and action embedding using the model of the environment, eventually using those embeddings to learn a parameterized control policy using stan..."
+wang|languagemediated_objectcentric_representation_learning|ICLR_cc_2021_Conference,False,0,8834,0.1248655361425146,0.4096900281972225,"### Summary
+
+This paper proposes to combine the neuro-symbolic concept learner for visual reasoning from language (NS-CL; Mao et al., 2019) with recent unsupervised approaches to learning object-centr..."
+wang|languagemediated_objectcentric_representation_learning|ICLR_cc_2021_Conference,False,1,2307,0.12814942528735632,0.4414072249589492,This paper proposed an interesting idea that uses language to learn the concept and aid downstream tasks such as segmentation and referential expression interpretation. The authors combine the unsuper...
+wang|languagemediated_objectcentric_representation_learning|ICLR_cc_2021_Conference,False,2,4110,0.11684501262626266,0.4132565235690235,Focus of the work: The paper tries to tackle the problem of learning object centric representations using language. The authors note that most of the previous work which tries to use language  assume ...
+wang|languagemediated_objectcentric_representation_learning|ICLR_cc_2021_Conference,False,3,8309,0.14610139089305754,0.46773806183528416,"=Summary
+The paper proposes a framework for object-centric representation learning with additional language supervision such as e.g. questions and answers, denoted as Language-mediated, Object-centric..."
+jeon|acoustic_neighbor_embeddings|ICLR_cc_2021_Conference,False,0,2819,0.20193972693972695,0.4878149628149628,This paper proposes a new approach to learn acoustic word embedding by adapting stochastic neighbor embedding (SNE) to sequential inputs. It learns both the acoustic embeddings and text embeddings fro...
+jeon|acoustic_neighbor_embeddings|ICLR_cc_2021_Conference,False,1,3210,0.21688973063973063,0.45193181818181816,"In this work, the authors propose a new training method to learn acoustic embeddings by simultaneously training two encoder networks, one for speech (f) and one for text (g), such that the resulting e..."
+jeon|acoustic_neighbor_embeddings|ICLR_cc_2021_Conference,False,2,5274,0.12828616856394634,0.4474030427734133,"### Overview:
+
+This paper proposes a new acoustic word embedding approach, where acoustic and text embeddings are jointly learned. The text encoder takes either phonemes or characters as input. The no..."
+jeon|acoustic_neighbor_embeddings|ICLR_cc_2021_Conference,False,3,6954,0.13612208162208164,0.46002842836176155,"While word embedding are very popular and useful for NLP tasks, in speech recognition acoustic embedding plays the same important role (for example to perform query search with the audio recordings). ..."
+jeon|acoustic_neighbor_embeddings|ICLR_cc_2021_Conference,False,4,5165,0.13622693096377306,0.3851883496620338,"Summary:
+
+This work adapts stochastic neighbor embedding (SNE) to acoustic segments to learn “acoustic neighbor embeddings” (ANE), which are fixed dimensional embeddings of variable-length speech. The..."
+sun|improving_learning_to_branch_via_reinforcement_learning|ICLR_cc_2021_Conference,False,0,1345,0.1666347687400319,0.5257416267942583,"
+### Summary
+
+The paper proposes a model for *variable selection* in *Mixed Integer Programming (MIP)* solvers. While this problem is clearly a sequential decision making task, modeling it as an MDP i..."
+sun|improving_learning_to_branch_via_reinforcement_learning|ICLR_cc_2021_Conference,False,1,2928,0.26023651145602367,0.48056963361841404,"The paper proposes a method of choosing variables for branching in branch and bound approaches to MIP solving. The approach is based on reinforcement learning.
+
+The paper presents an adequate overview..."
+sun|improving_learning_to_branch_via_reinforcement_learning|ICLR_cc_2021_Conference,False,2,2212,0.1128968253968254,0.4771825396825397,"### Summary
+
+The authors present a way of achieving high-quality variable-selection decisions inside a branch-and-bound algorithm for MIP Solving. The learning happens via evolutionary search with a b..."
+sun|improving_learning_to_branch_via_reinforcement_learning|ICLR_cc_2021_Conference,False,3,16837,0.0714391164391164,0.4828896578255555,"###############################################################################
+
+Summary
+
+The paper presents a novel method for learning branching strategies within branch-and-bound solvers, which con..."
+greenewald|kmixup_regularization_for_deep_learning_via_optimal_transport|ICLR_cc_2022_Conference,False,0,3712,0.042659402744148506,0.4713861985472156,"Major comments:
+
+-- Proposition 1 and Theorem 1's implications are unclear. Does this mean that k-mixup with large k is closer to ""on-manifold mixup"" such as SMOTE?  For instance, see ""[Chawla et al. ..."
+greenewald|kmixup_regularization_for_deep_learning_via_optimal_transport|ICLR_cc_2022_Conference,False,1,1057,0.29117647058823526,0.3784313725490196,"Pros: 
+- This work is well-motivated and well-written.
+- Theoretical study supports the claim of the paper (as k increases, the vicinal samples better reflect the local structure of the dataset).
+- Ex..."
+greenewald|kmixup_regularization_for_deep_learning_via_optimal_transport|ICLR_cc_2022_Conference,False,2,6859,0.10199799196787147,0.4775368139223561,"Description: The paper explains well the method and it can be reproduced easily in my opinion. However, I find it hard to fully understand how they build the entire minibatches of data they use (see q..."
+greenewald|kmixup_regularization_for_deep_learning_via_optimal_transport|ICLR_cc_2022_Conference,False,3,1884,0.16053732303732304,0.5873069498069498,This paper shows some nice improvements on low-dimensional toy datasets from using optimal transport to select examples from two different batches to interpolate.  The improvements on larger datasets ...
+greenewald|kmixup_regularization_for_deep_learning_via_optimal_transport|ICLR_cc_2022_Conference,False,4,9691,0.1507280219780219,0.4508090307128768,"-Strengths:
+
+1. This paper is generally well-written and well-organized, making it easy to understand.
+
+2. The authors did many experiments in various settings. They used neural networks with differen..."
+prince|calfads_latent_factor_analysis_of_dynamical_systems_in_calcium_imaging_data|ICLR_cc_2021_Conference,False,0,3570,0.05760971055088702,0.5096872082166201,"------------- UPDATE FOLLOWING DISCUSSION -------------
+
+The authors were responsive and suggested a series of updates to address the concerns raised here. I find the inclusion of a theory section val..."
+prince|calfads_latent_factor_analysis_of_dynamical_systems_in_calcium_imaging_data|ICLR_cc_2021_Conference,False,1,6207,0.16195780243148666,0.5121262801525956,"This paper, as I understand it, extends a very nice method for Latent Factor Analysis of Dynamical Systems (LFADS) from spike train data to calcium imaging data.  I am familiar with the LFADS paper, a..."
+prince|calfads_latent_factor_analysis_of_dynamical_systems_in_calcium_imaging_data|ICLR_cc_2021_Conference,False,2,7458,0.09220953649525075,0.49035839557268135,"This submission extends a previous nonlinear data analysis method ( Latent Factor Analysis of Dynamical Systems, LFADS) to deal with the calcium imaging data (CaLFADS). 
+
+Quality: Developing appropria..."
+prince|calfads_latent_factor_analysis_of_dynamical_systems_in_calcium_imaging_data|ICLR_cc_2021_Conference,False,3,5965,0.16086324786324785,0.4607136752136753,"##########################################################################
+
+Summary: 
+
+Traditionally, the problem of disentangling neural activity from calcium dynamics *and* inferring latent variable..."
+zhang|prototype_recalls_for_continual_learning|ICLR_cc_2020_Conference,False,0,11178,0.05224785566400475,0.45248570442669833,"The proposed method addresses continual learning, by learning a mapping from the input space to an embedding space, and employing a loss that encourages clustering the embeddings by class (and task?) ..."
+zhang|prototype_recalls_for_continual_learning|ICLR_cc_2020_Conference,False,1,3320,0.03965034965034965,0.4236065786065786,Paper proposes a method for continual learning. The method is based on the learning of a metric space where classes are represented by prototypes in this space. To prevent forgetting the method propos...
+zhang|prototype_recalls_for_continual_learning|ICLR_cc_2020_Conference,False,2,8639,0.040355054302422734,0.4706063770537454,"Paper summary:
+This paper proposes a method for continual learning/few-shot learning which involves (1) putting class prototypes in a replay buffer, at test time computing the distance to these protot..."
+mandyam|nested_policy_reinforcement_learning_for_clinical_decision_support|ICLR_cc_2022_Conference,False,0,8036,0.20447679071628647,0.4898959583833533,"Strengths:
+- The challenge of being able to identify shared problem structure between subgroups and leverage that information to improve sample efficiency in reinforcement learning is an important and..."
+mandyam|nested_policy_reinforcement_learning_for_clinical_decision_support|ICLR_cc_2022_Conference,False,1,3939,0.17597718253968253,0.5406316137566138,"### **Strengths**
+- Exposition is clear and easy to follow. 
+- Simulated experiments on CarPole are extensive and seek to answer various interesting research questions that justify the usefulness of t..."
+mandyam|nested_policy_reinforcement_learning_for_clinical_decision_support|ICLR_cc_2022_Conference,False,2,646,0.029017857142857147,0.46098214285714284,"Pros:
+- A simple approach to account for a structured and imbalanced data when learning off-policy RL
+- NFQI works well in the case of extreme imbalance between the foreground and background environme..."
+mandyam|nested_policy_reinforcement_learning_for_clinical_decision_support|ICLR_cc_2022_Conference,False,3,10504,0.0992199866480442,0.46527171669258016,"*Strengths*
+---
+
+The paper nicely outlines the setting for NFQI. It's clear to understand how the Nested MDPs are modeled and where they may be found in the real world. Concerns about novelty and the ..."
+fotiadis|disentangled_generative_models_for_robust_dynamical_system_prediction|ICLR_cc_2022_Conference,False,0,5429,0.07954545454545456,0.43744588744588747,"Pros:
+- A relevant problem in dynamical VAEs that is sufficiently motivated in the paper.
+- Empirical experiments on three problems: LV, video pendulum and the three-body problem. Demonstrate long ter..."
+fotiadis|disentangled_generative_models_for_robust_dynamical_system_prediction|ICLR_cc_2022_Conference,False,1,2275,0.1080672268907563,0.5565219421101775,"- The novelty of this work may be not enough for ICLR acceptance standards in that the authors applied existing VAEs with minor modifications to known problems.
+- I think the comparison with unsupervi..."
+fotiadis|disentangled_generative_models_for_robust_dynamical_system_prediction|ICLR_cc_2022_Conference,False,2,9820,0.08084956709956707,0.44459956709956716,"## Contribution
+
+The tackled problem of out-of-distribution generalization for the forecasting of dynamical systems is relevant and valuable to the community, as motivated in the paper. Models that ge..."
+fotiadis|disentangled_generative_models_for_robust_dynamical_system_prediction|ICLR_cc_2022_Conference,False,3,1173,0.2401515151515152,0.42727272727272736,"**Strengths:**
+* Clear statement of the underlying hypothesis being tested
+* Clear presentation of the results and supporting information
+* Extensive sweeps over hyperparameters
+
+**Weaknesses:**
+* Imp..."
+fotiadis|disentangled_generative_models_for_robust_dynamical_system_prediction|ICLR_cc_2022_Conference,False,4,4398,0.13222222222222224,0.4551927437641723,"- My main issue is the limited novelty of the proposed method. This method is a straightforward extension of the unsupervised disentangled state-space model (Miladinovic et al.) to a supervised one, w..."
+brando|chepan_constrained_blackbox_uncertainty_modelling_with_quantile_regression|ICLR_cc_2021_Conference,False,0,5700,0.0877401712211839,0.45116803028195435,"-------------------
+# Update
+
+After reading the updated version of the paper, I think my main issues with presentation have been addressed. I now see this work as introducing a relatively niche proble..."
+brando|chepan_constrained_blackbox_uncertainty_modelling_with_quantile_regression|ICLR_cc_2021_Conference,False,1,1897,0.07928030303030302,0.4341477272727272,"This paper presents an approach to model aleatoric uncertainty for the black-box model, through the combination of Chebyshev polynomial approximation and quantile loss. The method seems novel to the p..."
+brando|chepan_constrained_blackbox_uncertainty_modelling_with_quantile_regression|ICLR_cc_2021_Conference,False,2,2963,0.025846354166666665,0.4847284226190477,"This paper considers the problem of uncertainty estimation and it proposes to compute quantiles of a black-box predictor using Chebyshev-interpolated quantile regression, where the interpolation param..."
+brando|chepan_constrained_blackbox_uncertainty_modelling_with_quantile_regression|ICLR_cc_2021_Conference,False,3,9137,0.00954246370913038,0.44050841134174473,"## Summary / Weaknesses
+
+I have to confess that I found the paper to be extremely confusing. It is clear that the submission is still several edits away from a version that can be published.
+
+As far a..."
+brando|chepan_constrained_blackbox_uncertainty_modelling_with_quantile_regression|ICLR_cc_2021_Conference,False,4,3228,0.07120215311004785,0.5101076555023925,"This paper proposes a novel approach to modeling uncertainty, as an layer added-on to an otherwise black-box system. The ChePAN uses a neural network to estimate per-quantile roots of a chebyshev poly..."
+lan|uncovering_the_impact_of_hyperparameters_for_global_magnitude_pruning|ICLR_cc_2021_Conference,False,0,4070,0.21089498299319726,0.4677721088435374,"# Summary
+
+This paper evaluates explicitly decoupling the hyperparameters (specifically, learning rate) used to find pruning masks from those used to train pruned networks, finding that for global mag..."
+lan|uncovering_the_impact_of_hyperparameters_for_global_magnitude_pruning|ICLR_cc_2021_Conference,False,1,8652,0.0680952380952381,0.4119771428571428,"## Summary
+
+The paper studies the effect of different learning rates on finding performant pruning masks that can be applied to train a sparsified neural network in a lottery-ticket-style framework (i..."
+lan|uncovering_the_impact_of_hyperparameters_for_global_magnitude_pruning|ICLR_cc_2021_Conference,False,2,5424,0.0928673703158239,0.4094905981761654,"##########################################################################
+
+Summary:
+
+In the lottery ticket hypothesis's general framework, network pruning's two phases of training (before and after t..."
+lan|uncovering_the_impact_of_hyperparameters_for_global_magnitude_pruning|ICLR_cc_2021_Conference,False,3,4727,0.1940120802620803,0.40602375102375104,"### Summary:
+The authors propose to use a different learning rate (LR) when fine-tuning a pruned model (LR_eval) than the learning rate used for the original training (LR_find). They empirically demon..."
+kim|proper_measure_for_adversarial_robustness|ICLR_cc_2021_Conference,False,0,10409,0.08759111855886052,0.47687261663068115,"This paper proposes a new measure called ""genuine adversarial accuracy"" for adversarial robustness of a classifier. The key idea is that 1) they calculate robust accuracy when the perturbation norm is..."
+kim|proper_measure_for_adversarial_robustness|ICLR_cc_2021_Conference,False,1,2792,0.08536324786324787,0.4528133903133903,The authors study the question of adversarially robust classification---classifying inputs under worst-case norm-bounded corruptions. The authors argue that the standard notion of robust accuracy is i...
+kim|proper_measure_for_adversarial_robustness|ICLR_cc_2021_Conference,False,2,1911,0.09598214285714286,0.5108630952380953,"The paper introduces a novel metric for measuring adversarial accuracy of machine learning models, dubbed genuine adversarial accuracy. This is motivated by standard adversarial accuracy favouring in ..."
+kim|proper_measure_for_adversarial_robustness|ICLR_cc_2021_Conference,False,3,7720,0.03233657658414941,0.43759064290617705,"Summary:
+
+The paper revisits previously known definitions of ""adversarial accuracy"" (and its complement: adversarial risk) which captures the accuracy (and risk) of learning models under adversarial p..."
+zhang|boosting_onepoint_derivativefree_online_optimization_via_residual_feedback|ICLR_cc_2021_Conference,False,0,2809,0.11676349965823653,0.5253018910913646,"This manuscript considers online zeroth order optimization and it develops a gradient estimator based on one query per function. In particular, the proposed method mimics two-point estimators by evalu..."
+zhang|boosting_onepoint_derivativefree_online_optimization_via_residual_feedback|ICLR_cc_2021_Conference,False,1,14537,0.0785131473464807,0.4579747474747473,"This paper proposes a zeroth-order (derivative-free) algorithm for online stochastic optimization problems. The objective is to find a sequence of actions $x_0,\dots,x_{T-1}$ minimizing the expected r..."
+zhang|boosting_onepoint_derivativefree_online_optimization_via_residual_feedback|ICLR_cc_2021_Conference,False,2,2762,0.06946622559830107,0.47246453755887724,"1. Paper contribution summary
+    This paper proposes a new one-point zeroth-order gradient estimation method for online optimization. Comparing to previous methods in the same scenario, this paper's ..."
+zhang|boosting_onepoint_derivativefree_online_optimization_via_residual_feedback|ICLR_cc_2021_Conference,False,3,2677,0.10544786096256685,0.35504679144385026,"Summary:
+The paper considers online optimization with zero-order oracle. Motivated by nonstationarity of the objective function, impracticality is underlined for the two-point feedback approach. Inste..."
+young|neurosymbolic_deep_generative_models_for_sequence_data_with_relational_constraints|ICLR_cc_2021_Conference,False,0,3339,0.1627604166666667,0.4156622023809525,"This paper proposes a neural-symbolic deep generative model to generate music and poems. Compared to other natural language sentence generation tasks, songs and poems usually require some structural c..."
+young|neurosymbolic_deep_generative_models_for_sequence_data_with_relational_constraints|ICLR_cc_2021_Conference,False,1,2022,0.15333333333333332,0.5530555555555556,"# Overall summary
+This paper proposes a generative model for sequential data structured which uses latent relational constraints and conditions upon them to generate the actual sequence.  The authors ..."
+young|neurosymbolic_deep_generative_models_for_sequence_data_with_relational_constraints|ICLR_cc_2021_Conference,False,2,13104,0.0877578344087778,0.45930683746721485,"### Summary
+
+This paper proposes an approach for generating sequences that possess high-level structure, and in particular structure that can be expressed using hand-crafted symbolic relations. Given ..."
+young|neurosymbolic_deep_generative_models_for_sequence_data_with_relational_constraints|ICLR_cc_2021_Conference,False,3,4312,0.17171161616161612,0.3792487734487734,"**Summary**
+
+This paper presents a novel method of incorporating structural and relational constraints into the generative process of sequences. This approach is explored in both the music and poetry ..."
+chen|redefining_the_selfnormalization_property|ICLR_cc_2021_Conference,False,0,8738,0.09254384301829559,0.48691819129775343,"# Update
+
+I thank the authors for extensive replies and updates to the paper. Most of my questions are answered, and the paper quality is substantially improved. I would not be opposed if other review..."
+chen|redefining_the_selfnormalization_property|ICLR_cc_2021_Conference,False,1,4011,0.10987554112554117,0.4669264069264068,"In this paper, the authors propose a new definition for the self-normalization property of a network. Using this definition, the authors propose two new activation functions: sSELU and lSELU. Performa..."
+chen|redefining_the_selfnormalization_property|ICLR_cc_2021_Conference,False,2,4303,0.09026269185360095,0.3902587563951201,"Summary: The authors propose variants of the SELU activation 
+function that yield a stronger self-normalization property. The 
+analysis in done using mean field theory with several
+assumptions on the ..."
+chen|redefining_the_selfnormalization_property|ICLR_cc_2021_Conference,False,3,5713,0.032773109243697474,0.4184873949579831,"## Summary 
+
+The paper proposes two modifications to SELU activation function to improve it with regards to preserving forward-backward signal propagation in neural networks. The work builds on top of..."
+tang|what_about_taking_policy_as_input_of_value_function_policyextended_value_function_approximator|ICLR_cc_2021_Conference,False,0,4441,0.1682105142332415,0.35998622589531687,"Summary 
+
+The paper proposes to learn a value function that takes as input both a state and a policy embedding (PeVFA), which is used to design a new version of a generalized policy iteration (GPI) al..."
+tang|what_about_taking_policy_as_input_of_value_function_policyextended_value_function_approximator|ICLR_cc_2021_Conference,False,1,10030,0.034522275969644405,0.4496533291270133,"Summary:
+
+The authors propose PeVFA: a value function able to evaluate the expected return of multiple policies. They do so by extending the conventional value function, allowing it to receive as inpu..."
+tang|what_about_taking_policy_as_input_of_value_function_policyextended_value_function_approximator|ICLR_cc_2021_Conference,False,2,1693,0.1137112887112887,0.43242590742590753,The paper conditions the value function on a representation of the policy. The representation can be based on a batch of state-action pairs or based on the policy filters. When conditioning on the rep...
+tang|what_about_taking_policy_as_input_of_value_function_policyextended_value_function_approximator|ICLR_cc_2021_Conference,False,3,6557,0.10582732082732083,0.44638868847202173,"This work proposes an interesting idea of using the policy as an input to the value function. This is an interesting idea, moving away from the conventional approaches, and proposing to evaluate the v..."
+zhang|scheduled_intrinsic_drive_a_hierarchical_take_on_intrinsically_motivated_exploration|ICLR_cc_2020_Conference,False,0,6733,0.08977161154996205,0.47164889234476864,"Summary:
+
+This paper proposes the use of a controller that selects whether to act according to a policy trained to maximize an intrinsic reward or a different policy trained to maximize the extrinsic ..."
+zhang|scheduled_intrinsic_drive_a_hierarchical_take_on_intrinsically_motivated_exploration|ICLR_cc_2020_Conference,False,1,2647,0.16056835637480799,0.5211981566820276,Summary: A very nice study on the benefits of successor feature control as an intrinsic drive for hard exploration problems. The work builds nicely on previous work on using SF for exploration and pro...
+zhang|scheduled_intrinsic_drive_a_hierarchical_take_on_intrinsically_motivated_exploration|ICLR_cc_2020_Conference,False,2,9818,0.13603548229548226,0.46051833943833964,"
+## Summary
+
+This paper proposes a novel intrinsic reward for exploration called SFC (successor feature control), to deal with sparse-reward and hard-exploration task. The main idea of SFC is to provi..."
+zhang|scheduled_intrinsic_drive_a_hierarchical_take_on_intrinsically_motivated_exploration|ICLR_cc_2020_Conference,False,3,3466,0.1340430402930403,0.40011446886446883,"This paper tackles the problem of how to integrate intrinsic rewards most effectively, in the episodic sparse reward setting. It has two main technical contributions. The first is Scheduled Intrinsic ..."
+li|learning_lagrangian_fluid_dynamics_with_graph_neural_networks|ICLR_cc_2021_Conference,False,0,2696,0.10412261904761903,0.46258968253968263,"The paper deals with the prediction of 3D Lagrangian Fluid Simulations. Therefore the problem is divided into 3 subproblems, oriented on numerical simulations. An advection part, where the acceleratio..."
+li|learning_lagrangian_fluid_dynamics_with_graph_neural_networks|ICLR_cc_2021_Conference,False,1,6847,0.08426045174756516,0.43021553475161717,"### Summary
+The paper presents a method for learning Lagrangian fluid dynamics from MPS data. By injecting domain knowledge, and separately training subcomponents of the solver, it achieves low error ..."
+li|learning_lagrangian_fluid_dynamics_with_graph_neural_networks|ICLR_cc_2021_Conference,False,2,4761,0.08437439753229231,0.4481885000963948,"Summary:
+This paper presents a graph neural network approach specialized for Lagrangian fluid simulation.
+Instead of an end-to-end approach a multi-step solution is proposed which divides the computat..."
+li|learning_lagrangian_fluid_dynamics_with_graph_neural_networks|ICLR_cc_2021_Conference,False,3,8321,0.08878256213483489,0.4222772555727102,"The authors propose a learned model specialized on learning Lagrangian fluid dynamics for incompressible fluids. The model is a hybrid between a simulator with explicit advection, collision and pressu..."
+hill|latent_space_semisupervised_time_series_data_clustering|ICLR_cc_2021_Conference,False,0,1992,0.07281212121212122,0.41827692307692305,"Summary:
+
+This paper proposes a semi-supervised architecture for clustering time-series data based on Convolutional Autoencoders (AEs). The model combines the regular reconstruction loss usually emplo..."
+hill|latent_space_semisupervised_time_series_data_clustering|ICLR_cc_2021_Conference,False,1,1527,0.05,0.5465277777777777,"The paper presents an autoencoder-based approach for semi-supervised time-series clustering. Specifically, the paper exploits convolutional autoencoder (CAE) and integrates internal validity indexes t..."
+hill|latent_space_semisupervised_time_series_data_clustering|ICLR_cc_2021_Conference,False,2,1207,0.26125,0.5454166666666667,"This paper benchmarked three different existing losses, DB/Propotype/Sihouette, on time series clustering. Although there is no technique innovation, this is an interesting topic and the results look ..."
+hill|latent_space_semisupervised_time_series_data_clustering|ICLR_cc_2021_Conference,False,3,17815,0.0570219744024092,0.44770385532342016,"Disclaimer: I am not an expert in the time-series domain, although I did some literature review while performing this review.
+
+#####################################
+Summary:
+The work investigates semi..."
+xiong|learning_to_remember_from_a_multitask_teacher|ICLR_cc_2020_Conference,False,0,8936,0.09588455898939771,0.4511013717465331,"###  Summary
+
+- The paper demonstrates that neural networks that appear to have forgotten an old task still contain useful information of that task in their representation layers. 
+- The paper propose..."
+xiong|learning_to_remember_from_a_multitask_teacher|ICLR_cc_2020_Conference,False,1,3736,0.12060002838691365,0.4770300191611666,"Summary:
+This paper explores learning without forgetting / the online learning setting. They employ a novel meta-learned learning algorithm to this end.
+
+Writing:
+For the most part the writing was cle..."
+xiong|learning_to_remember_from_a_multitask_teacher|ICLR_cc_2020_Conference,False,2,9635,0.12809152127333945,0.49692221919494634,Summary: This paper introduces a variation on measuring catastrophic forgetting in sequential learning at the representation level and attempts to resolve forgetting issue with the help of a meta-lear...
+lingam|effective_polynomial_filter_adaptation_for_graph_neural_networks|ICLR_cc_2022_Conference,False,0,1021,0.021428571428571432,0.4857142857142857,"
+Strength
+- The proposed architecture is well-motivated.
+- The ablation study is extensive.
+
+Weakness
+- There are a lot of hyper-parameters to tune. ( The number of partitions, which can be interprete..."
+lingam|effective_polynomial_filter_adaptation_for_graph_neural_networks|ICLR_cc_2022_Conference,False,1,15511,0.07536144578313252,0.4815261044176708,"This paper focuses on the task of node classification (semi-supervised learning) in heterophilic graphs. The authors identify that low-pass filter-based GNNs perform poorly on heterophilic graphs, pre..."
+lingam|effective_polynomial_filter_adaptation_for_graph_neural_networks|ICLR_cc_2022_Conference,False,2,3498,0.19302380952380954,0.4646336996336997,"I found this paper enjoyable to read, and appreciated the authors' approach to the filter design problem.
+Although the goal of the paper is to develop methods for node classification with graph neural..."
+lingam|effective_polynomial_filter_adaptation_for_graph_neural_networks|ICLR_cc_2022_Conference,False,3,2192,0.1101410934744268,0.45881834215167555,"Strengths:
+1) It is natural to utilize the piece-wise polynomial to learn a graph filter on different subsets of the spectrum.
+2) The authors demonstrate that the sum of the polynomials approach is mo..."
+fanthomme|stable_cognitive_maps_for_path_integration_emerge_from_fusing_visual_and_proprioceptive_sensors|ICLR_cc_2022_Conference,False,0,3065,0.01686991869918698,0.43475609756097566,"Pro:
+- Apart from some confusion with the terminology in the introduction, the paper is clear to read and there is an abundance of analysis performed. 
+- The idea of learning state that encode the abs..."
+fanthomme|stable_cognitive_maps_for_path_integration_emerge_from_fusing_visual_and_proprioceptive_sensors|ICLR_cc_2022_Conference,False,1,4270,0.04267886537330981,0.47614070154810906,"In principle, a study of this type  is well suited to ICLR, and I think some of the analysis of internal dynamics in particular could be interesting. However the manuscript was difficult to follow at ..."
+fanthomme|stable_cognitive_maps_for_path_integration_emerge_from_fusing_visual_and_proprioceptive_sensors|ICLR_cc_2022_Conference,False,2,2069,0.011359126984126977,0.41453373015873013,"#### Strengths
+
+- The design and motivation of the proposed method is well grounded in cognitive science, which is quite interesting.
+- The paper is well written, and there are sufficient details abou..."
+fanthomme|stable_cognitive_maps_for_path_integration_emerge_from_fusing_visual_and_proprioceptive_sensors|ICLR_cc_2022_Conference,False,3,3680,0.10144665461121159,0.40105485232067506,The system relies on three losses; the path integration loss and the losses for the direct and inverse models respectively. The most interesting contribution is the gating network that selects either ...
+fanthomme|stable_cognitive_maps_for_path_integration_emerge_from_fusing_visual_and_proprioceptive_sensors|ICLR_cc_2022_Conference,False,4,9126,0.09369426869426868,0.3903272653272653,"### Main Review
+
+
+Studying spatial navigation within biological systems is interesting, especially from the computational learning perspective taken in this paper. To make an impactful contribution in..."
+ding|cdt_cascading_decision_trees_for_explainable_reinforcement_learning|ICLR_cc_2021_Conference,False,0,3882,0.13027777777777774,0.4876736111111111,"The paper proposes cascading decision trees (CDTs), which applies representation learning on the decision path of trees, and applies it to explain reinforcement learning models. The main empirical res..."
+ding|cdt_cascading_decision_trees_for_explainable_reinforcement_learning|ICLR_cc_2021_Conference,False,1,5487,0.10553304904051174,0.4019829424307037,"Edit:
+
+I have read the authors' response and the other reviews. I still believe that this paper is not ready for acceptance. 
+
+Summary: 
+
+The authors propose to use Cascading Decision Trees (CDTs) to ..."
+ding|cdt_cascading_decision_trees_for_explainable_reinforcement_learning|ICLR_cc_2021_Conference,False,2,11363,0.12672619047619046,0.4633979384436703,"## After Rebuttal and Discussion Period
+I want to first say that I really appreciated the opportunity to review this paper. It was awesome to see the authors willing to respond to the various suggesti..."
+ding|cdt_cascading_decision_trees_for_explainable_reinforcement_learning|ICLR_cc_2021_Conference,False,3,1427,0.018605699855699858,0.4928391053391053,"This paper introduces a new cascading decision trees (CDT) for interpretable RL tasks. As an extension to soft decision trees (SDT), CDT adds a feature learning tree before the decision making tree. B..."
