@@ -1,0 +1,38 @@
+OpenReview Dataset Analysis Report
+==================================================
+
+FILTERING CRITERIA:
+- Papers published up to November 2022
+- Papers with verbose reviews (>3279 chars avg)
+
+DATASET SUMMARY:
+- Total papers: 4900
+- Date range: 2017-05-21 to 2022-11-30
+- Total reviews: 18019
+- Average reviews per paper: 3.68
+- Average review length: 4048 characters
+- Acceptance rate: 57.1%
+
+REVIEW LENGTH DISTRIBUTION:
+- Mean: 4048 characters
+- Median: 3594 characters
+- Standard deviation: 2203 characters
+- This distribution appears approximately normal
+
+SCORE STATISTICS:
+- Mean score: 0.526 ± 0.142
+- Score range: 0.000 to 1.000
+
+TOP VENUES:
+- NeurIPS_cc_2021_Conference: 926 papers
+- NeurIPS_cc_2022_Conference: 840 papers
+- ICLR_cc_2021_Conference: 823 papers
+- ICLR_cc_2023_Conference: 714 papers
+- ICLR_cc_2022_Conference: 705 papers
+
+TOP FIELDS OF STUDY:
+- Computer Science: 1640 papers
+- Mathematics: 760 papers
+- reinforcement learning: 154 papers
+- Deep Learning and representational learning: 130 papers
+- Reinforcement Learning: 117 papers
