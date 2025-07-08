@@ -1,0 +1,26 @@
+{
+  "session_start": "2025-07-08T15:05:56.282859",
+  "last_updated": "2025-07-08T15:26:23.516045",
+  "completed_pdfs": {
+    "refusal_attack_narrative_first": {
+      "--gvHfE3Xf5.pdf": {
+        "standard_request": true
+      },
+      "0-uUGPbIjD.pdf": {
+        "standard_request": true
+      },
+      "026hEw26i3-.pdf": {
+        "standard_request": true
+      },
+      "0qbEq5UBfGD.pdf": {
+        "standard_request": true
+      },
+      "3q5IqUrkcF.pdf": {
+        "standard_request": true
+      }
+    }
+  },
+  "completed_batches": [],
+  "total_pdfs_processed": 5,
+  "total_requests_sent": 5
+}

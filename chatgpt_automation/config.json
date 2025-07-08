@@ -1,0 +1,18 @@
+{
+  "injected_pdfs_dir": "../injected_pdfs",
+  "results_dir": "results",
+  "logs_dir": "logs",
+  "chrome_user_data_dir": "chrome_user_data",
+  "chrome_headless": false,
+  "chrome_window_size": "1920,1080",
+  "page_load_timeout": 30,
+  "implicit_wait": 10,
+  "request_delay": 5.0,
+  "upload_timeout": 30,
+  "response_timeout": 150,
+  "max_retries": 3,
+  "chatgpt_url": "https://chatgpt.com/?model=gpt-4o&temporary-chat=true",
+  "max_response_wait": 180,
+  "save_intermediate_results": true,
+  "results_format": "both"
+}
