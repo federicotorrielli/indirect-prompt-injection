@@ -18,11 +18,14 @@ from tqdm import tqdm  # type: ignore
 
 # --- CORRECTED FUNCTION ---
 def create_invisible_text_overlay(
-    text_to_add, page_width, page_height, font_size, font_name
+    text_to_add, page_width, page_height, font_size, font_name, position="top"
 ):
     """
     Creates an in-memory PDF page with a block of invisible, wrapping text.
     This version uses the correct low-level PDF command for invisibility.
+
+    Args:
+        position: "top" for top of page, "bottom" for bottom of page
     """
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=(page_width, page_height))
@@ -73,9 +76,16 @@ def create_invisible_text_overlay(
         )
         p = Paragraph(simple_text, style)
 
-    # Wrap and draw the paragraph from the top of the page.
+    # Wrap and draw the paragraph from the specified position
     w, h = p.wrap(frame_width, frame_height)
-    y_position = page_height - margin - h
+
+    if position == "bottom":
+        # Position at bottom of page
+        y_position = margin
+    else:
+        # Position at top of page (default)
+        y_position = page_height - margin - h
+
     p.drawOn(can, margin, y_position)
 
     # Restore the canvas state to normal
@@ -89,10 +99,14 @@ def create_invisible_text_overlay(
 # --- END CORRECTED FUNCTION ---
 
 
-def inject_text_into_pdf(input_path, output_path, invisible_text, font_size):
+def inject_text_into_pdf(
+    input_path, output_path, invisible_text, font_size, injection_locus="first"
+):
     """
-    Injects invisible text into the FIRST PAGE ONLY, ensuring it is the first
-    content in the page's data stream.
+    Injects invisible text into the PDF at the specified location.
+
+    Args:
+        injection_locus: "first" for first page top, "last" for last page bottom
     """
     if not os.path.exists(input_path):
         print(f"Error: Input PDF file not found at '{input_path}'")
@@ -120,28 +134,58 @@ def inject_text_into_pdf(input_path, output_path, invisible_text, font_size):
         print("Error: The input PDF appears to be empty or corrupted.")
         return
 
-    original_first_page = existing_pdf.pages[0]
-    page_width = original_first_page.mediabox.width
-    page_height = original_first_page.mediabox.height
+    # Determine target page based on injection locus
+    if injection_locus == "last":
+        target_page_index = len(existing_pdf.pages) - 1
+        target_page = existing_pdf.pages[target_page_index]
+        position = "bottom"
+        print(f"Injecting text at bottom of last page ({target_page_index + 1})...")
+    else:
+        target_page_index = 0
+        target_page = existing_pdf.pages[target_page_index]
+        position = "top"
+        print("Injecting text at top of first page...")
+
+    page_width = target_page.mediabox.width
+    page_height = target_page.mediabox.height
 
     print(
         f"Creating invisible, wrapping text overlay with font '{font_name_to_use}' (size {font_size})..."
     )
     overlay_pdf = create_invisible_text_overlay(
-        invisible_text, page_width, page_height, font_size, font_name_to_use
+        invisible_text, page_width, page_height, font_size, font_name_to_use, position
     )
     overlay_page = overlay_pdf.pages[0]
 
-    print("Injecting text as the first content element on page 1...")
-    new_first_page = PageObject.create_blank_page(width=page_width, height=page_height)
-    new_first_page.merge_page(overlay_page)
-    new_first_page.merge_page(original_first_page)
-    output_writer.add_page(new_first_page)
-
-    if len(existing_pdf.pages) > 1:
-        print(f"Copying the remaining {len(existing_pdf.pages) - 1} page(s)...")
-        for i in range(1, len(existing_pdf.pages)):
+    # Handle injection based on locus
+    if injection_locus == "last":
+        # Copy all pages except the last one
+        for i in range(len(existing_pdf.pages) - 1):
             output_writer.add_page(existing_pdf.pages[i])
+
+        # Create modified last page
+        print("Injecting text as content at bottom of last page...")
+        new_last_page = PageObject.create_blank_page(
+            width=page_width, height=page_height
+        )
+        new_last_page.merge_page(target_page)
+        new_last_page.merge_page(overlay_page)
+        output_writer.add_page(new_last_page)
+    else:
+        # First page injection (existing behavior)
+        print("Injecting text as the first content element on page 1...")
+        new_first_page = PageObject.create_blank_page(
+            width=page_width, height=page_height
+        )
+        new_first_page.merge_page(overlay_page)
+        new_first_page.merge_page(target_page)
+        output_writer.add_page(new_first_page)
+
+        # Copy remaining pages
+        if len(existing_pdf.pages) > 1:
+            print(f"Copying the remaining {len(existing_pdf.pages) - 1} page(s)...")
+            for i in range(1, len(existing_pdf.pages)):
+                output_writer.add_page(existing_pdf.pages[i])
 
     print(f"Writing new PDF to: {output_path}")
     with open(output_path, "wb") as output_file:
@@ -149,7 +193,7 @@ def inject_text_into_pdf(input_path, output_path, invisible_text, font_size):
 
     print("\nInjection complete!")
     print(
-        f"The new file '{output_path}' has been created with text injected only on the first page."
+        f"The new file '{output_path}' has been created with text injected at {injection_locus} position."
     )
 
 
@@ -173,11 +217,19 @@ def read_prompts_json(json_path):
 
 
 def inject_text_into_pdf_silent(
-    input_path, output_path, invisible_text, font_size, font_path=None
+    input_path,
+    output_path,
+    invisible_text,
+    font_size,
+    font_path=None,
+    injection_locus="first",
 ):
     """
     Silent version of inject_text_into_pdf for batch processing (no print statements).
     Uses DejaVuSans.ttf from fonts directory exclusively.
+
+    Args:
+        injection_locus: "first" for first page top, "last" for last page bottom
     """
     if not os.path.exists(input_path):
         raise FileNotFoundError(f"Input PDF file not found at '{input_path}'")
@@ -212,10 +264,19 @@ def inject_text_into_pdf_silent(
     if not existing_pdf.pages or len(existing_pdf.pages) == 0:
         raise Exception("The input PDF appears to be empty or corrupted")
 
+    # Determine target page and position based on injection locus
+    if injection_locus == "last":
+        target_page_index = len(existing_pdf.pages) - 1
+        target_page = existing_pdf.pages[target_page_index]
+        position = "bottom"
+    else:
+        target_page_index = 0
+        target_page = existing_pdf.pages[target_page_index]
+        position = "top"
+
     try:
-        original_first_page = existing_pdf.pages[0]
-        page_width = float(original_first_page.mediabox.width)
-        page_height = float(original_first_page.mediabox.height)
+        page_width = float(target_page.mediabox.width)
+        page_height = float(target_page.mediabox.height)
 
         # Validate page dimensions
         if page_width <= 0 or page_height <= 0:
@@ -226,30 +287,56 @@ def inject_text_into_pdf_silent(
 
     try:
         overlay_pdf = create_invisible_text_overlay(
-            invisible_text, page_width, page_height, font_size, font_name_to_use
+            invisible_text,
+            page_width,
+            page_height,
+            font_size,
+            font_name_to_use,
+            position,
         )
         overlay_page = overlay_pdf.pages[0]
 
-        new_first_page = PageObject.create_blank_page(
-            width=page_width, height=page_height
-        )
-        new_first_page.merge_page(overlay_page)
-        new_first_page.merge_page(original_first_page)
-        output_writer.add_page(new_first_page)
+        # Handle injection based on locus
+        if injection_locus == "last":
+            # Copy all pages except the last one
+            for i in range(len(existing_pdf.pages) - 1):
+                try:
+                    page = existing_pdf.pages[i]
+                    if hasattr(page, "mediabox") and page.mediabox:
+                        output_writer.add_page(page)
+                except Exception:
+                    continue
+
+            # Create modified last page
+            new_last_page = PageObject.create_blank_page(
+                width=page_width, height=page_height
+            )
+            new_last_page.merge_page(target_page)
+            new_last_page.merge_page(overlay_page)
+            output_writer.add_page(new_last_page)
+        else:
+            # First page injection (existing behavior)
+            new_first_page = PageObject.create_blank_page(
+                width=page_width, height=page_height
+            )
+            new_first_page.merge_page(overlay_page)
+            new_first_page.merge_page(target_page)
+            output_writer.add_page(new_first_page)
+
+            # Copy remaining pages with error handling
+            if len(existing_pdf.pages) > 1:
+                for i in range(1, len(existing_pdf.pages)):
+                    try:
+                        page = existing_pdf.pages[i]
+                        if hasattr(page, "mediabox") and page.mediabox:
+                            output_writer.add_page(page)
+                    except Exception:
+                        continue
     except Exception as e:
         raise Exception(f"Failed to create or merge overlay: {e}")
 
-    # Copy remaining pages with error handling
-    if len(existing_pdf.pages) > 1:
-        for i in range(1, len(existing_pdf.pages)):
-            try:
-                page = existing_pdf.pages[i]
-                # Validate page before adding
-                if hasattr(page, "mediabox") and page.mediabox:
-                    output_writer.add_page(page)
-            except Exception:
-                # Skip problematic pages but continue processing
-                continue
+    # Copy remaining pages with error handling is now handled above
+    # Remove the duplicate page copying code
 
     try:
         with open(output_path, "wb") as output_file:
@@ -270,9 +357,14 @@ def debug_prompt_text(prompt_text):
     return prompt_text
 
 
-def process_batch_injection(prompts_json_path, pdfs_dir, font_size=1.0, font_path=None):
+def process_batch_injection(
+    prompts_json_path, pdfs_dir, font_size=1.0, font_path=None, injection_locus="first"
+):
     """
     Process batch injection for all PDFs using all prompts from the JSON file.
+
+    Args:
+        injection_locus: "first" for first page top, "last" for last page bottom
     """
     # Read the JSON configuration
     print(f"Reading prompts configuration from: {prompts_json_path}")
@@ -311,10 +403,14 @@ def process_batch_injection(prompts_json_path, pdfs_dir, font_size=1.0, font_pat
             # Debug: Verify prompt text integrity
             debug_prompt_text(prompt_text)
 
-            # Create output directory name
-            output_dir = f"injected_pdfs_{attack_type}_{prompt_type}"
+            # Create output directory name within injected_pdfs folder
+            main_output_dir = "injected_pdfs"
+            sub_dir = f"{attack_type}_{prompt_type}_{injection_locus}"
+            output_dir = os.path.join(main_output_dir, sub_dir)
 
-            print(f"\nProcessing: {attack_type} -> {prompt_type}")
+            print(
+                f"\nProcessing: {attack_type} -> {prompt_type} (injection: {injection_locus})"
+            )
             print(f"Creating output directory: {output_dir}")
             os.makedirs(output_dir, exist_ok=True)
 
@@ -334,7 +430,12 @@ def process_batch_injection(prompts_json_path, pdfs_dir, font_size=1.0, font_pat
 
                     # Inject text into PDF
                     inject_text_into_pdf_silent(
-                        pdf_file, output_path, prompt_text, font_size, font_path
+                        pdf_file,
+                        output_path,
+                        prompt_text,
+                        font_size,
+                        font_path,
+                        injection_locus,
                     )
                     successful_injections += 1
 
@@ -352,17 +453,23 @@ def process_batch_injection(prompts_json_path, pdfs_dir, font_size=1.0, font_pat
 
 if __name__ == "__main__":
     # Configuration - modify these paths as needed
-    prompts_json_path = "prompts.json"
+    prompts_json_path = os.path.join("pdf_injection", "prompts.json")
     pdfs_dir = "pdfs"
     font_size = 1.0
     # Always use DejaVuSans.ttf from fonts directory
     font_path = os.path.join("fonts", "dejavusans.ttf")
+
+    # Injection locus options: "first" (first page, top) or "last" (last page, bottom)
+    injection_locus = "first"  # Change to "last" for last page bottom injection
 
     print("Starting PDF injection process...")
     print(f"Prompts file: {prompts_json_path}")
     print(f"PDFs directory: {pdfs_dir}")
     print(f"Font size: {font_size}")
     print(f"Using font: {font_path}")
+    print(f"Injection locus: {injection_locus}")
 
     # Run batch processing
-    process_batch_injection(prompts_json_path, pdfs_dir, font_size, font_path)
+    process_batch_injection(
+        prompts_json_path, pdfs_dir, font_size, font_path, injection_locus
+    )
