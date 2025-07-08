@@ -1,20 +1,20 @@
 import ast
 import warnings
 from collections import Counter
-from datetime import datetime
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from datasets import load_dataset
+from datasets import load_dataset  # type: ignore
+from whenever import PlainDateTime
 
 warnings.filterwarnings("ignore")
 
 # Load the dataset
 print("Loading OpenReview dataset...")
 dataset = load_dataset("nhop/OpenReview", trust_remote_code=True)
-df = pd.DataFrame(dataset["train"])
+df = pd.DataFrame(dataset.get("train", {}))
 
 print(f"Original dataset shape: {df.shape}")
 
@@ -40,13 +40,13 @@ def parse_date(date_str):
 
         for fmt in formats:
             try:
-                return datetime.strptime(date_str, fmt)
+                return PlainDateTime.parse_strptime(date_str, format=fmt)
             except:
                 continue
 
         # If none work, try parsing just the date part
         date_part = date_str.split(" ")[0]
-        return datetime.strptime(date_part, "%Y-%m-%d")
+        return PlainDateTime.parse_strptime(date_part, format="%Y-%m-%d")
     except:
         return None
 
@@ -56,7 +56,7 @@ df["parsed_date"] = df["publication_date"].apply(parse_date)
 df = df.dropna(subset=["parsed_date"])
 
 # Filter up to November 2022
-cutoff_date = datetime(2022, 11, 30)
+cutoff_date = PlainDateTime(2022, 11, 30)
 df_filtered = df[df["parsed_date"] <= cutoff_date].copy()
 
 print(f"After date filtering: {df_filtered.shape[0]} papers")
@@ -198,7 +198,9 @@ ax3.set_title("Number of Reviews per Paper")
 
 # 4. Publications over time
 ax4 = axes[1, 0]
-df_verbose["year"] = df_verbose["parsed_date"].dt.year
+df_verbose["year"] = df_verbose["parsed_date"].apply(
+    lambda x: x.year if x is not None else None
+)
 yearly_counts = df_verbose["year"].value_counts().sort_index()
 ax4.plot(
     yearly_counts.index, yearly_counts.values, marker="o", linewidth=2, markersize=6
@@ -269,7 +271,7 @@ print("\n5. Extracting detailed statistics...")
 print("\n=== PAPER STATISTICS ===")
 print(f"Total papers with verbose reviews: {len(df_verbose)}")
 print(
-    f"Date range: {df_verbose['parsed_date'].min().strftime('%Y-%m-%d')} to {df_verbose['parsed_date'].max().strftime('%Y-%m-%d')}"
+    f"Date range: {df_verbose['parsed_date'].min().format_common_iso()[:10]} to {df_verbose['parsed_date'].max().format_common_iso()[:10]}"
 )
 print(f"Unique venues: {df_verbose['venue'].nunique()}")
 print(
@@ -349,13 +351,15 @@ yearly_stats = (
     )
     .round(3)
 )
-yearly_stats.columns = [
-    "avg_score",
-    "score_std",
-    "num_papers",
-    "avg_reviews",
-    "acceptance_rate",
-]
+yearly_stats.columns = pd.Index(
+    [
+        "avg_score",
+        "score_std",
+        "num_papers",
+        "avg_reviews",
+        "acceptance_rate",
+    ]
+)
 print("Yearly statistics:")
 print(yearly_stats)
 
@@ -377,7 +381,7 @@ with open("dataset_analysis_report.txt", "w") as f:
     f.write("DATASET SUMMARY:\n")
     f.write(f"- Total papers: {len(df_verbose)}\n")
     f.write(
-        f"- Date range: {df_verbose['parsed_date'].min().strftime('%Y-%m-%d')} to {df_verbose['parsed_date'].max().strftime('%Y-%m-%d')}\n"
+        f"- Date range: {df_verbose['parsed_date'].min().format_common_iso()[:10]} to {df_verbose['parsed_date'].max().format_common_iso()[:10]}\n"
     )
     f.write(f"- Total reviews: {total_reviews}\n")
     f.write(f"- Average reviews per paper: {df_verbose['num_reviews'].mean():.2f}\n")
