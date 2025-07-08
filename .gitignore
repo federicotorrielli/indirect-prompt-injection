@@ -1,5 +1,7 @@
 openreview_verbose_reviews.csv
 .github/
+chrome_user_data/
+logs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
