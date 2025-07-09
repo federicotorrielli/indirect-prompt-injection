@@ -84,8 +84,7 @@ def redact_conference_info(pdf_path: str) -> None:
         doc = fitz.open(pdf_path)
         redactions_made = False
 
-        # Process first 3 pages for better performance
-        max_pages = min(3, doc.page_count)
+        max_pages = doc.page_count
 
         for page_num in range(max_pages):
             page = doc.load_page(page_num)
