@@ -377,7 +377,7 @@ requires-dist = [
     { name = "pandas", specifier = ">=2.3.1" },
     { name = "pandas-stubs", specifier = ">=2.3.0.250703" },
     { name = "plotly", specifier = ">=6.2.0" },
-    { name = "pymupdf", specifier = ">=1.25.2" },
+    { name = "pymupdf", specifier = ">=1.26.3" },
     { name = "pypdf", specifier = ">=5.7.0" },
     { name = "reportlab", specifier = ">=4.4.2" },
     { name = "scipy", specifier = ">=1.16.0" },
