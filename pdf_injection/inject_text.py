@@ -1,7 +1,9 @@
+import argparse
 import glob
 import io
 import json
 import os
+import random
 import warnings
 
 from pypdf import PageObject, PdfReader, PdfWriter
@@ -451,10 +453,78 @@ def process_batch_injection(
     print("All prompt combinations have been processed.")
 
 
+def process_single_test(
+    prompts_json_path, pdfs_dir, font_size=1.0, font_path=None, injection_locus="first"
+):
+    """
+    Process a single random PDF with all prompts for testing purposes.
+    """
+    print(f"Reading prompts configuration from: {prompts_json_path}")
+    prompts_data = read_prompts_json(prompts_json_path)
+    if not prompts_data:
+        return
+
+    print(f"Scanning for PDF files in: {pdfs_dir}")
+    pdf_pattern = os.path.join(pdfs_dir, "*.pdf")
+    pdf_files = glob.glob(pdf_pattern)
+    if not pdf_files:
+        print(f"No PDF files found in '{pdfs_dir}'")
+        return
+
+    # Select one random PDF
+    pdf_file = random.choice(pdf_files)
+    print(f"Selected random PDF for testing: {pdf_file}")
+
+    for attack_type, prompt_types in prompts_data.items():
+        for prompt_type, prompt_data in prompt_types.items():
+            prompt_text = prompt_data.get("prompt", "")
+            if not prompt_text:
+                print(f"Warning: No prompt text found for {attack_type}/{prompt_type}")
+                continue
+
+            main_output_dir = "injected_pdfs"
+            sub_dir = f"test_{attack_type}_{prompt_type}_{injection_locus}"
+            output_dir = os.path.join(main_output_dir, sub_dir)
+
+            print(
+                f"\nProcessing: {attack_type} -> {prompt_type} (injection: {injection_locus})"
+            )
+            print(f"Creating output directory: {output_dir}")
+            os.makedirs(output_dir, exist_ok=True)
+
+            pdf_filename = os.path.basename(pdf_file)
+            output_path = os.path.join(output_dir, pdf_filename)
+
+            try:
+                inject_text_into_pdf_silent(
+                    pdf_file,
+                    output_path,
+                    prompt_text,
+                    font_size,
+                    font_path,
+                    injection_locus,
+                )
+                print(f"Successfully created test file: {output_path}")
+            except Exception as e:
+                print(f"Failed to process {pdf_file} for test: {str(e)}")
+
+    print("\nSingle PDF test injection complete!")
+
+
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Inject invisible text into PDFs.")
+    parser.add_argument(
+        "--mode",
+        type=str,
+        choices=["batch", "test"],
+        default="batch",
+        help="Run in 'batch' mode (all PDFs) or 'test' mode (one random PDF).",
+    )
+    args = parser.parse_args()
+
     # Configuration - modify these paths as needed
     prompts_json_path = os.path.join("pdf_injection", "prompts.json")
-    pdfs_dir = "pdfs"
+    pdfs_dir = os.path.join("dataset", "redacted_anonymized_pdfs")
     font_size = 1.0
     # Always use DejaVuSans.ttf from fonts directory
     font_path = os.path.join("fonts", "dejavusans.ttf")
@@ -468,8 +538,14 @@ if __name__ == "__main__":
     print(f"Font size: {font_size}")
     print(f"Using font: {font_path}")
     print(f"Injection locus: {injection_locus}")
+    print(f"Running in {args.mode} mode.")
 
-    # Run batch processing
-    process_batch_injection(
-        prompts_json_path, pdfs_dir, font_size, font_path, injection_locus
-    )
+    if args.mode == "batch":
+        # Run batch processing
+        process_batch_injection(
+            prompts_json_path, pdfs_dir, font_size, font_path, injection_locus
+        )
+    elif args.mode == "test":
+        process_single_test(
+            prompts_json_path, pdfs_dir, font_size, font_path, injection_locus
+        )
