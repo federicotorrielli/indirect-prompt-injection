@@ -426,7 +426,7 @@ def main():
     args = parser.parse_args()
 
     # Load configuration
-    config = Config.load_from_file(args.config)
+    config = Config.load_from_file(os.path.join("src", "llm_automation", "config.json"))
 
     # Create automator
     automator = PDFReviewAutomator(config)

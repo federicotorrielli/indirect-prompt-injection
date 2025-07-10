@@ -115,7 +115,7 @@ def inject_text_into_pdf(
         return
 
     # Use DejaVuSans.ttf from fonts directory
-    font_path = os.path.join("fonts", "dejavusans.ttf")
+    font_path = os.path.join("data", "fonts", "dejavusans.ttf")
     if not os.path.exists(font_path):
         print(f"Error: DejaVuSans font not found at '{font_path}'")
         return
@@ -238,7 +238,7 @@ def inject_text_into_pdf_silent(
 
     # Use provided font path or default to DejaVuSans.ttf from fonts directory
     if font_path is None:
-        font_path = os.path.join("fonts", "dejavusans.ttf")
+        font_path = os.path.join("data", "fonts", "dejavusans.ttf")
 
     if not os.path.exists(font_path):
         raise FileNotFoundError(f"Font not found at '{font_path}'")
@@ -406,7 +406,7 @@ def process_batch_injection(
             debug_prompt_text(prompt_text)
 
             # Create output directory name within injected_pdfs folder
-            main_output_dir = "injected_pdfs"
+            main_output_dir = os.path.join("data", "injected_pdfs")
             sub_dir = f"{attack_type}_{prompt_type}_{injection_locus}"
             output_dir = os.path.join(main_output_dir, sub_dir)
 
@@ -482,7 +482,7 @@ def process_single_test(
                 print(f"Warning: No prompt text found for {attack_type}/{prompt_type}")
                 continue
 
-            main_output_dir = "injected_pdfs"
+            main_output_dir = os.path.join("data", "injected_pdfs")
             sub_dir = f"test_{attack_type}_{prompt_type}_{injection_locus}"
             output_dir = os.path.join(main_output_dir, sub_dir)
 
@@ -523,11 +523,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Configuration - modify these paths as needed
-    prompts_json_path = os.path.join("pdf_injection", "prompts.json")
-    pdfs_dir = os.path.join("dataset", "redacted_anonymized_pdfs")
+    prompts_json_path = os.path.join("data", "prompts", "prompts.json")
+    pdfs_dir = os.path.join("data", "redacted_pdfs")
     font_size = 1.0
     # Always use DejaVuSans.ttf from fonts directory
-    font_path = os.path.join("fonts", "dejavusans.ttf")
+    font_path = os.path.join("data", "fonts", "dejavusans.ttf")
 
     # Injection locus options: "first" (first page, top) or "last" (last page, bottom)
     injection_locus = "first"  # Change to "last" for last page bottom injection

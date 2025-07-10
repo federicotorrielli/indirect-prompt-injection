@@ -364,11 +364,11 @@ print("Yearly statistics:")
 print(yearly_stats)
 
 # Save the filtered dataset
-df_verbose.to_csv("openreview_verbose_reviews.csv", index=False)
+df_verbose.to_csv("data/analysis/openreview_verbose_reviews.csv", index=False)
 print("\nFiltered dataset saved to 'openreview_verbose_reviews.csv'")
 
 # Create a summary report
-with open("dataset_analysis_report.txt", "w") as f:
+with open("data/analysis/dataset_analysis_report.txt", "w") as f:
     f.write("OpenReview Dataset Analysis Report\n")
     f.write("=" * 50 + "\n\n")
 
