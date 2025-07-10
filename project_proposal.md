@@ -47,7 +47,7 @@ To what extent can a hidden payload within a scientific manuscript reliably mani
    * Identify **50 accepted papers** with clear "Accept" decisions and an average review score of ≥ 7/10.  
    * Identify **50 rejected papers** with clear "Reject" decisions and an average review score of ≤ 4/10.  
 3. **Data Structuring:** For each of the 100 papers, we’ll have a directory containing:  
-   * paper\_ID\_clean.pdf: The original, unmodified PDF manuscript.  
+   * paper\_ID\_clean.pdf: The original, unmodified PDF manuscript, located in `data/raw_pdfs`.  
    * paper\_ID\_gold\_review.txt: A plain text file containing the concatenated, anonymized text of all official human reviews. This serves as the Gold Standard Review.
 
 **Step 1: Finalize Payloads for Each Task**

@@ -12,7 +12,7 @@ class Config:
     """Configuration settings for the automation system."""
 
     # Directory paths
-    injected_pdfs_dir: str = "../injected_pdfs"
+    injected_pdfs_dir: str = "data/injected_pdfs"
     results_dir: str = "results"
     logs_dir: str = "logs"
 
