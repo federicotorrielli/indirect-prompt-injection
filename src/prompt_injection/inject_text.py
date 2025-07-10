@@ -511,8 +511,40 @@ def process_single_test(
     print("\nSingle PDF test injection complete!")
 
 
-if __name__ == "__main__":
+def main():
+    """Main function to run the script."""
     parser = argparse.ArgumentParser(description="Inject invisible text into PDFs.")
+    parser.add_argument(
+        "--prompts-json-path",
+        type=str,
+        default=os.path.join("data", "prompts", "prompts.json"),
+        help="Path to the prompts JSON file.",
+    )
+    parser.add_argument(
+        "--pdfs-dir",
+        type=str,
+        default=os.path.join("data", "redacted_pdfs"),
+        help="Directory containing the PDF files.",
+    )
+    parser.add_argument(
+        "--font-size",
+        type=float,
+        default=1.0,
+        help="Font size for the injected text.",
+    )
+    parser.add_argument(
+        "--font-path",
+        type=str,
+        default=os.path.join("data", "fonts", "dejavusans.ttf"),
+        help="Path to the font file.",
+    )
+    parser.add_argument(
+        "--injection-locus",
+        type=str,
+        choices=["first", "last"],
+        default="first",
+        help="Injection locus: 'first' for first page top, 'last' for last page bottom.",
+    )
     parser.add_argument(
         "--mode",
         type=str,
@@ -522,30 +554,31 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    # Configuration - modify these paths as needed
-    prompts_json_path = os.path.join("data", "prompts", "prompts.json")
-    pdfs_dir = os.path.join("data", "redacted_pdfs")
-    font_size = 1.0
-    # Always use DejaVuSans.ttf from fonts directory
-    font_path = os.path.join("data", "fonts", "dejavusans.ttf")
-
-    # Injection locus options: "first" (first page, top) or "last" (last page, bottom)
-    injection_locus = "first"  # Change to "last" for last page bottom injection
-
     print("Starting PDF injection process...")
-    print(f"Prompts file: {prompts_json_path}")
-    print(f"PDFs directory: {pdfs_dir}")
-    print(f"Font size: {font_size}")
-    print(f"Using font: {font_path}")
-    print(f"Injection locus: {injection_locus}")
+    print(f"Prompts file: {args.prompts_json_path}")
+    print(f"PDFs directory: {args.pdfs_dir}")
+    print(f"Font size: {args.font_size}")
+    print(f"Using font: {args.font_path}")
+    print(f"Injection locus: {args.injection_locus}")
     print(f"Running in {args.mode} mode.")
 
     if args.mode == "batch":
         # Run batch processing
         process_batch_injection(
-            prompts_json_path, pdfs_dir, font_size, font_path, injection_locus
+            args.prompts_json_path,
+            args.pdfs_dir,
+            args.font_size,
+            args.font_path,
+            args.injection_locus,
         )
     elif args.mode == "test":
         process_single_test(
-            prompts_json_path, pdfs_dir, font_size, font_path, injection_locus
+            args.prompts_json_path,
+            args.pdfs_dir,
+            args.font_size,
+            args.font_path,
+            args.injection_locus,
         )
+
+if __name__ == "__main__":
+    main()
