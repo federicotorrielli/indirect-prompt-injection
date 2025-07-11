@@ -20,7 +20,7 @@ from tqdm import tqdm  # type: ignore
 
 # --- CORRECTED FUNCTION ---
 def create_invisible_text_overlay(
-    text_to_add, page_width, page_height, font_size, font_name, position="top"
+    text_to_add, page_width, page_height, font_size, font_name, position="top", ocr_model_mode=False
 ):
     """
     Creates an in-memory PDF page with a block of invisible, wrapping text.
@@ -28,6 +28,7 @@ def create_invisible_text_overlay(
 
     Args:
         position: "top" for top of page, "bottom" for bottom of page
+        ocr_model_mode: If True, makes text visible for OCR model testing
     """
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=(page_width, page_height))
@@ -37,7 +38,9 @@ def create_invisible_text_overlay(
     can.saveState()
     # Use a low-level PDF command to set the text render mode to 3 (invisible).
     # This is the correct way to apply this state before drawing a high-level Paragraph.
-    can._code.append("3 Tr")
+    # Skip this if ocr_model_mode is True to make text visible
+    if not ocr_model_mode:
+        can._code.append("3 Tr")
     # --- END OF FIX ---
 
     # Define the bounding box for our text paragraph (1-inch margins)
@@ -102,13 +105,14 @@ def create_invisible_text_overlay(
 
 
 def inject_text_into_pdf(
-    input_path, output_path, invisible_text, font_size, injection_locus="first"
+    input_path, output_path, invisible_text, font_size, injection_locus="first", ocr_model_mode=False
 ):
     """
     Injects invisible text into the PDF at the specified location.
 
     Args:
         injection_locus: "first" for first page top, "last" for last page bottom
+        ocr_model_mode: If True, makes text visible for OCR model testing
     """
     if not os.path.exists(input_path):
         print(f"Error: Input PDF file not found at '{input_path}'")
@@ -155,7 +159,7 @@ def inject_text_into_pdf(
         f"Creating invisible, wrapping text overlay with font '{font_name_to_use}' (size {font_size})..."
     )
     overlay_pdf = create_invisible_text_overlay(
-        invisible_text, page_width, page_height, font_size, font_name_to_use, position
+        invisible_text, page_width, page_height, font_size, font_name_to_use, position, ocr_model_mode
     )
     overlay_page = overlay_pdf.pages[0]
 
@@ -225,6 +229,7 @@ def inject_text_into_pdf_silent(
     font_size,
     font_path=None,
     injection_locus="first",
+    ocr_model_mode=False,
 ):
     """
     Silent version of inject_text_into_pdf for batch processing (no print statements).
@@ -232,6 +237,7 @@ def inject_text_into_pdf_silent(
 
     Args:
         injection_locus: "first" for first page top, "last" for last page bottom
+        ocr_model_mode: If True, makes text visible for OCR model testing
     """
     if not os.path.exists(input_path):
         raise FileNotFoundError(f"Input PDF file not found at '{input_path}'")
@@ -295,6 +301,7 @@ def inject_text_into_pdf_silent(
             font_size,
             font_name_to_use,
             position,
+            ocr_model_mode,
         )
         overlay_page = overlay_pdf.pages[0]
 
@@ -360,13 +367,14 @@ def debug_prompt_text(prompt_text):
 
 
 def process_batch_injection(
-    prompts_json_path, pdfs_dir, font_size=1.0, font_path=None, injection_locus="first"
+    prompts_json_path, pdfs_dir, font_size=1.0, font_path=None, injection_locus="first", ocr_model_mode=False
 ):
     """
     Process batch injection for all PDFs using all prompts from the JSON file.
 
     Args:
         injection_locus: "first" for first page top, "last" for last page bottom
+        ocr_model_mode: If True, makes text visible for OCR model testing
     """
     # Read the JSON configuration
     print(f"Reading prompts configuration from: {prompts_json_path}")
@@ -408,6 +416,8 @@ def process_batch_injection(
             # Create output directory name within injected_pdfs folder
             main_output_dir = "injected_pdfs"
             sub_dir = f"{attack_type}_{prompt_type}_{injection_locus}"
+            if ocr_model_mode:
+                sub_dir += "_ocr"
             output_dir = os.path.join(main_output_dir, sub_dir)
 
             print(
@@ -438,6 +448,7 @@ def process_batch_injection(
                         font_size,
                         font_path,
                         injection_locus,
+                        ocr_model_mode,
                     )
                     successful_injections += 1
 
@@ -454,10 +465,13 @@ def process_batch_injection(
 
 
 def process_single_test(
-    prompts_json_path, pdfs_dir, font_size=1.0, font_path=None, injection_locus="first"
+    prompts_json_path, pdfs_dir, font_size=1.0, font_path=None, injection_locus="first", ocr_model_mode=False
 ):
     """
     Process a single random PDF with all prompts for testing purposes.
+    
+    Args:
+        ocr_model_mode: If True, makes text visible for OCR model testing
     """
     print(f"Reading prompts configuration from: {prompts_json_path}")
     prompts_data = read_prompts_json(prompts_json_path)
@@ -484,6 +498,8 @@ def process_single_test(
 
             main_output_dir = "injected_pdfs"
             sub_dir = f"test_{attack_type}_{prompt_type}_{injection_locus}"
+            if ocr_model_mode:
+                sub_dir += "_ocr"
             output_dir = os.path.join(main_output_dir, sub_dir)
 
             print(
@@ -503,6 +519,7 @@ def process_single_test(
                     font_size,
                     font_path,
                     injection_locus,
+                    ocr_model_mode,
                 )
                 print(f"Successfully created test file: {output_path}")
             except Exception as e:
@@ -530,7 +547,10 @@ if __name__ == "__main__":
     font_path = os.path.join("fonts", "dejavusans.ttf")
 
     # Injection locus options: "first" (first page, top) or "last" (last page, bottom)
-    injection_locus = "first"  # Change to "last" for last page bottom injection
+    injection_locus = "last"  # Change to "last" for last page bottom injection
+    
+    # OCR model mode: Set to True to make text visible for OCR model testing
+    ocr_model_mode = True  # Change to True to make injected text visible
 
     print("Starting PDF injection process...")
     print(f"Prompts file: {prompts_json_path}")
@@ -538,14 +558,15 @@ if __name__ == "__main__":
     print(f"Font size: {font_size}")
     print(f"Using font: {font_path}")
     print(f"Injection locus: {injection_locus}")
+    print(f"OCR model mode: {ocr_model_mode}")
     print(f"Running in {args.mode} mode.")
 
     if args.mode == "batch":
         # Run batch processing
         process_batch_injection(
-            prompts_json_path, pdfs_dir, font_size, font_path, injection_locus
+            prompts_json_path, pdfs_dir, font_size, font_path, injection_locus, ocr_model_mode
         )
     elif args.mode == "test":
         process_single_test(
-            prompts_json_path, pdfs_dir, font_size, font_path, injection_locus
+            prompts_json_path, pdfs_dir, font_size, font_path, injection_locus, ocr_model_mode
         )
