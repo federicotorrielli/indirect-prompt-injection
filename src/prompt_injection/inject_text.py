@@ -18,7 +18,6 @@ from reportlab.platypus import Paragraph  # type: ignore
 from tqdm import tqdm  # type: ignore
 
 
-# --- CORRECTED FUNCTION ---
 def create_invisible_text_overlay(
     text_to_add,
     page_width,
@@ -105,9 +104,6 @@ def create_invisible_text_overlay(
     packet.seek(0)
 
     return PdfReader(packet)
-
-
-# --- END CORRECTED FUNCTION ---
 
 
 def inject_text_into_pdf(
@@ -596,34 +592,40 @@ def main():
         default="batch",
         help="Run in 'batch' mode (all PDFs) or 'test' mode (one random PDF).",
     )
+    parser.add_argument(
+        "--ocr-model-mode",
+        action="store_true",
+        help="Make text visible for OCR model testing instead of invisible.",
+    )
     args = parser.parse_args()
 
-    # Configuration - modify these paths as needed
-    prompts_json_path = os.path.join("pdf_injection", "prompts.json")
-    pdfs_dir = os.path.join("dataset", "redacted_anonymized_pdfs")
-    font_size = 1.0
-    # Always use DejaVuSans.ttf from fonts directory
-    font_path = os.path.join("fonts", "dejavusans.ttf")
-
-    # Injection locus options: "first" (first page, top) or "last" (last page, bottom)
-    injection_locus = "first"  # Change to "last" for last page bottom injection
-
     print("Starting PDF injection process...")
-    print(f"Prompts file: {prompts_json_path}")
-    print(f"PDFs directory: {pdfs_dir}")
-    print(f"Font size: {font_size}")
-    print(f"Using font: {font_path}")
-    print(f"Injection locus: {injection_locus}")
+    print(f"Prompts file: {args.prompts_json_path}")
+    print(f"PDFs directory: {args.pdfs_dir}")
+    print(f"Font size: {args.font_size}")
+    print(f"Using font: {args.font_path}")
+    print(f"Injection locus: {args.injection_locus}")
+    print(f"OCR model mode: {args.ocr_model_mode}")
     print(f"Running in {args.mode} mode.")
 
     if args.mode == "batch":
         # Run batch processing
         process_batch_injection(
-            prompts_json_path, pdfs_dir, font_size, font_path, injection_locus
+            args.prompts_json_path,
+            args.pdfs_dir,
+            args.font_size,
+            args.font_path,
+            args.injection_locus,
+            args.ocr_model_mode,
         )
     elif args.mode == "test":
         process_single_test(
-            prompts_json_path, pdfs_dir, font_size, font_path, injection_locus
+            args.prompts_json_path,
+            args.pdfs_dir,
+            args.font_size,
+            args.font_path,
+            args.injection_locus,
+            args.ocr_model_mode,
         )
 
 
