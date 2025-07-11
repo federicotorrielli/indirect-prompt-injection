@@ -12,6 +12,7 @@ __pycache__/
 *.so
 
 /pdfs/
+/injected_pdfs/
 .DS_Store
 
 # Distribution / packaging
