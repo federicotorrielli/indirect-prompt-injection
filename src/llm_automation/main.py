@@ -3,7 +3,24 @@
 ChatGPT PDF Review Automation System
 
 This script automates the process of uploading PDFs to ChatGPT and requesting reviews.
-It processes all injection techniques and generates comprehensive review datasets.
+It processes all injection techniques and generates comprehensi                # Save result immediately to consolidated file
+                self.processor.save_single_result(
+                    result, attack_type, prompt_type, injection_locus, request_type
+                )
+
+                if success:
+                    # Clear any previous failure record and mark as processed
+                    self.progress_tracker.clear_pdf_failure(batch_key, pdf_name, request_type)
+                    self.progress_tracker.mark_pdf_processed(batch_key, pdf_name, request_type)
+                    stats["processed"] += 1
+                    logger.info(f"Successfully processed {pdf_name} ({request_type})")
+                else:
+                    # Mark as failed (will be retried if under max retries)
+                    self.progress_tracker.mark_pdf_failed(
+                        batch_key, pdf_name, request_type, error, self.config.max_retries
+                    )
+                    stats["failed"] += 1
+                    logger.error(f"Failed to process {pdf_name} ({request_type}) after retries: {error}")ts.
 
 Requirements:
 - Chrome/Chromium browser installed
@@ -17,7 +34,7 @@ import sys
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 # Add the script directory to path for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -154,9 +171,9 @@ class PDFReviewAutomator:
         # Get request types for progress tracking
         request_types = [self._get_request_type(req) for req in review_requests]
 
-        # Get unprocessed PDF/request combinations
+        # Get unprocessed PDF/request combinations (including failed items that should be retried)
         unprocessed_items = self.progress_tracker.get_unprocessed_pdfs(
-            batch_key, pdf_files, request_types
+            batch_key, pdf_files, request_types, max_retries=self.config.max_retries
         )
 
         if not unprocessed_items:
@@ -194,8 +211,10 @@ class PDFReviewAutomator:
                     stats["skipped"] += 1
                     continue
 
-                # Process the PDF
-                response = self.chatgpt.send_pdf_review_request(pdf_file, request_text)
+                # Process the PDF with retry logic
+                success, response, error = self._process_pdf_with_retry(
+                    pdf_file, request_text, max_retries=self.config.max_retries
+                )
 
                 # Create result object
                 result = {
@@ -207,8 +226,8 @@ class PDFReviewAutomator:
                     "request_text": request_text,
                     "response": response,
                     "timestamp": datetime.now().isoformat(),
-                    "success": response is not None,
-                    "error": None if response else "No response received",
+                    "success": success,
+                    "error": error,
                 }
 
                 # Save result immediately to consolidated file
@@ -216,46 +235,26 @@ class PDFReviewAutomator:
                     result, attack_type, prompt_type, injection_locus, request_type
                 )
 
-                # Mark as processed in progress tracker
+                # Mark as processed in progress tracker (only if successful or max retries exceeded)
                 self.progress_tracker.mark_pdf_processed(
                     batch_key, pdf_name, request_type
                 )
 
-                stats["processed"] += 1
-                logger.info(f"Successfully processed {pdf_name} ({request_type})")
+                if success:
+                    stats["processed"] += 1
+                    logger.info(f"Successfully processed {pdf_name} ({request_type})")
+                else:
+                    stats["failed"] += 1
+                    logger.error(
+                        f"Failed to process {pdf_name} ({request_type}) after retries: {error}"
+                    )
 
                 # Add delay between requests to avoid rate limiting
                 time.sleep(self.config.request_delay)
 
             except Exception as e:
-                logger.error(f"Failed to process {pdf_file} ({request_type}): {e}")
-
-                # Create error result
-                error_result = {
-                    "pdf_file": pdf_name,
-                    "attack_type": attack_type,
-                    "prompt_type": prompt_type,
-                    "injection_locus": injection_locus,
-                    "request_type": request_type,
-                    "request_text": request_text,
-                    "response": None,
-                    "timestamp": datetime.now().isoformat(),
-                    "success": False,
-                    "error": str(e),
-                }
-
-                # Save error result
-                self.processor.save_single_result(
-                    error_result,
-                    attack_type,
-                    prompt_type,
-                    injection_locus,
-                    request_type,
-                )
-
-                # Still mark as processed to avoid retrying failed items
-                self.progress_tracker.mark_pdf_processed(
-                    batch_key, pdf_name, request_type
+                logger.error(
+                    f"Unexpected error processing {pdf_file} ({request_type}): {e}"
                 )
                 stats["failed"] += 1
 
@@ -400,6 +399,118 @@ class PDFReviewAutomator:
             return False
         finally:
             self.cleanup()
+
+    def _process_pdf_with_retry(
+        self, pdf_file: str, request_text: str, max_retries: int = 3
+    ) -> Tuple[bool, Optional[str], Optional[str]]:
+        """Process a PDF with retry logic and page refresh on errors.
+
+        Returns:
+            Tuple of (success, response, error_message)
+        """
+        last_error = None
+
+        for attempt in range(max_retries):
+            try:
+                logger.info(
+                    f"Processing attempt {attempt + 1}/{max_retries} for {Path(pdf_file).name}"
+                )
+
+                # Refresh page before retry (except first attempt)
+                if attempt > 0:
+                    logger.info("Refreshing page before retry...")
+                    if not self.chatgpt.start_new_conversation():
+                        logger.warning("Failed to refresh page, continuing anyway...")
+                    time.sleep(2)  # Give page time to load
+
+                # Attempt to process the PDF
+                response = self.chatgpt.send_pdf_review_request(pdf_file, request_text)
+
+                if response is not None:
+                    logger.info(
+                        f"Successfully processed {Path(pdf_file).name} on attempt {attempt + 1}"
+                    )
+                    return True, response, None
+                else:
+                    last_error = "No response received"
+                    logger.warning(
+                        f"No response received for {Path(pdf_file).name} on attempt {attempt + 1}"
+                    )
+
+            except Exception as e:
+                last_error = str(e)
+                error_type = type(e).__name__
+
+                # Check if this is a retryable error
+                if self._is_retryable_error(e):
+                    logger.warning(
+                        f"Retryable error ({error_type}) on attempt {attempt + 1}/{max_retries} for {Path(pdf_file).name}: {e}"
+                    )
+
+                    # Add exponential backoff for retries
+                    if attempt < max_retries - 1:
+                        backoff_time = 2**attempt  # 1s, 2s, 4s
+                        logger.info(f"Waiting {backoff_time} seconds before retry...")
+                        time.sleep(backoff_time)
+                else:
+                    logger.error(
+                        f"Non-retryable error ({error_type}) for {Path(pdf_file).name}: {e}"
+                    )
+                    return False, None, last_error
+
+        logger.error(
+            f"Failed to process {Path(pdf_file).name} after {max_retries} attempts. Last error: {last_error}"
+        )
+        return False, None, last_error
+
+    def _is_retryable_error(self, error: Exception) -> bool:
+        """Determine if an error is worth retrying."""
+        error_str = str(error).lower()
+        error_type = type(error).__name__
+
+        # Retryable error patterns
+        retryable_patterns = [
+            "stale element reference",
+            "element not found",
+            "element not interactable",
+            "timeout",
+            "no such element",
+            "connection",
+            "network",
+            "webdriver",
+            "chrome",
+            "driver not available",
+            "driver appears to be dead",
+        ]
+
+        # Non-retryable error patterns (permanent failures)
+        non_retryable_patterns = [
+            "file not found",
+            "pdf file not found",
+            "permission denied",
+            "access denied",
+        ]
+
+        # Check for non-retryable patterns first
+        for pattern in non_retryable_patterns:
+            if pattern in error_str:
+                return False
+
+        # Check for retryable patterns
+        for pattern in retryable_patterns:
+            if pattern in error_str:
+                return True
+
+        # Default: retry for most Selenium and WebDriver related errors
+        retryable_types = [
+            "WebDriverException",
+            "TimeoutException",
+            "NoSuchElementException",
+            "StaleElementReferenceException",
+            "ElementNotInteractableException",
+        ]
+
+        return error_type in retryable_types
 
 
 def main():

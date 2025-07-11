@@ -5,7 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "datasets>=3.6.0",
+    "datasets>=4.0.0",
     "matplotlib>=3.10.3",
     "nltk>=3.9.1",
     "numpy>=2.3.1",
@@ -16,7 +16,7 @@ dependencies = [
     "seaborn>=0.13.2",
     "textblob>=0.19.0",
     "torch>=2.7.1",
-    "transformers>=4.53.1",
+    "transformers>=4.53.2",
     "vadersentiment>=3.3.2",
     "wordcloud>=1.9.4",
     "pypdf>=5.7.0",
@@ -26,5 +26,5 @@ dependencies = [
     "pandas-stubs>=2.3.0.250703",
     "types-seaborn>=0.13.2.20250516",
     "selenium>=4.34.2",
-    "undetected-chromedriver>=3.5.5"
+    "undetected-chromedriver>=3.5.5",
 ]
