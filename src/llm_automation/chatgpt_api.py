@@ -84,7 +84,7 @@ class ChatGPTAutomator:
             if self.driver:
                 try:
                     self.driver.quit()
-                except:
+                except Exception:
                     pass
                 self.driver = None
             return False
@@ -100,28 +100,125 @@ class ChatGPTAutomator:
             logger.info("ChatGPT automator cleaned up")
 
     def _handle_initial_dialogs(self):
-        """Handle any initial dialogs or prompts."""
+        """Handle any initial dialogs or prompts with optimized detection."""
         try:
-            if not self.driver or not self.wait:
+            if not self.driver:
                 return
 
-            # Look for "Stay logged out" button
-            stay_logged_out_xpath = "//a[contains(text(), 'Stay logged out')]"
-            try:
-                stay_logged_out = self.wait.until(
-                    EC.element_to_be_clickable((By.XPATH, stay_logged_out_xpath))
-                )
-                stay_logged_out.click()
-                logger.info("Clicked 'Stay logged out'")
-                time.sleep(2)
-            except TimeoutException:
-                logger.info("No 'Stay logged out' button found")
+            logger.info("Checking for initial dialogs...")
 
-            # Handle any other common dialogs
-            time.sleep(2)
+            # First, do a quick check if we're already at the chat interface
+            if self._is_chat_interface_ready():
+                logger.info("Chat interface already ready - no dialogs to handle")
+                return
+
+            # Quick check for login requirements (2 second timeout)
+            login_required = self._check_for_login_requirement()
+
+            if login_required:
+                logger.info("Login required - waiting for user to complete login")
+                self._wait_for_login_completion()
+                return
+
+            # Quick check for "Stay logged out" option (2 second timeout)
+            if self._handle_stay_logged_out():
+                logger.info("Handled 'Stay logged out' option")
+
+            # Final short wait for any remaining page elements to load
+            time.sleep(1)
 
         except Exception as e:
             logger.warning(f"Error handling initial dialogs: {e}")
+
+    def _is_chat_interface_ready(self) -> bool:
+        """Quick check if the chat interface is already loaded and ready."""
+        try:
+            if not self.driver:
+                return False
+
+            chat_indicators = [
+                "#prompt-textarea",
+                "[data-testid='prompt-textarea']",
+                "textarea[placeholder*='message']",
+                "div[contenteditable='true']",
+            ]
+
+            for selector in chat_indicators:
+                try:
+                    element = WebDriverWait(self.driver, 1).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, selector))
+                    )
+                    if element and element.is_displayed():
+                        return True
+                except TimeoutException:
+                    continue
+
+            return False
+
+        except Exception:
+            return False
+
+    def _check_for_login_requirement(self) -> bool:
+        """Quick check if login is required (2 second timeout)."""
+        try:
+            if not self.driver:
+                return False
+
+            # Most common login indicators
+            login_selectors = [
+                "[data-testid='login-button']",
+                "//button[contains(text(), 'Log in')]",
+                "//a[contains(text(), 'Log in')]",
+                "//a[contains(@href, 'login')]",
+            ]
+
+            for selector in login_selectors:
+                try:
+                    if selector.startswith("//"):
+                        element = WebDriverWait(self.driver, 0.5).until(
+                            EC.presence_of_element_located((By.XPATH, selector))
+                        )
+                    else:
+                        element = WebDriverWait(self.driver, 0.5).until(
+                            EC.presence_of_element_located((By.CSS_SELECTOR, selector))
+                        )
+
+                    if element and element.is_displayed():
+                        logger.info(f"Login required - found: {element.text}")
+                        return True
+
+                except TimeoutException:
+                    continue
+
+            return False
+
+        except Exception:
+            return False
+
+    def _handle_stay_logged_out(self) -> bool:
+        """Handle 'Stay logged out' button with short timeout."""
+        try:
+            if not self.driver:
+                return False
+
+            stay_logged_out_xpath = "//a[contains(text(), 'Stay logged out')]"
+
+            stay_logged_out = WebDriverWait(self.driver, 2).until(
+                EC.element_to_be_clickable((By.XPATH, stay_logged_out_xpath))
+            )
+
+            if stay_logged_out:
+                stay_logged_out.click()
+                logger.info("Clicked 'Stay logged out'")
+                time.sleep(1)
+                return True
+
+        except TimeoutException:
+            logger.debug("No 'Stay logged out' button found")
+        except Exception as e:
+            logger.warning(f"Error handling 'Stay logged out': {e}")
+
+        return False
 
     def _ensure_driver_alive(self) -> bool:
         """Check if driver is still alive and responsive."""
@@ -303,17 +400,13 @@ class ChatGPTAutomator:
             # Upload the file
             file_input.send_keys(os.path.abspath(pdf_path))
 
-            # Wait for upload to complete
+            # Wait for upload to complete by monitoring send button state
             logger.info("Waiting for file upload to complete...")
-            time.sleep(self.config.upload_timeout)
-
-            # Look for upload confirmation or file name in UI
-            uploaded = self._wait_for_upload_confirmation(pdf_path)
-            if uploaded:
+            if self._wait_for_upload_completion_by_button():
                 logger.info("PDF uploaded successfully")
                 return True
             else:
-                logger.warning("Could not confirm PDF upload")
+                logger.warning("Upload timeout reached, but continuing...")
                 return True  # Continue anyway
 
         except Exception as e:
@@ -323,6 +416,10 @@ class ChatGPTAutomator:
     def _wait_for_upload_confirmation(self, pdf_path: str) -> bool:
         """Wait for confirmation that the file was uploaded."""
         try:
+            if not self.driver:
+                logger.warning("Driver not available for upload confirmation")
+                return False
+
             pdf_name = Path(pdf_path).name
 
             # Look for the filename in the UI
@@ -354,64 +451,115 @@ class ChatGPTAutomator:
                 logger.error("Driver not available")
                 return False
 
-            # Find text input area
-            text_input_selectors = [
-                "#prompt-textarea",
-                "[data-testid='prompt-textarea']",
-                "textarea[placeholder*='message']",
-                "textarea[placeholder*='type']",
-                ".prompt-textarea",
-                "div[contenteditable='true']",
-            ]
-
-            text_input = None
-            for selector in text_input_selectors:
-                try:
-                    text_input = self.driver.find_element(By.CSS_SELECTOR, selector)
-                    if text_input:
-                        break
-                except Exception:
-                    continue
-
+            # Find text input area with retry logic
+            text_input = self._find_text_input_with_retry()
             if not text_input:
                 logger.error("Could not find text input area")
                 return False
 
-            # Clear and type message
-            text_input.clear()
-            text_input.send_keys(message)
-            time.sleep(1)
+            # Clear and type message with stale element handling
+            try:
+                text_input.clear()
+                text_input.send_keys(message)
+                time.sleep(1)
+            except Exception as e:
+                if "stale element reference" in str(e).lower():
+                    logger.debug("Stale element during text input, retrying...")
+                    text_input = self._find_text_input_with_retry()
+                    if text_input:
+                        text_input.clear()
+                        text_input.send_keys(message)
+                        time.sleep(1)
+                    else:
+                        logger.error("Could not re-find text input after stale element")
+                        return False
+                else:
+                    raise
 
-            # Find and click send button
-            send_button_selectors = [
-                "[data-testid='send-button']",
-                "button[aria-label*='send']",
-                "button[type='submit']",
-                ".send-button",
-                "button:has(svg[class*='send'])",
-            ]
+            # Find and click send button with retry logic
+            send_button = self._find_send_button_with_retry()
 
-            send_button = None
-            for selector in send_button_selectors:
+            if send_button:
                 try:
-                    send_button = self.driver.find_element(By.CSS_SELECTOR, selector)
-                    if send_button and send_button.is_enabled():
-                        break
-                except Exception:
-                    continue
-
-            if not send_button:
-                # Try pressing Enter
-                text_input.send_keys(Keys.RETURN)
+                    send_button.click()
+                    logger.info("Message sent successfully")
+                    return True
+                except Exception as e:
+                    if "stale element reference" in str(e).lower():
+                        logger.debug(
+                            "Stale element during send button click, retrying..."
+                        )
+                        send_button = self._find_send_button_with_retry()
+                        if send_button:
+                            send_button.click()
+                            logger.info("Message sent successfully")
+                            return True
+                    raise
             else:
-                send_button.click()
-
-            logger.info("Message sent successfully")
-            return True
+                # Fallback: Try pressing Enter on a fresh text input
+                logger.debug("No send button found, trying Enter key")
+                fresh_text_input = self._find_text_input_with_retry()
+                if fresh_text_input:
+                    fresh_text_input.send_keys(Keys.RETURN)
+                    logger.info("Message sent successfully via Enter key")
+                    return True
+                else:
+                    logger.error("Could not find text input for Enter key fallback")
+                    return False
 
         except Exception as e:
             logger.error(f"Failed to send message: {e}")
             return False
+
+    def _find_text_input_with_retry(self):
+        """Find text input with retry logic to handle dynamic content."""
+        text_input_selectors = [
+            "#prompt-textarea",
+            "[data-testid='prompt-textarea']",
+            "textarea[placeholder*='message']",
+            "textarea[placeholder*='type']",
+            ".prompt-textarea",
+            "div[contenteditable='true']",
+        ]
+
+        for attempt in range(3):  # Try 3 times
+            for selector in text_input_selectors:
+                try:
+                    element = self.driver.find_element(By.CSS_SELECTOR, selector)
+                    if element and element.is_displayed():
+                        return element
+                except Exception:
+                    continue
+
+            if attempt < 2:  # Don't sleep on the last attempt
+                time.sleep(0.5)
+
+        return None
+
+    def _find_send_button_with_retry(self):
+        """Find send button with retry logic to handle dynamic content."""
+        send_button_selectors = [
+            "#composer-submit-button",
+            "[data-testid='send-button']",
+            "button[aria-label*='Send']",
+            "button[aria-label*='send']",
+            "button[type='submit']",
+            ".send-button",
+        ]
+
+        for attempt in range(3):  # Try 3 times
+            for selector in send_button_selectors:
+                try:
+                    element = self.driver.find_element(By.CSS_SELECTOR, selector)
+                    if element and element.is_displayed() and element.is_enabled():
+                        return element
+                except Exception:
+                    continue
+
+            if attempt < 2:  # Don't sleep on the last attempt
+                time.sleep(0.5)
+
+        return None
 
     def _wait_for_response_completion(self) -> str:
         """Wait for ChatGPT response to complete and extract it."""
@@ -568,4 +716,121 @@ class ChatGPTAutomator:
 
         except Exception as e:
             logger.warning(f"Error starting new conversation: {e}")
+            return False
+
+    def _wait_for_login_completion(self):
+        """Wait for the user to complete the login process."""
+        try:
+            if not self.driver:
+                return
+
+            logger.info("Waiting for login completion...")
+            logger.info(
+                "Please log in using the browser window. Press Enter when done or Ctrl+C to cancel."
+            )
+
+            # Wait for user confirmation that login is complete
+            try:
+                input("Press Enter after you have completed the login process...")
+            except KeyboardInterrupt:
+                logger.info("Login process cancelled by user")
+                raise
+
+            # Additional check - look for signs that we're logged in
+            # Common indicators of successful login
+            logged_in_indicators = [
+                "textarea[placeholder*='message']",
+                "[data-testid='prompt-textarea']",
+                "#prompt-textarea",
+                ".chat-input",
+                "div[contenteditable='true']",
+            ]
+
+            login_successful = False
+            for indicator in logged_in_indicators:
+                try:
+                    element = self.driver.find_element(By.CSS_SELECTOR, indicator)
+                    if element and element.is_displayed():
+                        login_successful = True
+                        break
+                except Exception:
+                    continue
+
+            if login_successful:
+                logger.info("Login appears successful - chat interface detected")
+            else:
+                logger.warning("Could not confirm successful login - continuing anyway")
+
+        except Exception as e:
+            logger.warning(f"Error during login wait: {e}")
+
+    def _wait_for_upload_completion_by_button(self) -> bool:
+        """Wait for upload completion by monitoring the send button's disabled state."""
+        try:
+            if not self.driver:
+                logger.error("Driver not available")
+                return False
+
+            send_button_selectors = [
+                "#composer-submit-button",
+                "[data-testid='send-button']",
+                "button[aria-label*='Send']",
+                "button[aria-label*='send']",
+                "button[type='submit']",
+            ]
+
+            # Wait for button to become disabled (upload starting)
+            start_time = time.time()
+            upload_detected = False
+
+            logger.info("Monitoring send button for upload progress...")
+
+            while time.time() - start_time < 30:  # 30 second timeout
+                send_button = None
+
+                # Re-find the button on each iteration to avoid stale element references
+                for selector in send_button_selectors:
+                    try:
+                        send_button = self.driver.find_element(
+                            By.CSS_SELECTOR, selector
+                        )
+                        if send_button:
+                            break
+                    except Exception:
+                        continue
+
+                if not send_button:
+                    logger.warning("Could not find send button, retrying...")
+                    time.sleep(0.5)
+                    continue
+
+                try:
+                    if not send_button.is_enabled():
+                        if not upload_detected:
+                            logger.info("Upload detected - send button disabled")
+                            upload_detected = True
+                    else:
+                        if upload_detected:
+                            logger.info("Upload completed - send button re-enabled")
+                            return True
+
+                    time.sleep(0.5)  # Check every 500ms
+
+                except Exception as e:
+                    # Log stale element errors at debug level since they're expected
+                    if "stale element reference" in str(e).lower():
+                        logger.debug(f"Stale element reference (expected): {e}")
+                    else:
+                        logger.warning(f"Error checking button state: {e}")
+                    time.sleep(0.5)
+
+            if upload_detected:
+                logger.warning("Upload may have completed but button state unclear")
+                return True
+            else:
+                logger.warning("No upload activity detected via button monitoring")
+                return False
+
+        except Exception as e:
+            logger.warning(f"Error monitoring upload via button state: {e}")
             return False
