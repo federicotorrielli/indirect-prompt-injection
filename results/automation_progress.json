@@ -1,6 +1,6 @@
 {
   "session_start": "2025-07-11T16:44:03.694269",
-  "last_updated": "2025-07-11T17:44:34.206090",
+  "last_updated": "2025-07-11T17:46:41.245323",
   "completed_pdfs": {
     "refusal_attack_narrative_first": {
       "--gvHfE3Xf5.pdf": {
@@ -119,6 +119,15 @@
       },
       "NMgB4CVnMh.pdf": {
         "standard_request": true
+      },
+      "PP4KyAaBoBK.pdf": {
+        "standard_request": true
+      },
+      "Pgv4fwfh63L.pdf": {
+        "standard_request": true
+      },
+      "PoP96DrBHnl.pdf": {
+        "standard_request": true
       }
     },
     "pos_steering_attack_policy_puppetry_first": {
@@ -131,7 +140,7 @@
     }
   },
   "completed_batches": [],
-  "total_pdfs_processed": 42,
-  "total_requests_sent": 42,
+  "total_pdfs_processed": 45,
+  "total_requests_sent": 45,
   "failed_pdfs": {}
 }

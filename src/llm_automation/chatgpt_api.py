@@ -73,6 +73,12 @@ class ChatGPTAutomator:
             # Wait for page to load
             time.sleep(3)
 
+            # Check for usage limits immediately after loading
+            usage_error = self._check_for_usage_limits()
+            if usage_error:
+                self._handle_usage_limit_error(usage_error)
+                # This won't return since _handle_usage_limit_error calls exit()
+
             # Check if we need to handle any initial dialogs
             self._handle_initial_dialogs()
 
@@ -600,6 +606,12 @@ class ChatGPTAutomator:
 
             while time.time() - start_time < self.config.max_response_wait:
                 try:
+                    # Check for usage limits before processing response
+                    usage_error = self._check_for_usage_limits()
+                    if usage_error:
+                        self._handle_usage_limit_error(usage_error)
+                        # This won't return since _handle_usage_limit_error calls exit()
+
                     # Get all response elements (in case there are multiple)
                     all_responses = self.driver.find_elements(
                         By.CSS_SELECTOR, response_container_selectors[0]
@@ -663,6 +675,13 @@ class ChatGPTAutomator:
                 logger.error("Failed to send request message")
                 return None
 
+            # Check for immediate usage limit errors after sending
+            time.sleep(2)  # Brief wait for any immediate error to appear
+            usage_error = self._check_for_usage_limits()
+            if usage_error:
+                self._handle_usage_limit_error(usage_error)
+                # This won't return since _handle_usage_limit_error calls exit()
+
             # Wait for and extract response
             response = self._wait_for_response_completion()
 
@@ -708,6 +727,12 @@ class ChatGPTAutomator:
             self.driver.get(self.config.chatgpt_url)
             time.sleep(3)  # Wait for page to load
 
+            # Check for usage limits after reload (common place for limit messages)
+            usage_error = self._check_for_usage_limits()
+            if usage_error:
+                self._handle_usage_limit_error(usage_error)
+                # This won't return since _handle_usage_limit_error calls exit()
+
             # Handle any initial dialogs that might appear
             self._handle_initial_dialogs()
 
@@ -717,6 +742,126 @@ class ChatGPTAutomator:
         except Exception as e:
             logger.warning(f"Error starting new conversation: {e}")
             return False
+
+    def _check_for_usage_limits(self) -> Optional[str]:
+        """Check for usage cap or limit error messages."""
+        try:
+            if not self.driver:
+                return None
+
+            # Common selectors where error messages appear
+            error_selectors = [
+                # Specific ChatGPT usage limit selectors
+                ".text-token-text-error",
+                "div.text-token-text-error",
+                "aside.flex.w-full",
+                "div[class*='text-token-text-error']",
+                "div[class*='border-token-surface-error']",
+                "aside[class*='rounded-3xl'][class*='border']",
+                # Button with regenerate functionality (usage cap reached)
+                "[data-testid='regenerate-thread-error-button']",
+                # Any div containing error-related tokens
+                "div[class*='token-text-error']",
+                "aside[class*='token-main-surface']",
+                # Keep some fallback selectors for edge cases
+                ".message-content",
+                ".prose",
+                "div[role='alert']",
+            ]
+
+            # Usage limit patterns to detect
+            limit_patterns = [
+                # Exact patterns from the provided examples
+                "you previously reached your usage cap for gpt",
+                "you've hit the edu plan limit for gpt",
+                "usage cap for gpt",
+                "hit the edu plan limit",
+                "plan limit for gpt",
+                # Generic patterns
+                "reached your usage limit",
+                "usage limit exceeded",
+                "you've hit the",
+                "usage cap",
+                "plan limit",
+                "rate limit",
+                "quota exceeded",
+                "responses will use another model",
+                "limit resets after",
+                "usage cap for",
+                "edu plan limit",
+            ]
+
+            for selector in error_selectors:
+                try:
+                    elements = self.driver.find_elements(By.CSS_SELECTOR, selector)
+                    for element in elements:
+                        if element.is_displayed():
+                            text = element.text.lower()
+                            for pattern in limit_patterns:
+                                if pattern in text:
+                                    logger.error(
+                                        f"Usage limit detected: {element.text}"
+                                    )
+                                    return element.text
+                except Exception:
+                    continue
+
+            # Additional check for specific regenerate button that appears with usage caps
+            try:
+                regenerate_button = self.driver.find_element(
+                    By.CSS_SELECTOR, "[data-testid='regenerate-thread-error-button']"
+                )
+                if regenerate_button and regenerate_button.is_displayed():
+                    # Look for the associated error message near the button
+                    parent = regenerate_button.find_element(By.XPATH, "./..")
+                    if parent:
+                        error_text = parent.text.lower()
+                        if any(pattern in error_text for pattern in limit_patterns):
+                            logger.error(
+                                f"Usage limit detected via regenerate button: {parent.text}"
+                            )
+                            return parent.text
+            except Exception:
+                pass
+
+            return None
+
+        except Exception as e:
+            logger.warning(f"Error checking for usage limits: {e}")
+            return None
+
+    def _handle_usage_limit_error(self, error_message: str):
+        """Handle usage limit errors by stopping execution with a clear notice."""
+        logger.error("=" * 80)
+        logger.error("🚨 CRITICAL: USAGE LIMIT REACHED 🚨")
+        logger.error("=" * 80)
+        logger.error(f"Error message: {error_message}")
+        logger.error("")
+        logger.error(
+            "The script has been stopped because ChatGPT usage limits have been reached."
+        )
+        logger.error(
+            "Please wait for the limit to reset or upgrade your plan before continuing."
+        )
+        logger.error("=" * 80)
+
+        # Print to console as well for visibility
+        print("\n" + "=" * 80)
+        print("🚨 CRITICAL: CHATGPT USAGE LIMIT REACHED 🚨")
+        print("=" * 80)
+        print(f"Error message: {error_message}")
+        print("")
+        print(
+            "The script has been stopped because ChatGPT usage limits have been reached."
+        )
+        print(
+            "Please wait for the limit to reset or upgrade your plan before continuing."
+        )
+        print("=" * 80 + "\n")
+
+        # Cleanup and exit
+        self.cleanup()
+        exit(1)
 
     def _wait_for_login_completion(self):
         """Wait for the user to complete the login process."""
