@@ -27,4 +27,5 @@ dependencies = [
     "types-seaborn>=0.13.2.20250516",
     "selenium>=4.34.2",
     "undetected-chromedriver>=3.5.5",
+    "huggingface-hub[cli]>=0.33.2",
 ]
