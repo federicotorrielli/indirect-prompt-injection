@@ -3,7 +3,7 @@ name = "indirect-prompt-injection"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.11"
 dependencies = [
     "datasets>=4.0.0",
     "matplotlib>=3.10.3",
@@ -21,11 +21,11 @@ dependencies = [
     "wordcloud>=1.9.4",
     "pypdf>=5.7.0",
     "reportlab>=4.4.2",
-    "tqdm>=4.67.1",
-    "whenever>=0.8.6",
-    "pandas-stubs>=2.3.0.250703",
-    "types-seaborn>=0.13.2.20250516",
-    "selenium>=4.34.2",
-    "undetected-chromedriver>=3.5.5",
-    "huggingface-hub[cli]>=0.33.2",
+    "tqdm",
+    "transformers",
+    "accelerate",
+    "bitsandbytes",
+    "scikit-learn",
+    "vaderSentiment",
 ]
+license = { text = "MIT" }
