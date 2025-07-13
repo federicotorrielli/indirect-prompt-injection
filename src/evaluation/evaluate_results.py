@@ -20,9 +20,9 @@ from collections import defaultdict
 from typing import Dict, List
 
 import torch
-from datasets import Dataset
-from sklearn.metrics import classification_report
-from tqdm import tqdm
+from datasets import Dataset  # type: ignore
+from sklearn.metrics import classification_report  # type: ignore
+from tqdm import tqdm  # type: ignore
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 
 # Set up logging
@@ -81,7 +81,7 @@ class AttackEvaluator:
         """
         logging.info(f"Evaluating dataset with batch size {batch_size}...")
 
-        prompts = []
+        prompts: List[List[Dict[str, str]] | None] = []
         for item in tqdm(dataset, desc="Formatting prompts"):
             attack_type = item["attack_type"]
             response = item["response"]
@@ -120,7 +120,7 @@ class AttackEvaluator:
             else:
                 prompt_key = attack_type
 
-            base_prompt = base_prompts.get(prompt_key)
+            base_prompt = base_prompts.get(prompt_key) if prompt_key else None
 
             if not base_prompt:
                 logging.warning(
@@ -225,8 +225,12 @@ def print_evaluation_summary(evaluated_records: List[Dict]):
         r for r in evaluated_records if "clean" not in r.get("attack_key", "")
     ]
     if attack_records:
-        type_summary = defaultdict(lambda: {"success": 0, "total": 0})
-        key_summary = defaultdict(lambda: {"success": 0, "total": 0})
+        type_summary: Dict[str, Dict[str, int]] = defaultdict(
+            lambda: {"success": 0, "total": 0}
+        )
+        key_summary: Dict[str, Dict[str, int]] = defaultdict(
+            lambda: {"success": 0, "total": 0}
+        )
         overall_success = 0
 
         for record in attack_records:
