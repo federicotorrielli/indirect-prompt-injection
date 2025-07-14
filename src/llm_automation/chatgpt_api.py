@@ -252,14 +252,17 @@ class ChatGPTAutomator:
 
             # Common attachment button selectors for ChatGPT
             attachment_selectors = [
+                "#upload-file-btn",  # Specific ID for upload button
                 "button[aria-label*='attach']",
                 "button[aria-label*='file']",
                 "button[aria-label*='upload']",
+                "button[aria-label*='Add files']",  # Match "Add files is unavailable"
                 "[data-testid='attachment-button']",
                 "[data-testid='file-upload-button']",
                 "button:has(svg[data-icon='paperclip'])",
                 "button:has(svg[data-icon='attachment'])",
                 "button[class*='attach']",
+                "button[class*='composer-btn']",  # Match the composer-btn class
                 ".attachment-button",
                 "button[title*='attach']",
                 "button[title*='file']",
@@ -303,13 +306,18 @@ class ChatGPTAutomator:
             try:
                 class_attr = attachment_btn.get_attribute("class") or ""
                 style_attr = attachment_btn.get_attribute("style") or ""
+                data_disabled = attachment_btn.get_attribute("data-disabled")
+                aria_label = attachment_btn.get_attribute("aria-label") or ""
 
                 is_disabled = (
                     not attachment_btn.is_enabled()
                     or attachment_btn.get_attribute("disabled") is not None
                     or attachment_btn.get_attribute("aria-disabled") == "true"
+                    or data_disabled is not None  # Check for data-disabled attribute
                     or "disabled" in class_attr.lower()
                     or ("opacity" in style_attr and "0" in style_attr)
+                    or "unavailable"
+                    in aria_label.lower()  # Check for "unavailable" in aria-label
                 )
 
                 if is_disabled:
@@ -915,6 +923,16 @@ class ChatGPTAutomator:
                                 f"Usage limit detected via regenerate button: {parent.text}"
                             )
                             return parent.text
+            except Exception:
+                pass
+
+            # Check if attachment/upload button is disabled (another indicator of usage limits)
+            try:
+                if self._is_attachment_button_disabled():
+                    logger.error("Usage limit detected: Attachment button is disabled")
+                    return (
+                        "Attachment functionality disabled - likely due to usage limits"
+                    )
             except Exception:
                 pass
 
