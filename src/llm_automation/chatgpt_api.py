@@ -7,13 +7,14 @@ import logging
 import os
 import time
 from pathlib import Path
-from typing import Optional
+from typing import Any, Dict, Optional
 
 import undetected_chromedriver as uc
 from config import Config
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -25,11 +26,11 @@ class ChatGPTAutomator:
 
     def __init__(self, config: Config):
         self.config = config
-        self.driver = None
-        self.wait = None
+        self.driver: Optional[WebDriver] = None
+        self.selector_cache: Dict[str, Any] = {}  # Cache for successful selectors
 
     def initialize(self) -> bool:
-        """Initialize the Chrome driver and navigate to ChatGPT."""
+        """Initialize the WebDriver and navigate to ChatGPT."""
         try:
             logger.info("Setting up Chrome driver...")
 
@@ -170,30 +171,36 @@ class ChatGPTAutomator:
             if not self.driver:
                 return False
 
-            # Most common login indicators
             login_selectors = [
-                "[data-testid='login-button']",
-                "//button[contains(text(), 'Log in')]",
-                "//a[contains(text(), 'Log in')]",
-                "//a[contains(@href, 'login')]",
+                ("[data-testid='login-button']", By.CSS_SELECTOR),
+                ("//button[contains(text(), 'Log in')]", By.XPATH),
+                ("//a[contains(text(), 'Log in')]", By.XPATH),
+                ("//a[contains(@href, 'login')]", By.XPATH),
             ]
 
-            for selector in login_selectors:
+            # Try cached selector first
+            cached = self.selector_cache.get("login_button")
+            if cached:
+                cached_selector, by = cached
                 try:
-                    if selector.startswith("//"):
-                        element = WebDriverWait(self.driver, 0.5).until(
-                            EC.presence_of_element_located((By.XPATH, selector))
-                        )
-                    else:
-                        element = WebDriverWait(self.driver, 0.5).until(
-                            EC.presence_of_element_located((By.CSS_SELECTOR, selector))
-                        )
-
+                    element = self.driver.find_element(by, cached_selector)
                     if element and element.is_displayed():
-                        logger.info(f"Login required - found: {element.text}")
+                        logger.debug(
+                            f"Login required (cached selector: {cached_selector})"
+                        )
                         return True
+                except Exception:
+                    logger.debug("Cached login selector failed, trying all")
+                    del self.selector_cache["login_button"]  # Remove failed selector
 
-                except TimeoutException:
+            for selector, by in login_selectors:
+                try:
+                    element = self.driver.find_element(by, selector)
+                    if element and element.is_displayed():
+                        logger.debug(f"Login required (new selector: {selector})")
+                        self.selector_cache["login_button"] = (selector, by)
+                        return True
+                except Exception:
                     continue
 
             return False
@@ -258,11 +265,23 @@ class ChatGPTAutomator:
                 "button[title*='file']",
             ]
 
+            # Try cached selector first
+            cached_selector = self.selector_cache.get("attachment_button")
+            if cached_selector:
+                try:
+                    element = self.driver.find_element(By.CSS_SELECTOR, cached_selector)
+                    if element and element.is_displayed():
+                        return element
+                except Exception:
+                    logger.debug("Cached attachment button selector failed, trying all")
+                    del self.selector_cache["attachment_button"]
+
             for selector in attachment_selectors:
                 try:
-                    elements = self.driver.find_elements(By.CSS_SELECTOR, selector)
-                    if elements:
-                        return elements[0]
+                    element = self.driver.find_element(By.CSS_SELECTOR, selector)
+                    if element and element.is_displayed():
+                        self.selector_cache["attachment_button"] = selector
+                        return element
                 except Exception:
                     continue
 
@@ -352,12 +371,24 @@ class ChatGPTAutomator:
                 "#file-upload",
             ]
 
+            # Try cached selector first
+            cached_selector = self.selector_cache.get("file_upload_input")
+            if cached_selector:
+                try:
+                    element = self.driver.find_element(By.CSS_SELECTOR, cached_selector)
+                    if element:  # Hidden inputs are fine
+                        return element
+                except Exception:
+                    logger.debug("Cached file upload selector failed, trying all")
+                    del self.selector_cache["file_upload_input"]
+
             # First try to find visible file inputs
             for selector in file_selectors:
                 try:
-                    elements = self.driver.find_elements(By.CSS_SELECTOR, selector)
-                    if elements:
-                        return elements[0]
+                    element = self.driver.find_element(By.CSS_SELECTOR, selector)
+                    if element:
+                        self.selector_cache["file_upload_input"] = selector
+                        return element
                 except Exception:
                     continue
 
@@ -372,11 +403,11 @@ class ChatGPTAutomator:
                         # Now look for file input again
                         for selector in file_selectors:
                             try:
-                                elements = self.driver.find_elements(
+                                element = self.driver.find_element(
                                     By.CSS_SELECTOR, selector
                                 )
-                                if elements:
-                                    return elements[0]
+                                if element:
+                                    return element
                             except Exception:
                                 continue
                 except Exception as e:
@@ -430,16 +461,37 @@ class ChatGPTAutomator:
 
             # Look for the filename in the UI
             confirmation_selectors = [
-                f"//*[contains(text(), '{pdf_name}')]",
+                "//*[contains(text(), '{pdf_name}')]",
                 "//*[contains(@class, 'file') and contains(@class, 'uploaded')]",
                 "//*[contains(@class, 'attachment')]",
             ]
 
+            # Try cached selector first
+            cached_selector = self.selector_cache.get("upload_confirmation")
+            if cached_selector:
+                try:
+                    if "{pdf_name}" in cached_selector:
+                        selector_to_try = cached_selector.format(pdf_name=pdf_name)
+                    else:
+                        selector_to_try = cached_selector
+                    WebDriverWait(self.driver, 10).until(
+                        EC.presence_of_element_located((By.XPATH, selector_to_try))
+                    )
+                    return True
+                except TimeoutException:
+                    logger.debug("Cached upload confirmation selector failed")
+                    del self.selector_cache["upload_confirmation"]
+
             for selector in confirmation_selectors:
                 try:
+                    if "{pdf_name}" in selector:
+                        selector_to_try = selector.format(pdf_name=pdf_name)
+                    else:
+                        selector_to_try = selector
                     WebDriverWait(self.driver, 10).until(
-                        EC.presence_of_element_located((By.XPATH, selector))
+                        EC.presence_of_element_located((By.XPATH, selector_to_try))
                     )
+                    self.selector_cache["upload_confirmation"] = selector
                     return True
                 except TimeoutException:
                     continue
@@ -528,11 +580,25 @@ class ChatGPTAutomator:
             "div[contenteditable='true']",
         ]
 
+        # Try cached selector first
+        cached_selector = self.selector_cache.get("text_input")
+        if cached_selector:
+            for attempt in range(2):  # Try cached twice
+                try:
+                    element = self.driver.find_element(By.CSS_SELECTOR, cached_selector)
+                    if element and element.is_displayed():
+                        return element
+                except Exception:
+                    time.sleep(0.5)
+            logger.debug("Cached text input selector failed, trying all")
+            del self.selector_cache["text_input"]
+
         for attempt in range(3):  # Try 3 times
             for selector in text_input_selectors:
                 try:
                     element = self.driver.find_element(By.CSS_SELECTOR, selector)
                     if element and element.is_displayed():
+                        self.selector_cache["text_input"] = selector
                         return element
                 except Exception:
                     continue
@@ -553,11 +619,25 @@ class ChatGPTAutomator:
             ".send-button",
         ]
 
+        # Try cached selector first
+        cached_selector = self.selector_cache.get("send_button")
+        if cached_selector:
+            for attempt in range(2):  # Try cached twice
+                try:
+                    element = self.driver.find_element(By.CSS_SELECTOR, cached_selector)
+                    if element and element.is_displayed() and element.is_enabled():
+                        return element
+                except Exception:
+                    time.sleep(0.5)
+            logger.debug("Cached send button selector failed, trying all")
+            del self.selector_cache["send_button"]
+
         for attempt in range(3):  # Try 3 times
             for selector in send_button_selectors:
                 try:
                     element = self.driver.find_element(By.CSS_SELECTOR, selector)
                     if element and element.is_displayed() and element.is_enabled():
+                        self.selector_cache["send_button"] = selector
                         return element
                 except Exception:
                     continue
@@ -586,14 +666,29 @@ class ChatGPTAutomator:
             ]
 
             response_element = None
-            for selector in response_container_selectors:
+            # Try cached selector first
+            cached_selector = self.selector_cache.get("response_container")
+            if cached_selector:
                 try:
-                    response_element = WebDriverWait(self.driver, 30).until(
-                        EC.presence_of_element_located((By.CSS_SELECTOR, selector))
+                    response_element = WebDriverWait(self.driver, 10).until(
+                        EC.presence_of_element_located(
+                            (By.CSS_SELECTOR, cached_selector)
+                        )
                     )
-                    break
                 except TimeoutException:
-                    continue
+                    logger.debug("Cached response container selector failed")
+                    del self.selector_cache["response_container"]
+
+            if not response_element:
+                for selector in response_container_selectors:
+                    try:
+                        response_element = WebDriverWait(self.driver, 30).until(
+                            EC.presence_of_element_located((By.CSS_SELECTOR, selector))
+                        )
+                        self.selector_cache["response_container"] = selector
+                        break
+                    except TimeoutException:
+                        continue
 
             if not response_element:
                 logger.error("Could not find response container")
@@ -613,8 +708,11 @@ class ChatGPTAutomator:
                         # This won't return since _handle_usage_limit_error calls exit()
 
                     # Get all response elements (in case there are multiple)
+                    response_selector = self.selector_cache.get(
+                        "response_container", response_container_selectors[0]
+                    )
                     all_responses = self.driver.find_elements(
-                        By.CSS_SELECTOR, response_container_selectors[0]
+                        By.CSS_SELECTOR, response_selector
                     )
                     if all_responses:
                         current_text = all_responses[-1].text
@@ -622,10 +720,9 @@ class ChatGPTAutomator:
 
                         if current_length > 0 and current_length == last_length:
                             stable_count += 1
-                            if stable_count >= 3:  # Response stable for 3 checks
+                            if stable_count >= 3:  # Response stable for 6 seconds
                                 logger.info("Response appears complete")
-                                time.sleep(2)  # Final wait
-                                return all_responses[-1].text
+                                return current_text
                         else:
                             stable_count = 0
 
@@ -640,8 +737,11 @@ class ChatGPTAutomator:
             # Timeout reached, return what we have
             logger.warning("Response timeout reached")
             try:
+                response_selector = self.selector_cache.get(
+                    "response_container", response_container_selectors[0]
+                )
                 all_responses = self.driver.find_elements(
-                    By.CSS_SELECTOR, response_container_selectors[0]
+                    By.CSS_SELECTOR, response_selector
                 )
                 if all_responses:
                     return all_responses[-1].text
@@ -744,85 +844,70 @@ class ChatGPTAutomator:
             return False
 
     def _check_for_usage_limits(self) -> Optional[str]:
-        """Check for usage cap or limit error messages."""
+        """Check for usage cap or limit error messages using an optimized XPath query."""
         try:
             if not self.driver:
                 return None
 
-            # Common selectors where error messages appear
-            error_selectors = [
-                # Specific ChatGPT usage limit selectors
-                ".text-token-text-error",
-                "div.text-token-text-error",
-                "aside.flex.w-full",
-                "div[class*='text-token-text-error']",
-                "div[class*='border-token-surface-error']",
-                "aside[class*='rounded-3xl'][class*='border']",
-                # Button with regenerate functionality (usage cap reached)
-                "[data-testid='regenerate-thread-error-button']",
-                # Any div containing error-related tokens
-                "div[class*='token-text-error']",
-                "aside[class*='token-main-surface']",
-                # Keep some fallback selectors for edge cases
-                ".message-content",
-                ".prose",
-                "div[role='alert']",
-            ]
-
-            # Usage limit patterns to detect
+            # A single, optimized XPath query is much faster than multiple CSS selectors.
+            # This query looks for any visible element containing the relevant keywords.
+            # We combine multiple text checks using 'or'.
             limit_patterns = [
-                # Exact patterns from the provided examples
-                "you previously reached your usage cap for gpt",
-                "you've hit the edu plan limit for gpt",
-                "usage cap for gpt",
-                "hit the edu plan limit",
-                "plan limit for gpt",
-                # Generic patterns
-                "reached your usage limit",
-                "usage limit exceeded",
-                "you've hit the",
                 "usage cap",
                 "plan limit",
+                "usage limit",
                 "rate limit",
                 "quota exceeded",
-                "responses will use another model",
-                "limit resets after",
-                "usage cap for",
-                "edu plan limit",
             ]
+            # Build an XPath that checks for any of the patterns in the text.
+            # translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') is for case-insensitivity.
+            contains_text = " or ".join(
+                [
+                    f"contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '{p}')"
+                    for p in limit_patterns
+                ]
+            )
+            xpath_query = (
+                f"//*[{contains_text} and not(self::script) and not(self::style)]"
+            )
 
-            for selector in error_selectors:
-                try:
-                    elements = self.driver.find_elements(By.CSS_SELECTOR, selector)
-                    for element in elements:
-                        if element.is_displayed():
-                            text = element.text.lower()
-                            for pattern in limit_patterns:
-                                if pattern in text:
-                                    logger.error(
-                                        f"Usage limit detected: {element.text}"
-                                    )
-                                    return element.text
-                except Exception:
-                    continue
+            # We also check for the specific regenerate button which is a strong indicator.
+            regenerate_button_xpath = (
+                "//*[@data-testid='regenerate-thread-error-button']"
+            )
 
-            # Additional check for specific regenerate button that appears with usage caps
+            # Combine both checks into one wait. We wait for either the text or the button.
+            # This is more efficient than two separate waits.
+            combined_xpath = f"({xpath_query}) | ({regenerate_button_xpath})"
+
             try:
-                regenerate_button = self.driver.find_element(
-                    By.CSS_SELECTOR, "[data-testid='regenerate-thread-error-button']"
+                # Use a short wait, as these messages usually appear quickly.
+                wait = WebDriverWait(self.driver, 2)
+                error_element = wait.until(
+                    EC.visibility_of_element_located((By.XPATH, combined_xpath))
                 )
-                if regenerate_button and regenerate_button.is_displayed():
-                    # Look for the associated error message near the button
-                    parent = regenerate_button.find_element(By.XPATH, "./..")
-                    if parent:
-                        error_text = parent.text.lower()
-                        if any(pattern in error_text for pattern in limit_patterns):
-                            logger.error(
-                                f"Usage limit detected via regenerate button: {parent.text}"
-                            )
-                            return parent.text
-            except Exception:
-                pass
+
+                if error_element:
+                    # If it's the button, find the parent text. Otherwise, use the element's text.
+                    if (
+                        error_element.get_attribute("data-testid")
+                        == "regenerate-thread-error-button"
+                    ):
+                        parent = error_element.find_element(By.XPATH, "./..")
+                        error_message = parent.text if parent else "Usage limit reached"
+                    else:
+                        error_message = error_element.text
+
+                    logger.error(f"Usage limit detected: {error_message}")
+                    return error_message
+
+            except TimeoutException:
+                # This is the expected outcome if no limit is found.
+                return None
+            except Exception as e:
+                # Catch other potential exceptions during element search.
+                logger.debug(f"Non-timeout error checking for usage limits: {e}")
+                return None
 
             return None
 
@@ -892,14 +977,27 @@ class ChatGPTAutomator:
             ]
 
             login_successful = False
-            for indicator in logged_in_indicators:
+            # Try cached selector first
+            cached_selector = self.selector_cache.get("logged_in_indicator")
+            if cached_selector:
                 try:
-                    element = self.driver.find_element(By.CSS_SELECTOR, indicator)
+                    element = self.driver.find_element(By.CSS_SELECTOR, cached_selector)
                     if element and element.is_displayed():
                         login_successful = True
-                        break
                 except Exception:
-                    continue
+                    logger.debug("Cached logged in indicator failed")
+                    del self.selector_cache["logged_in_indicator"]
+
+            if not login_successful:
+                for indicator in logged_in_indicators:
+                    try:
+                        element = self.driver.find_element(By.CSS_SELECTOR, indicator)
+                        if element and element.is_displayed():
+                            self.selector_cache["logged_in_indicator"] = indicator
+                            login_successful = True
+                            break
+                    except Exception:
+                        continue
 
             if login_successful:
                 logger.info("Login appears successful - chat interface detected")
@@ -934,15 +1032,28 @@ class ChatGPTAutomator:
                 send_button = None
 
                 # Re-find the button on each iteration to avoid stale element references
-                for selector in send_button_selectors:
+                # Try cached selector first
+                cached_selector = self.selector_cache.get("send_button")
+                if cached_selector:
                     try:
                         send_button = self.driver.find_element(
-                            By.CSS_SELECTOR, selector
+                            By.CSS_SELECTOR, cached_selector
                         )
-                        if send_button:
-                            break
                     except Exception:
-                        continue
+                        logger.debug("Cached send button selector failed in monitor")
+                        del self.selector_cache["send_button"]
+
+                if not send_button:
+                    for selector in send_button_selectors:
+                        try:
+                            send_button = self.driver.find_element(
+                                By.CSS_SELECTOR, selector
+                            )
+                            if send_button:
+                                self.selector_cache["send_button"] = selector
+                                break
+                        except Exception:
+                            continue
 
                 if not send_button:
                     logger.warning("Could not find send button, retrying...")
