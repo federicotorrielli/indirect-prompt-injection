@@ -701,12 +701,6 @@ class ChatGPTAutomator:
 
             while time.time() - start_time < self.config.max_response_wait:
                 try:
-                    # Check for usage limits before processing response
-                    usage_error = self._check_for_usage_limits()
-                    if usage_error:
-                        self._handle_usage_limit_error(usage_error)
-                        # This won't return since _handle_usage_limit_error calls exit()
-
                     # Get all response elements (in case there are multiple)
                     response_selector = self.selector_cache.get(
                         "response_container", response_container_selectors[0]
@@ -720,7 +714,7 @@ class ChatGPTAutomator:
 
                         if current_length > 0 and current_length == last_length:
                             stable_count += 1
-                            if stable_count >= 3:  # Response stable for 6 seconds
+                            if stable_count >= 3:  # Response stable for 3 checks
                                 logger.info("Response appears complete")
                                 return current_text
                         else:
@@ -728,7 +722,7 @@ class ChatGPTAutomator:
 
                         last_length = current_length
 
-                    time.sleep(2)
+                    time.sleep(0.5)
 
                 except Exception as e:
                     logger.warning(f"Error checking response: {e}")
@@ -776,7 +770,7 @@ class ChatGPTAutomator:
                 return None
 
             # Check for immediate usage limit errors after sending
-            time.sleep(2)  # Brief wait for any immediate error to appear
+            time.sleep(1)  # Brief wait for any immediate error to appear
             usage_error = self._check_for_usage_limits()
             if usage_error:
                 self._handle_usage_limit_error(usage_error)
@@ -844,70 +838,85 @@ class ChatGPTAutomator:
             return False
 
     def _check_for_usage_limits(self) -> Optional[str]:
-        """Check for usage cap or limit error messages using an optimized XPath query."""
+        """Check for usage cap or limit error messages."""
         try:
             if not self.driver:
                 return None
 
-            # A single, optimized XPath query is much faster than multiple CSS selectors.
-            # This query looks for any visible element containing the relevant keywords.
-            # We combine multiple text checks using 'or'.
-            limit_patterns = [
-                "usage cap",
-                "plan limit",
-                "usage limit",
-                "rate limit",
-                "quota exceeded",
+            logger.info("Checking for usage limit errors... This will take a bit.")
+
+            # Common selectors where error messages appear
+            error_selectors = [
+                ".text-token-text-error",
+                "div.text-token-text-error",
+                "aside.flex.w-full",
+                "div[class*='text-token-text-error']",
+                "div[class*='border-token-surface-error']",
+                "aside[class*='rounded-3xl'][class*='border']",
             ]
-            # Build an XPath that checks for any of the patterns in the text.
-            # translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') is for case-insensitivity.
-            contains_text = " or ".join(
-                [
-                    f"contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '{p}')"
-                    for p in limit_patterns
-                ]
-            )
-            xpath_query = (
-                f"//*[{contains_text} and not(self::script) and not(self::style)]"
-            )
 
-            # We also check for the specific regenerate button which is a strong indicator.
-            regenerate_button_xpath = (
-                "//*[@data-testid='regenerate-thread-error-button']"
-            )
+            # Usage limit patterns to detect
+            limit_patterns = [
+                "usage cap for gpt",
+                "hit the edu plan limit",
+                "plan limit for gpt",
+            ]
 
-            # Combine both checks into one wait. We wait for either the text or the button.
-            # This is more efficient than two separate waits.
-            combined_xpath = f"({xpath_query}) | ({regenerate_button_xpath})"
+            # Use cached selector for performance if available
+            cached_selector = self.selector_cache.get("usage_limit_error")
+            if cached_selector:
+                try:
+                    elements = self.driver.find_elements(
+                        By.CSS_SELECTOR, cached_selector
+                    )
+                    for element in elements:
+                        if element.is_displayed():
+                            text = element.text.lower()
+                            for pattern in limit_patterns:
+                                if pattern in text:
+                                    logger.error(
+                                        f"Usage limit detected (cached): {element.text}"
+                                    )
+                                    return element.text
+                except Exception:
+                    logger.debug("Cached usage limit selector failed")
+                    del self.selector_cache["usage_limit_error"]
 
+            # Check all selectors for usage limit messages
+            for selector in error_selectors:
+                try:
+                    elements = self.driver.find_elements(By.CSS_SELECTOR, selector)
+                    for element in elements:
+                        if element.is_displayed():
+                            text = element.text.lower()
+                            for pattern in limit_patterns:
+                                if pattern in text:
+                                    logger.error(
+                                        f"Usage limit detected: {element.text}"
+                                    )
+                                    # Cache the successful selector for future use
+                                    self.selector_cache["usage_limit_error"] = selector
+                                    return element.text
+                except Exception:
+                    continue
+
+            # Additional check for specific regenerate button that appears with usage caps
             try:
-                # Use a short wait, as these messages usually appear quickly.
-                wait = WebDriverWait(self.driver, 2)
-                error_element = wait.until(
-                    EC.visibility_of_element_located((By.XPATH, combined_xpath))
+                regenerate_button = self.driver.find_element(
+                    By.CSS_SELECTOR, "[data-testid='regenerate-thread-error-button']"
                 )
-
-                if error_element:
-                    # If it's the button, find the parent text. Otherwise, use the element's text.
-                    if (
-                        error_element.get_attribute("data-testid")
-                        == "regenerate-thread-error-button"
-                    ):
-                        parent = error_element.find_element(By.XPATH, "./..")
-                        error_message = parent.text if parent else "Usage limit reached"
-                    else:
-                        error_message = error_element.text
-
-                    logger.error(f"Usage limit detected: {error_message}")
-                    return error_message
-
-            except TimeoutException:
-                # This is the expected outcome if no limit is found.
-                return None
-            except Exception as e:
-                # Catch other potential exceptions during element search.
-                logger.debug(f"Non-timeout error checking for usage limits: {e}")
-                return None
+                if regenerate_button and regenerate_button.is_displayed():
+                    # Look for the associated error message near the button
+                    parent = regenerate_button.find_element(By.XPATH, "./..")
+                    if parent:
+                        error_text = parent.text.lower()
+                        if any(pattern in error_text for pattern in limit_patterns):
+                            logger.error(
+                                f"Usage limit detected via regenerate button: {parent.text}"
+                            )
+                            return parent.text
+            except Exception:
+                pass
 
             return None
 
