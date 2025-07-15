@@ -1,6 +1,6 @@
 {
   "session_start": "2025-07-11T16:44:03.694269",
-  "last_updated": "2025-07-15T00:12:12.885947",
+  "last_updated": "2025-07-15T10:43:05.412556",
   "completed_pdfs": {
     "refusal_attack_narrative_first": {
       "--gvHfE3Xf5.pdf": {
@@ -1851,6 +1851,75 @@
       },
       "49A1Y6tRhaq.pdf": {
         "standard_request": true
+      },
+      "4hBXGTdS6Lc.pdf": {
+        "standard_request": true
+      },
+      "4pfqv2FCo0R.pdf": {
+        "standard_request": true
+      },
+      "5USOVm2HkfG.pdf": {
+        "standard_request": true
+      },
+      "5l9zj5G7vDY.pdf": {
+        "standard_request": true
+      },
+      "6gLEKETxUWp.pdf": {
+        "standard_request": true
+      },
+      "7WwYBADS3E_.pdf": {
+        "standard_request": true
+      },
+      "8nXkyH2_s6.pdf": {
+        "standard_request": true
+      },
+      "AADxnPG-PR.pdf": {
+        "standard_request": true
+      },
+      "AT7jak63NNK.pdf": {
+        "standard_request": true
+      },
+      "Al7Wpsy49g.pdf": {
+        "standard_request": true
+      },
+      "B1g30j0qF7.pdf": {
+        "standard_request": true
+      },
+      "BIIwfP55pp.pdf": {
+        "standard_request": true
+      },
+      "BJe4oxHYPB.pdf": {
+        "standard_request": true
+      },
+      "BJlPOlBKDB.pdf": {
+        "standard_request": true
+      },
+      "BygSP6Vtvr.pdf": {
+        "standard_request": true
+      },
+      "CrCvGNHAIrz.pdf": {
+        "standard_request": true
+      },
+      "DFIoGDZejIB.pdf": {
+        "standard_request": true
+      },
+      "DTXZqTNV5nW.pdf": {
+        "standard_request": true
+      },
+      "E3UZoJKHxuk.pdf": {
+        "standard_request": true
+      },
+      "FoM-RnF6SNe.pdf": {
+        "standard_request": true
+      },
+      "H1lJJnR5Ym.pdf": {
+        "standard_request": true
+      },
+      "HG7vlodGGm.pdf": {
+        "standard_request": true
+      },
+      "HHiiQKWsOcV.pdf": {
+        "standard_request": true
       }
     },
     "watermark_attack_policy_puppetry_first": {
@@ -1892,7 +1961,7 @@
     "refusal_attack_policy_puppetry_first",
     "external_site_attack_policy_puppetry_first"
   ],
-  "total_pdfs_processed": 100,
-  "total_requests_sent": 674,
+  "total_pdfs_processed": 123,
+  "total_requests_sent": 697,
   "failed_pdfs": {}
 }
