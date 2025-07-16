@@ -816,6 +816,24 @@ class ChatGPTAutomator:
                 pass
             return None
 
+    def upload_pdf_and_request_review(
+        self, pdf_path: str, review_request: str
+    ) -> Optional[str]:
+        """Alias for send_pdf_review_request to maintain compatibility with generic interface."""
+        return self.send_pdf_review_request(pdf_path, review_request)
+
+    def refresh_page(self):
+        """Refresh the current page."""
+        try:
+            if self.driver:
+                logger.info("Refreshing page...")
+                self.driver.refresh()
+                time.sleep(3)
+                self._handle_initial_dialogs()
+        except Exception as e:
+            logger.error(f"Error refreshing page: {e}")
+            raise
+
     def start_new_conversation(self) -> bool:
         """Start a new conversation in ChatGPT by reloading the page."""
         try:

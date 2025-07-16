@@ -1,8 +1,8 @@
 {
   "session_start": "2025-07-11T16:44:03.694269",
-  "last_updated": "2025-07-15T10:43:05.412556",
+  "last_updated": "2025-07-16T11:45:32.105099",
   "completed_pdfs": {
-    "refusal_attack_narrative_first": {
+    "chatgpt_refusal_attack_narrative_first": {
       "--gvHfE3Xf5.pdf": {
         "standard_request": true
       },
@@ -301,7 +301,7 @@
         "standard_request": true
       }
     },
-    "pos_steering_attack_policy_puppetry_first": {
+    "chatgpt_pos_steering_attack_policy_puppetry_first": {
       "--gvHfE3Xf5.pdf": {
         "standard_request": true
       },
@@ -600,7 +600,7 @@
         "standard_request": true
       }
     },
-    "neg_steering_attack_narrative_first": {
+    "chatgpt_neg_steering_attack_narrative_first": {
       "--gvHfE3Xf5.pdf": {
         "standard_request": true,
         "positive_request": true
@@ -622,7 +622,7 @@
         "positive_request": true
       }
     },
-    "pos_steering_attack_narrative_first": {
+    "chatgpt_pos_steering_attack_narrative_first": {
       "AADxnPG-PR.pdf": {
         "negative_request": true
       },
@@ -951,7 +951,7 @@
         "negative_request": true
       }
     },
-    "neg_steering_attack_policy_puppetry_first": {
+    "chatgpt_neg_steering_attack_policy_puppetry_first": {
       "--gvHfE3Xf5.pdf": {
         "standard_request": true
       },
@@ -1247,7 +1247,7 @@
         "standard_request": true
       }
     },
-    "external_site_attack_policy_puppetry_first": {
+    "chatgpt_external_site_attack_policy_puppetry_first": {
       "--gvHfE3Xf5.pdf": {
         "standard_request": true
       },
@@ -1549,7 +1549,7 @@
         "standard_request": true
       }
     },
-    "refusal_attack_policy_puppetry_first": {
+    "chatgpt_refusal_attack_policy_puppetry_first": {
       "--gvHfE3Xf5.pdf": {
         "standard_request": true
       },
@@ -1833,7 +1833,7 @@
         "standard_request": true
       }
     },
-    "watermark_attack_narrative_first": {
+    "chatgpt_watermark_attack_narrative_first": {
       "--gvHfE3Xf5.pdf": {
         "standard_request": true
       },
@@ -1920,9 +1920,12 @@
       },
       "HHiiQKWsOcV.pdf": {
         "standard_request": true
+      },
+      "Hw2Za4N5hy0.pdf": {
+        "standard_request": true
       }
     },
-    "watermark_attack_policy_puppetry_first": {
+    "chatgpt_watermark_attack_policy_puppetry_first": {
       "--gvHfE3Xf5.pdf": {
         "standard_request": true
       },
@@ -1953,15 +1956,15 @@
     }
   },
   "completed_batches": [
-    "neg_steering_attack_narrative_first",
-    "neg_steering_attack_policy_puppetry_first",
-    "pos_steering_attack_narrative_first",
-    "pos_steering_attack_policy_puppetry_first",
-    "refusal_attack_narrative_first",
-    "refusal_attack_policy_puppetry_first",
-    "external_site_attack_policy_puppetry_first"
+    "chatgpt_neg_steering_attack_narrative_first",
+    "chatgpt_neg_steering_attack_policy_puppetry_first",
+    "chatgpt_pos_steering_attack_narrative_first",
+    "chatgpt_pos_steering_attack_policy_puppetry_first",
+    "chatgpt_refusal_attack_narrative_first",
+    "chatgpt_refusal_attack_policy_puppetry_first",
+    "chatgpt_external_site_attack_policy_puppetry_first"
   ],
-  "total_pdfs_processed": 123,
-  "total_requests_sent": 697,
+  "total_pdfs_processed": 124,
+  "total_requests_sent": 698,
   "failed_pdfs": {}
 }

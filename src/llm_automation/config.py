@@ -33,6 +33,12 @@ class Config:
     chatgpt_url: str = "https://chatgpt.com/?model=gpt-4o&temporary-chat=true"
     max_response_wait: int = 180  # Maximum seconds to wait for response completion
 
+    # Copilot interaction settings
+    copilot_url: str = "https://copilot.microsoft.com/"
+
+    # LLM service selection ('chatgpt' or 'copilot')
+    llm_service: str = "chatgpt"
+
     # Output settings
     save_intermediate_results: bool = True
     results_format: str = "json"  # json, csv, both
