@@ -60,52 +60,69 @@ class ProgressTracker:
             logger.error(f"Failed to save progress: {e}")
 
     def is_pdf_processed(
-        self, batch_key: str, pdf_name: str, request_type: str
+        self,
+        batch_key: str,
+        pdf_name: str,
+        request_type: str,
+        llm_service: str = "chatgpt",
     ) -> bool:
         """Check if a specific PDF/request combination has been processed."""
+        full_batch_key = f"{llm_service}_{batch_key}"
         return (
-            batch_key in self.progress_data["completed_pdfs"]
-            and pdf_name in self.progress_data["completed_pdfs"][batch_key]
+            full_batch_key in self.progress_data["completed_pdfs"]
+            and pdf_name in self.progress_data["completed_pdfs"][full_batch_key]
             and request_type
-            in self.progress_data["completed_pdfs"][batch_key][pdf_name]
+            in self.progress_data["completed_pdfs"][full_batch_key][pdf_name]
         )
 
-    def mark_pdf_processed(self, batch_key: str, pdf_name: str, request_type: str):
+    def mark_pdf_processed(
+        self,
+        batch_key: str,
+        pdf_name: str,
+        request_type: str,
+        llm_service: str = "chatgpt",
+    ):
         """Mark a PDF/request combination as processed."""
-        if batch_key not in self.progress_data["completed_pdfs"]:
-            self.progress_data["completed_pdfs"][batch_key] = {}
+        full_batch_key = f"{llm_service}_{batch_key}"
 
-        if pdf_name not in self.progress_data["completed_pdfs"][batch_key]:
-            self.progress_data["completed_pdfs"][batch_key][pdf_name] = {}
+        if full_batch_key not in self.progress_data["completed_pdfs"]:
+            self.progress_data["completed_pdfs"][full_batch_key] = {}
 
-        self.progress_data["completed_pdfs"][batch_key][pdf_name][request_type] = True
+        if pdf_name not in self.progress_data["completed_pdfs"][full_batch_key]:
+            self.progress_data["completed_pdfs"][full_batch_key][pdf_name] = {}
+
+        self.progress_data["completed_pdfs"][full_batch_key][pdf_name][request_type] = (
+            True
+        )
         self.progress_data["total_requests_sent"] += 1
 
         # Check if this is a new PDF (first request type for this PDF)
-        if len(self.progress_data["completed_pdfs"][batch_key][pdf_name]) == 1:
+        if len(self.progress_data["completed_pdfs"][full_batch_key][pdf_name]) == 1:
             self.progress_data["total_pdfs_processed"] += 1
 
         self._save_progress()
 
-    def mark_batch_completed(self, batch_key: str):
+    def mark_batch_completed(self, batch_key: str, llm_service: str = "chatgpt"):
         """Mark an entire batch as completed."""
-        if batch_key not in self.progress_data["completed_batches"]:
-            self.progress_data["completed_batches"].append(batch_key)
+        full_batch_key = f"{llm_service}_{batch_key}"
+        if full_batch_key not in self.progress_data["completed_batches"]:
+            self.progress_data["completed_batches"].append(full_batch_key)
             self._save_progress()
 
-    def is_batch_completed(self, batch_key: str) -> bool:
+    def is_batch_completed(self, batch_key: str, llm_service: str = "chatgpt") -> bool:
         """Check if a batch has been fully completed."""
-        return batch_key in self.progress_data["completed_batches"]
+        full_batch_key = f"{llm_service}_{batch_key}"
+        return full_batch_key in self.progress_data["completed_batches"]
 
     def get_resume_point(
-        self, directories: List[Tuple[str, str, str, str]]
+        self, directories: List[Tuple[str, str, str, str]], llm_service: str = "chatgpt"
     ) -> List[Tuple[str, str, str, str]]:
         """Get the list of directories that still need processing."""
         remaining_directories = []
 
         for attack_type, prompt_type, injection_locus, pdf_dir in directories:
             batch_key = f"{attack_type}_{prompt_type}_{injection_locus}"
-            if not self.is_batch_completed(batch_key):
+            if not self.is_batch_completed(batch_key, llm_service):
                 remaining_directories.append(
                     (attack_type, prompt_type, injection_locus, pdf_dir)
                 )
@@ -116,7 +133,7 @@ class ProgressTracker:
             completed_count = total_dirs - remaining_count
 
             logger.info(
-                f"Resuming automation: {completed_count}/{total_dirs} batches already completed"
+                f"Resuming {llm_service} automation: {completed_count}/{total_dirs} batches already completed"
             )
             logger.info(f"Remaining batches to process: {remaining_count}")
 
@@ -128,6 +145,7 @@ class ProgressTracker:
         pdf_files: List[str],
         request_types: List[str],
         max_retries: int = 3,
+        llm_service: str = "chatgpt",
     ) -> List[Tuple[str, str]]:
         """Get PDF/request combinations that haven't been processed yet or should be retried."""
         unprocessed = []
@@ -137,9 +155,9 @@ class ProgressTracker:
             for request_type in request_types:
                 # Include if never processed OR failed but under retry limit
                 if not self.is_pdf_processed(
-                    batch_key, pdf_name, request_type
+                    batch_key, pdf_name, request_type, llm_service
                 ) or self.should_retry_failed_pdf(
-                    batch_key, pdf_name, request_type, max_retries
+                    batch_key, pdf_name, request_type, max_retries, llm_service
                 ):
                     unprocessed.append((pdf_file, request_type))
 
@@ -194,15 +212,18 @@ class ProgressTracker:
         request_type: str,
         error_msg: str,
         max_retries: int,
+        llm_service: str = "chatgpt",
     ):
         """Mark a PDF/request combination as failed after max retries."""
-        if batch_key not in self.progress_data["failed_pdfs"]:
-            self.progress_data["failed_pdfs"][batch_key] = {}
+        full_batch_key = f"{llm_service}_{batch_key}"
 
-        if pdf_name not in self.progress_data["failed_pdfs"][batch_key]:
-            self.progress_data["failed_pdfs"][batch_key][pdf_name] = {}
+        if full_batch_key not in self.progress_data["failed_pdfs"]:
+            self.progress_data["failed_pdfs"][full_batch_key] = {}
 
-        self.progress_data["failed_pdfs"][batch_key][pdf_name][request_type] = {
+        if pdf_name not in self.progress_data["failed_pdfs"][full_batch_key]:
+            self.progress_data["failed_pdfs"][full_batch_key][pdf_name] = {}
+
+        self.progress_data["failed_pdfs"][full_batch_key][pdf_name][request_type] = {
             "attempts": max_retries,
             "last_error": error_msg,
             "timestamp": datetime.now().isoformat(),
@@ -211,39 +232,64 @@ class ProgressTracker:
         self._save_progress()
 
     def get_failure_count(
-        self, batch_key: str, pdf_name: str, request_type: str
+        self,
+        batch_key: str,
+        pdf_name: str,
+        request_type: str,
+        llm_service: str = "chatgpt",
     ) -> int:
         """Get the number of previous failure attempts for a PDF/request combination."""
+        full_batch_key = f"{llm_service}_{batch_key}"
+
         if (
-            batch_key in self.progress_data["failed_pdfs"]
-            and pdf_name in self.progress_data["failed_pdfs"][batch_key]
-            and request_type in self.progress_data["failed_pdfs"][batch_key][pdf_name]
+            full_batch_key in self.progress_data["failed_pdfs"]
+            and pdf_name in self.progress_data["failed_pdfs"][full_batch_key]
+            and request_type
+            in self.progress_data["failed_pdfs"][full_batch_key][pdf_name]
         ):
-            return self.progress_data["failed_pdfs"][batch_key][pdf_name][request_type][
-                "attempts"
-            ]
+            return self.progress_data["failed_pdfs"][full_batch_key][pdf_name][
+                request_type
+            ]["attempts"]
         return 0
 
-    def clear_pdf_failure(self, batch_key: str, pdf_name: str, request_type: str):
+    def clear_pdf_failure(
+        self,
+        batch_key: str,
+        pdf_name: str,
+        request_type: str,
+        llm_service: str = "chatgpt",
+    ):
         """Clear failure record when a PDF is successfully processed."""
+        full_batch_key = f"{llm_service}_{batch_key}"
+
         if (
-            batch_key in self.progress_data["failed_pdfs"]
-            and pdf_name in self.progress_data["failed_pdfs"][batch_key]
-            and request_type in self.progress_data["failed_pdfs"][batch_key][pdf_name]
+            full_batch_key in self.progress_data["failed_pdfs"]
+            and pdf_name in self.progress_data["failed_pdfs"][full_batch_key]
+            and request_type
+            in self.progress_data["failed_pdfs"][full_batch_key][pdf_name]
         ):
-            del self.progress_data["failed_pdfs"][batch_key][pdf_name][request_type]
+            del self.progress_data["failed_pdfs"][full_batch_key][pdf_name][
+                request_type
+            ]
 
             # Clean up empty structures
-            if not self.progress_data["failed_pdfs"][batch_key][pdf_name]:
-                del self.progress_data["failed_pdfs"][batch_key][pdf_name]
-            if not self.progress_data["failed_pdfs"][batch_key]:
-                del self.progress_data["failed_pdfs"][batch_key]
+            if not self.progress_data["failed_pdfs"][full_batch_key][pdf_name]:
+                del self.progress_data["failed_pdfs"][full_batch_key][pdf_name]
+            if not self.progress_data["failed_pdfs"][full_batch_key]:
+                del self.progress_data["failed_pdfs"][full_batch_key]
 
             self._save_progress()
 
     def should_retry_failed_pdf(
-        self, batch_key: str, pdf_name: str, request_type: str, max_retries: int
+        self,
+        batch_key: str,
+        pdf_name: str,
+        request_type: str,
+        max_retries: int,
+        llm_service: str = "chatgpt",
     ) -> bool:
         """Check if a failed PDF should be retried (hasn't exceeded max retries)."""
-        failure_count = self.get_failure_count(batch_key, pdf_name, request_type)
+        failure_count = self.get_failure_count(
+            batch_key, pdf_name, request_type, llm_service
+        )
         return failure_count < max_retries

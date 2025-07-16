@@ -43,14 +43,18 @@ class ResultsProcessor:
         prompt_type: str,
         injection_locus: str,
         request_type: str,
+        llm_service: str = "chatgpt",
     ):
         """Save a single result to the consolidated file."""
         try:
+            # Add LLM service to result
+            result["llm_service"] = llm_service
+
             # Load existing results
             all_results = self.load_existing_results()
 
-            # Create batch key
-            batch_key = f"{attack_type}_{prompt_type}_{injection_locus}"
+            # Create batch key with LLM service
+            batch_key = f"{llm_service}_{attack_type}_{prompt_type}_{injection_locus}"
 
             # Initialize structure if needed
             if batch_key not in all_results:
@@ -97,11 +101,12 @@ class ResultsProcessor:
         prompt_type: str,
         injection_locus: str,
         request_type: str,
+        llm_service: str = "chatgpt",
     ):
         """Save results for a specific batch."""
         try:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"{attack_type}_{prompt_type}_{injection_locus}_{request_type}_{timestamp}"
+            filename = f"{llm_service}_{attack_type}_{prompt_type}_{injection_locus}_{request_type}_{timestamp}"
 
             # Save as JSON
             if self.config.results_format in ["json", "both"]:
@@ -124,30 +129,76 @@ class ResultsProcessor:
         try:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-            # Save as JSON
+            # Group results by LLM service for separate files
+            results_by_llm = self._group_results_by_llm(all_results)
+
+            for llm_service, llm_results in results_by_llm.items():
+                # Save as JSON
+                if self.config.results_format in ["json", "both"]:
+                    json_path = os.path.join(
+                        self.config.results_dir,
+                        f"consolidated_results_{llm_service}_{timestamp}.json",
+                    )
+                    with open(json_path, "w", encoding="utf-8") as f:
+                        json.dump(llm_results, f, indent=2, ensure_ascii=False)
+                    logger.info(
+                        f"Saved consolidated {llm_service} results to {json_path}"
+                    )
+
+                # Save as CSV
+                if self.config.results_format in ["csv", "both"]:
+                    csv_path = os.path.join(
+                        self.config.results_dir,
+                        f"consolidated_results_{llm_service}_{timestamp}.csv",
+                    )
+                    self._save_consolidated_as_csv(llm_results, csv_path)
+                    logger.info(
+                        f"Saved consolidated {llm_service} results to {csv_path}"
+                    )
+
+                # Also save as latest for each LLM
+                latest_json = os.path.join(
+                    self.config.results_dir, f"latest_results_{llm_service}.json"
+                )
+                with open(latest_json, "w", encoding="utf-8") as f:
+                    json.dump(llm_results, f, indent=2, ensure_ascii=False)
+
+            # Also save combined results
             if self.config.results_format in ["json", "both"]:
-                json_path = os.path.join(
-                    self.config.results_dir, f"consolidated_results_{timestamp}.json"
+                combined_json_path = os.path.join(
+                    self.config.results_dir,
+                    f"consolidated_results_combined_{timestamp}.json",
                 )
-                with open(json_path, "w", encoding="utf-8") as f:
+                with open(combined_json_path, "w", encoding="utf-8") as f:
                     json.dump(all_results, f, indent=2, ensure_ascii=False)
-                logger.info(f"Saved consolidated results to {json_path}")
-
-            # Save as CSV
-            if self.config.results_format in ["csv", "both"]:
-                csv_path = os.path.join(
-                    self.config.results_dir, f"consolidated_results_{timestamp}.csv"
-                )
-                self._save_consolidated_as_csv(all_results, csv_path)
-                logger.info(f"Saved consolidated results to {csv_path}")
-
-            # Also save as latest
-            latest_json = os.path.join(self.config.results_dir, "latest_results.json")
-            with open(latest_json, "w", encoding="utf-8") as f:
-                json.dump(all_results, f, indent=2, ensure_ascii=False)
+                logger.info(f"Saved combined results to {combined_json_path}")
 
         except Exception as e:
             logger.error(f"Failed to save consolidated results: {e}")
+
+    def _group_results_by_llm(self, all_results: Dict[str, Dict]) -> Dict[str, Dict]:
+        """Group results by LLM service."""
+        results_by_llm: Dict[str, Dict] = {}
+
+        for batch_key, batch_data in all_results.items():
+            # Extract LLM service from batch key (e.g., "chatgpt_attack_prompt_locus" -> "chatgpt")
+            if batch_key.startswith("chatgpt_"):
+                llm_service = "chatgpt"
+                clean_batch_key = batch_key[8:]  # Remove "chatgpt_" prefix
+            elif batch_key.startswith("copilot_"):
+                llm_service = "copilot"
+                clean_batch_key = batch_key[8:]  # Remove "copilot_" prefix
+            else:
+                # Legacy format without LLM prefix - assume ChatGPT
+                llm_service = "chatgpt"
+                clean_batch_key = batch_key
+
+            if llm_service not in results_by_llm:
+                results_by_llm[llm_service] = {}
+
+            results_by_llm[llm_service][clean_batch_key] = batch_data
+
+        return results_by_llm
 
     def _save_results_as_csv(self, results: Dict[str, List[Dict]], csv_path: str):
         """Save results as CSV file."""
@@ -310,6 +361,36 @@ class ResultsProcessor:
                     "successful": data["successful"],
                     "success_rate": success_rate,
                 }
+
+        # Add LLM service breakdown
+        llm_stats: Dict[str, Dict[str, int]] = defaultdict(
+            lambda: {"total": 0, "successful": 0}
+        )
+        for batch_key, batch_data in all_results.items():
+            # Extract LLM service from batch key
+            if batch_key.startswith("chatgpt_"):
+                llm_service = "chatgpt"
+            elif batch_key.startswith("copilot_"):
+                llm_service = "copilot"
+            else:
+                llm_service = "chatgpt"  # Legacy format
+
+            for request_type, results_list in batch_data.items():
+                for result in results_list:
+                    llm_stats[llm_service]["total"] += 1
+                    if result.get("success", False):
+                        llm_stats[llm_service]["successful"] += 1
+
+        analysis["success_rates"]["llm_service"] = {}
+        for llm_service, data in llm_stats.items():
+            success_rate = (
+                data["successful"] / data["total"] if data["total"] > 0 else 0
+            )
+            analysis["success_rates"]["llm_service"][llm_service] = {
+                "total": data["total"],
+                "successful": data["successful"],
+                "success_rate": success_rate,
+            }
 
         return analysis
 
