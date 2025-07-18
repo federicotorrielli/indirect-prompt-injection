@@ -38,20 +38,66 @@ The project explores a critical security vulnerability in AI-assisted peer revie
 - **`logs/`**: Runtime logs and debugging information
 - **`chrome_user_data/`**: Browser automation data and configurations
 
-## Requirements## Usage
-
-Run experiments using UV:
-
-```bash
-# Setup automation environment
-uv run scripts/setup_automation.py
-```
+## Requirements
 
 - Python 3.11+
 - UV package manager for dependency management
 - Chrome/Chromium for browser automation
 - PyMuPDF for PDF manipulation
 - Transformers and PyTorch for LLM processing
+
+## Supported LLM Services
+
+The automation system supports multiple LLM services:
+
+- **ChatGPT**: Web interface automation using Selenium
+- **Microsoft Copilot**: Web interface automation using Selenium  
+- **Google Gemini**: API-based integration using gemini-webapi
+
+### Gemini Setup
+
+For Gemini integration, you need to obtain authentication cookies:
+
+1. Visit [gemini.google.com](https://gemini.google.com) and log in
+2. Extract `__Secure-1PSID` and `__Secure-1PSIDTS` cookies from browser
+3. Set environment variables:
+
+  **Bash/Zsh:**
+
+  ```bash
+  export GEMINI_SECURE_1PSID="your_cookie_value"
+  export GEMINI_SECURE_1PSIDTS="your_cookie_value"  # Optional
+  ```
+
+  **Fish shell:**
+
+  ```fish
+  set -gx GEMINI_SECURE_1PSID "your_cookie_value"
+  set -gx GEMINI_SECURE_1PSIDTS "your_cookie_value"  # Optional
+  ```
+
+  **Or add to .env file:**
+
+  ```env
+  GEMINI_SECURE_1PSID=your_cookie_value
+  GEMINI_SECURE_1PSIDTS=your_cookie_value
+  ```
+
+See `docs/GEMINI_SETUP.md` for detailed setup instructions.
+
+## Usage
+
+Run experiments using UV:
+
+```bash
+# Setup automation environment
+uv run scripts/setup_automation.py
+
+# Run with different LLM services
+uv run src/llm_automation/main.py --llm-service chatgpt
+uv run src/llm_automation/main.py --llm-service copilot  
+uv run src/llm_automation/main.py --llm-service gemini
+```
 
 ## Installation
 
