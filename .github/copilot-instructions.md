@@ -21,7 +21,8 @@
 - Prefer named functions and class-based structures over inline lambdas.
 - Use type hints where applicable (`typing` module).
 - Use uv to manage python packages, virtual environments, and dependencies.
-- Use `uv run` to execute scripts, ensuring the correct environment is activated with `source .venv/bin/activate.fish`.
+- Remember: you are usinga fish shell, not bash.
+- Use `uv run` to execute python, ensuring the correct environment is activated with `source .venv/bin/activate.fish`.
 - Every script must run from the root directory of the project.
 - Use meaningful naming; avoid cryptic variables.
 - Emphasize simplicity, readability, and DRY principles.
@@ -45,4 +46,4 @@
 - Don’t hardcode secrets or config values—use `.env`.
 - Don’t expose internal stack traces in production environments.
 - Avoid business logic inside views/routes.
-- Do not create test files unless explicitly requested.
+- Do not create test files unless explicitly requested. If you create tests, delete them after the task is complete.

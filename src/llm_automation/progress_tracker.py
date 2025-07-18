@@ -7,7 +7,7 @@ import json
 import logging
 import os
 from datetime import datetime
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -15,8 +15,14 @@ logger = logging.getLogger(__name__)
 class ProgressTracker:
     """Tracks and persists automation progress."""
 
-    def __init__(self, progress_file: str):
+    def __init__(
+        self, progress_file: Optional[str] = None, llm_service: str = "chatgpt"
+    ):
+        if progress_file is None:
+            # Default to model-specific progress file
+            progress_file = f"results/automation_progress_{llm_service}.json"
         self.progress_file = progress_file
+        self.llm_service = llm_service
         self.progress_data = self._load_progress()
 
     def _load_progress(self) -> Dict:
@@ -67,12 +73,11 @@ class ProgressTracker:
         llm_service: str = "chatgpt",
     ) -> bool:
         """Check if a specific PDF/request combination has been processed."""
-        full_batch_key = f"{llm_service}_{batch_key}"
         return (
-            full_batch_key in self.progress_data["completed_pdfs"]
-            and pdf_name in self.progress_data["completed_pdfs"][full_batch_key]
+            batch_key in self.progress_data["completed_pdfs"]
+            and pdf_name in self.progress_data["completed_pdfs"][batch_key]
             and request_type
-            in self.progress_data["completed_pdfs"][full_batch_key][pdf_name]
+            in self.progress_data["completed_pdfs"][batch_key][pdf_name]
         )
 
     def mark_pdf_processed(
@@ -83,36 +88,30 @@ class ProgressTracker:
         llm_service: str = "chatgpt",
     ):
         """Mark a PDF/request combination as processed."""
-        full_batch_key = f"{llm_service}_{batch_key}"
+        if batch_key not in self.progress_data["completed_pdfs"]:
+            self.progress_data["completed_pdfs"][batch_key] = {}
 
-        if full_batch_key not in self.progress_data["completed_pdfs"]:
-            self.progress_data["completed_pdfs"][full_batch_key] = {}
+        if pdf_name not in self.progress_data["completed_pdfs"][batch_key]:
+            self.progress_data["completed_pdfs"][batch_key][pdf_name] = {}
 
-        if pdf_name not in self.progress_data["completed_pdfs"][full_batch_key]:
-            self.progress_data["completed_pdfs"][full_batch_key][pdf_name] = {}
-
-        self.progress_data["completed_pdfs"][full_batch_key][pdf_name][request_type] = (
-            True
-        )
+        self.progress_data["completed_pdfs"][batch_key][pdf_name][request_type] = True
         self.progress_data["total_requests_sent"] += 1
 
         # Check if this is a new PDF (first request type for this PDF)
-        if len(self.progress_data["completed_pdfs"][full_batch_key][pdf_name]) == 1:
+        if len(self.progress_data["completed_pdfs"][batch_key][pdf_name]) == 1:
             self.progress_data["total_pdfs_processed"] += 1
 
         self._save_progress()
 
     def mark_batch_completed(self, batch_key: str, llm_service: str = "chatgpt"):
         """Mark an entire batch as completed."""
-        full_batch_key = f"{llm_service}_{batch_key}"
-        if full_batch_key not in self.progress_data["completed_batches"]:
-            self.progress_data["completed_batches"].append(full_batch_key)
+        if batch_key not in self.progress_data["completed_batches"]:
+            self.progress_data["completed_batches"].append(batch_key)
             self._save_progress()
 
     def is_batch_completed(self, batch_key: str, llm_service: str = "chatgpt") -> bool:
         """Check if a batch has been fully completed."""
-        full_batch_key = f"{llm_service}_{batch_key}"
-        return full_batch_key in self.progress_data["completed_batches"]
+        return batch_key in self.progress_data["completed_batches"]
 
     def get_resume_point(
         self, directories: List[Tuple[str, str, str, str]], llm_service: str = "chatgpt"
@@ -215,15 +214,13 @@ class ProgressTracker:
         llm_service: str = "chatgpt",
     ):
         """Mark a PDF/request combination as failed after max retries."""
-        full_batch_key = f"{llm_service}_{batch_key}"
+        if batch_key not in self.progress_data["failed_pdfs"]:
+            self.progress_data["failed_pdfs"][batch_key] = {}
 
-        if full_batch_key not in self.progress_data["failed_pdfs"]:
-            self.progress_data["failed_pdfs"][full_batch_key] = {}
+        if pdf_name not in self.progress_data["failed_pdfs"][batch_key]:
+            self.progress_data["failed_pdfs"][batch_key][pdf_name] = {}
 
-        if pdf_name not in self.progress_data["failed_pdfs"][full_batch_key]:
-            self.progress_data["failed_pdfs"][full_batch_key][pdf_name] = {}
-
-        self.progress_data["failed_pdfs"][full_batch_key][pdf_name][request_type] = {
+        self.progress_data["failed_pdfs"][batch_key][pdf_name][request_type] = {
             "attempts": max_retries,
             "last_error": error_msg,
             "timestamp": datetime.now().isoformat(),
@@ -239,17 +236,14 @@ class ProgressTracker:
         llm_service: str = "chatgpt",
     ) -> int:
         """Get the number of previous failure attempts for a PDF/request combination."""
-        full_batch_key = f"{llm_service}_{batch_key}"
-
         if (
-            full_batch_key in self.progress_data["failed_pdfs"]
-            and pdf_name in self.progress_data["failed_pdfs"][full_batch_key]
-            and request_type
-            in self.progress_data["failed_pdfs"][full_batch_key][pdf_name]
+            batch_key in self.progress_data["failed_pdfs"]
+            and pdf_name in self.progress_data["failed_pdfs"][batch_key]
+            and request_type in self.progress_data["failed_pdfs"][batch_key][pdf_name]
         ):
-            return self.progress_data["failed_pdfs"][full_batch_key][pdf_name][
-                request_type
-            ]["attempts"]
+            return self.progress_data["failed_pdfs"][batch_key][pdf_name][request_type][
+                "attempts"
+            ]
         return 0
 
     def clear_pdf_failure(
@@ -260,23 +254,18 @@ class ProgressTracker:
         llm_service: str = "chatgpt",
     ):
         """Clear failure record when a PDF is successfully processed."""
-        full_batch_key = f"{llm_service}_{batch_key}"
-
         if (
-            full_batch_key in self.progress_data["failed_pdfs"]
-            and pdf_name in self.progress_data["failed_pdfs"][full_batch_key]
-            and request_type
-            in self.progress_data["failed_pdfs"][full_batch_key][pdf_name]
+            batch_key in self.progress_data["failed_pdfs"]
+            and pdf_name in self.progress_data["failed_pdfs"][batch_key]
+            and request_type in self.progress_data["failed_pdfs"][batch_key][pdf_name]
         ):
-            del self.progress_data["failed_pdfs"][full_batch_key][pdf_name][
-                request_type
-            ]
+            del self.progress_data["failed_pdfs"][batch_key][pdf_name][request_type]
 
             # Clean up empty structures
-            if not self.progress_data["failed_pdfs"][full_batch_key][pdf_name]:
-                del self.progress_data["failed_pdfs"][full_batch_key][pdf_name]
-            if not self.progress_data["failed_pdfs"][full_batch_key]:
-                del self.progress_data["failed_pdfs"][full_batch_key]
+            if not self.progress_data["failed_pdfs"][batch_key][pdf_name]:
+                del self.progress_data["failed_pdfs"][batch_key][pdf_name]
+            if not self.progress_data["failed_pdfs"][batch_key]:
+                del self.progress_data["failed_pdfs"][batch_key]
 
             self._save_progress()
 

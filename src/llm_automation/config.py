@@ -36,7 +36,11 @@ class Config:
     # Copilot interaction settings
     copilot_url: str = "https://copilot.microsoft.com/"
 
-    # LLM service selection ('chatgpt' or 'copilot')
+    # Gemini interaction settings
+    gemini_timeout: int = 30
+    gemini_auto_refresh: bool = True
+
+    # LLM service selection ('chatgpt', 'copilot', or 'gemini')
     llm_service: str = "chatgpt"
 
     # Output settings
