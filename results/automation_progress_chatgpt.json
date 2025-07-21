@@ -1,6 +1,6 @@
 {
   "session_start": "2025-07-11T16:44:03.694269",
-  "last_updated": "2025-07-21T08:13:59.311855",
+  "last_updated": "2025-07-21T16:04:48.540241",
   "completed_pdfs": {
     "refusal_attack_narrative_first": {
       "--gvHfE3Xf5.pdf": {
@@ -298,6 +298,9 @@
         "standard_request": true
       },
       "zWy1uxjDdZJ.pdf": {
+        "standard_request": true
+      },
+      "q3KSThy2GwB.pdf": {
         "standard_request": true
       }
     },
@@ -1097,10 +1100,12 @@
         "positive_request": true
       },
       "4hBXGTdS6Lc.pdf": {
-        "positive_request": true
+        "positive_request": true,
+        "standard_request": true
       },
       "V4AVDoFtVM.pdf": {
-        "positive_request": true
+        "positive_request": true,
+        "standard_request": true
       }
     },
     "pos_steering_attack_narrative_first": {
@@ -1903,7 +1908,8 @@
         "positive_request": true
       },
       "V4AVDoFtVM.pdf": {
-        "positive_request": true
+        "positive_request": true,
+        "standard_request": true
       }
     },
     "external_site_attack_policy_puppetry_first": {
@@ -2490,6 +2496,24 @@
       },
       "zWy1uxjDdZJ.pdf": {
         "standard_request": true
+      },
+      "DTXZqTNV5nW.pdf": {
+        "standard_request": true
+      },
+      "E3UZoJKHxuk.pdf": {
+        "standard_request": true
+      },
+      "FoM-RnF6SNe.pdf": {
+        "standard_request": true
+      },
+      "H1lJJnR5Ym.pdf": {
+        "standard_request": true
+      },
+      "HG7vlodGGm.pdf": {
+        "standard_request": true
+      },
+      "V4AVDoFtVM.pdf": {
+        "standard_request": true
       }
     },
     "watermark_attack_narrative_first": {
@@ -2788,6 +2812,9 @@
         "standard_request": true
       },
       "zWy1uxjDdZJ.pdf": {
+        "standard_request": true
+      },
+      "V4AVDoFtVM.pdf": {
         "standard_request": true
       }
     },
@@ -3088,19 +3115,24 @@
       },
       "zWy1uxjDdZJ.pdf": {
         "standard_request": true
+      },
+      "V4AVDoFtVM.pdf": {
+        "standard_request": true
       }
     }
   },
   "completed_batches": [
-    "neg_steering_attack_narrative_first",
-    "neg_steering_attack_policy_puppetry_first",
-    "refusal_attack_narrative_first",
-    "refusal_attack_policy_puppetry_first",
     "external_site_attack_policy_puppetry_first",
     "pos_steering_attack_narrative_first",
-    "pos_steering_attack_policy_puppetry_first"
+    "pos_steering_attack_policy_puppetry_first",
+    "neg_steering_attack_narrative_first",
+    "refusal_attack_narrative_first",
+    "refusal_attack_policy_puppetry_first",
+    "watermark_attack_narrative_first",
+    "watermark_attack_policy_puppetry_first",
+    "neg_steering_attack_policy_puppetry_first"
   ],
-  "total_pdfs_processed": 101,
-  "total_requests_sent": 1288,
+  "total_pdfs_processed": 600,
+  "total_requests_sent": 1990,
   "failed_pdfs": {}
 }
