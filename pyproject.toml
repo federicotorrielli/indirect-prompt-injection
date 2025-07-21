@@ -22,9 +22,11 @@ dependencies = [
     "pypdf==5.8.0",
     "reportlab==4.4.2",
     "tqdm==4.67.1",
-    "accelerate==1.8.1",
+    "accelerate==1.9.0",
     "bitsandbytes==0.46.1",
-    "scikit-learn==1.7.0",
+    "scikit-learn==1.7.1",
     "undetected-chromedriver==3.5.5",
+    "gemini-webapi==1.14.2",
+    "browser-cookie3==0.20.1",
 ]
 license = { text = "MIT" }

@@ -30,9 +30,18 @@ def create_llm_automator(config: Config):
         except ImportError as e:
             logger.error(f"Failed to import ChatGPTAutomator: {e}")
             raise
+    elif config.llm_service.lower() == "gemini":
+        try:
+            from gemini_api import GeminiAutomator
+
+            logger.info("Creating Gemini automator")
+            return GeminiAutomator(config)
+        except ImportError as e:
+            logger.error(f"Failed to import GeminiAutomator: {e}")
+            raise
     else:
         raise ValueError(
-            f"Unsupported LLM service: {config.llm_service}. Supported: 'chatgpt', 'copilot'"
+            f"Unsupported LLM service: {config.llm_service}. Supported: 'chatgpt', 'copilot', 'gemini'"
         )
 
 

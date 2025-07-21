@@ -33,17 +33,21 @@ class PDFReviewAutomator:
     def __init__(self, config: Config):
         self.config = config
         self.llm_automator = create_llm_automator(config)
-        self.processor = ResultsProcessor(config)
+        self.processor = ResultsProcessor(config, config.llm_service)
         self.session_start = datetime.now()
 
-        # Initialize progress tracker
-        progress_file = os.path.join(config.results_dir, "automation_progress.json")
-        self.progress_tracker = ProgressTracker(progress_file)
+        # Initialize progress tracker with model-specific file
+        progress_file = os.path.join(
+            config.results_dir, f"automation_progress_{config.llm_service}.json"
+        )
+        self.progress_tracker = ProgressTracker(progress_file, config.llm_service)
 
     def initialize(self) -> bool:
         """Initialize the automation system."""
         try:
             logger.info(f"Initializing {self.config.llm_service} automation system...")
+            logger.info(f"Using results file: {self.processor.consolidated_file}")
+            logger.info(f"Using progress file: {self.progress_tracker.progress_file}")
             return self.llm_automator.initialize()
         except Exception as e:
             logger.error(f"Failed to initialize: {e}")
@@ -516,7 +520,7 @@ def main():
     parser = argparse.ArgumentParser(description="Universal LLM PDF Review Automation")
     parser.add_argument(
         "--llm-service",
-        choices=["chatgpt", "copilot"],
+        choices=["chatgpt", "copilot", "gemini"],
         default="chatgpt",
         help="LLM service to use (default: chatgpt)",
     )
@@ -535,7 +539,9 @@ def main():
         "--reset-progress", action="store_true", help="Reset progress and start fresh"
     )
     parser.add_argument(
-        "--show-progress", action="store_true", help="Show current progress and exit"
+        "--show-progress-only",
+        action="store_true",
+        help="Show current progress and exit",
     )
 
     args = parser.parse_args()
@@ -560,7 +566,7 @@ def main():
             )
             sys.exit(0)
 
-        if args.show_progress:
+        if args.show_progress_only:
             progress_stats = automator.progress_tracker.get_statistics()
             result_counts = automator.processor.get_result_counts()
 

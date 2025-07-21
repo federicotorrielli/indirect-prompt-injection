@@ -18,13 +18,16 @@ logger = logging.getLogger(__name__)
 class ResultsProcessor:
     """Handles saving and processing of automation results."""
 
-    def __init__(self, config: Config):
+    def __init__(self, config: Config, llm_service: str = "chatgpt"):
         self.config = config
+        self.llm_service = llm_service
         self.config.setup_directories()
         self.consolidated_file = os.path.join(
-            self.config.results_dir, "all_results.json"
+            self.config.results_dir, f"all_results_{llm_service}.json"
         )
-        self.consolidated_csv = os.path.join(self.config.results_dir, "all_results.csv")
+        self.consolidated_csv = os.path.join(
+            self.config.results_dir, f"all_results_{llm_service}.csv"
+        )
 
     def load_existing_results(self) -> Dict[str, Dict]:
         """Load existing consolidated results if they exist."""
@@ -47,14 +50,11 @@ class ResultsProcessor:
     ):
         """Save a single result to the consolidated file."""
         try:
-            # Add LLM service to result
-            result["llm_service"] = llm_service
-
             # Load existing results
             all_results = self.load_existing_results()
 
-            # Create batch key with LLM service
-            batch_key = f"{llm_service}_{attack_type}_{prompt_type}_{injection_locus}"
+            # Create batch key without LLM service prefix (since file is already model-specific)
+            batch_key = f"{attack_type}_{prompt_type}_{injection_locus}"
 
             # Initialize structure if needed
             if batch_key not in all_results:
@@ -62,7 +62,7 @@ class ResultsProcessor:
             if request_type not in all_results[batch_key]:
                 all_results[batch_key][request_type] = []
 
-            # Add the new result
+            # Add the new result (without redundant llm_service field)
             all_results[batch_key][request_type].append(result)
 
             # Save back to file
@@ -106,7 +106,7 @@ class ResultsProcessor:
         """Save results for a specific batch."""
         try:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"{llm_service}_{attack_type}_{prompt_type}_{injection_locus}_{request_type}_{timestamp}"
+            filename = f"{attack_type}_{prompt_type}_{injection_locus}_{request_type}_{timestamp}"
 
             # Save as JSON
             if self.config.results_format in ["json", "both"]:
@@ -181,22 +181,11 @@ class ResultsProcessor:
         results_by_llm: Dict[str, Dict] = {}
 
         for batch_key, batch_data in all_results.items():
-            # Extract LLM service from batch key (e.g., "chatgpt_attack_prompt_locus" -> "chatgpt")
-            if batch_key.startswith("chatgpt_"):
-                llm_service = "chatgpt"
-                clean_batch_key = batch_key[8:]  # Remove "chatgpt_" prefix
-            elif batch_key.startswith("copilot_"):
-                llm_service = "copilot"
-                clean_batch_key = batch_key[8:]  # Remove "copilot_" prefix
-            else:
-                # Legacy format without LLM prefix - assume ChatGPT
-                llm_service = "chatgpt"
-                clean_batch_key = batch_key
+            # Since we're using model-specific files, all results in this file are for this LLM service
+            if self.llm_service not in results_by_llm:
+                results_by_llm[self.llm_service] = {}
 
-            if llm_service not in results_by_llm:
-                results_by_llm[llm_service] = {}
-
-            results_by_llm[llm_service][clean_batch_key] = batch_data
+            results_by_llm[self.llm_service][batch_key] = batch_data
 
         return results_by_llm
 
@@ -367,13 +356,8 @@ class ResultsProcessor:
             lambda: {"total": 0, "successful": 0}
         )
         for batch_key, batch_data in all_results.items():
-            # Extract LLM service from batch key
-            if batch_key.startswith("chatgpt_"):
-                llm_service = "chatgpt"
-            elif batch_key.startswith("copilot_"):
-                llm_service = "copilot"
-            else:
-                llm_service = "chatgpt"  # Legacy format
+            # Since we're using model-specific files, all results are for this LLM service
+            llm_service = self.llm_service
 
             for request_type, results_list in batch_data.items():
                 for result in results_list:

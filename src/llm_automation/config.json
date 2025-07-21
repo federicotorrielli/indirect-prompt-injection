@@ -14,6 +14,8 @@
   "chatgpt_url": "https://chatgpt.com/?model=gpt-4o&temporary-chat=true",
   "max_response_wait": 120,
   "copilot_url": "https://copilot.microsoft.com/",
+  "gemini_timeout": 30,
+  "gemini_auto_refresh": true,
   "llm_service": "chatgpt",
   "save_intermediate_results": true,
   "results_format": "json"
