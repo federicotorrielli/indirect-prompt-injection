@@ -147,15 +147,15 @@ class ProgressTracker:
         llm_service: str = "chatgpt",
     ) -> List[Tuple[str, str]]:
         """Get PDF/request combinations that haven't been processed yet or should be retried."""
-        logger.info(f"DEBUG: get_unprocessed_pdfs called with batch_key='{batch_key}', llm_service='{llm_service}'")
-        logger.info(f"DEBUG: Checking {len(pdf_files)} PDFs with {len(request_types)} request types")
-        
+        logger.info(
+            f"DEBUG: get_unprocessed_pdfs called with batch_key='{batch_key}', llm_service='{llm_service}'"
+        )
+        logger.info(
+            f"DEBUG: Checking {len(pdf_files)} PDFs with {len(request_types)} request types"
+        )
+
         unprocessed = []
-        debug_stats = {
-            "not_processed": 0,
-            "should_retry": 0,
-            "fully_processed": 0
-        }
+        debug_stats = {"not_processed": 0, "should_retry": 0, "fully_processed": 0}
 
         for pdf_file in pdf_files:
             pdf_name = os.path.basename(pdf_file)
@@ -166,9 +166,11 @@ class ProgressTracker:
                 should_retry = self.should_retry_failed_pdf(
                     batch_key, pdf_name, request_type, max_retries, llm_service
                 )
-                
-                logger.info(f"DEBUG: {pdf_name} ({request_type}) - processed: {is_processed}, should_retry: {should_retry}")
-                
+
+                logger.debug(
+                    f"DEBUG: {pdf_name} ({request_type}) - processed: {is_processed}, should_retry: {should_retry}"
+                )
+
                 # Include if never processed OR failed but under retry limit
                 if not is_processed or should_retry:
                     unprocessed.append((pdf_file, request_type))
@@ -176,13 +178,17 @@ class ProgressTracker:
                         debug_stats["not_processed"] += 1
                     if should_retry:
                         debug_stats["should_retry"] += 1
-                        logger.info(f"DEBUG: {pdf_name} ({request_type}) - ADDING TO RETRY due to failure check")
+                        logger.debug(
+                            f"DEBUG: {pdf_name} ({request_type}) - ADDING TO RETRY due to failure check"
+                        )
                 else:
                     debug_stats["fully_processed"] += 1
 
-        logger.info(f"DEBUG: Stats - not_processed: {debug_stats['not_processed']}, should_retry: {debug_stats['should_retry']}, fully_processed: {debug_stats['fully_processed']}")
+        logger.info(
+            f"DEBUG: Stats - not_processed: {debug_stats['not_processed']}, should_retry: {debug_stats['should_retry']}, fully_processed: {debug_stats['fully_processed']}"
+        )
         logger.info(f"DEBUG: Total unprocessed items: {len(unprocessed)}")
-        
+
         return unprocessed
 
     def get_statistics(self) -> Dict:
@@ -267,7 +273,9 @@ class ProgressTracker:
             attempts = self.progress_data["failed_pdfs"][batch_key][pdf_name][
                 request_type
             ]["attempts"]
-            logger.info(f"DEBUG: get_failure_count - {pdf_name} ({request_type}) has {attempts} failure attempts")
+            logger.info(
+                f"DEBUG: get_failure_count - {pdf_name} ({request_type}) has {attempts} failure attempts"
+            )
             return attempts
         return 0
 
@@ -306,11 +314,114 @@ class ProgressTracker:
         failure_count = self.get_failure_count(
             batch_key, pdf_name, request_type, llm_service
         )
-        
+
         # Only retry if there ARE failures (failure_count > 0) AND it's under the retry limit
         should_retry = failure_count > 0 and failure_count < max_retries
-        
+
         if failure_count > 0:
-            logger.info(f"DEBUG: should_retry_failed_pdf - {pdf_name} ({request_type}) has {failure_count} failures, max_retries={max_retries}, should_retry={should_retry}")
-        
+            logger.info(
+                f"DEBUG: should_retry_failed_pdf - {pdf_name} ({request_type}) has {failure_count} failures, max_retries={max_retries}, should_retry={should_retry}"
+            )
+
         return should_retry
+
+    def sync_with_results_file(
+        self, results_file_path: str, llm_service: str = "chatgpt"
+    ):
+        """Synchronize progress tracker with actual results in the consolidated file.
+
+        This method checks the results file and marks batches as completed if all
+        expected PDFs have been processed, fixing any discrepancies.
+        """
+        try:
+            import json
+
+            if not os.path.exists(results_file_path):
+                logger.warning(f"Results file not found: {results_file_path}")
+                return
+
+            with open(results_file_path, "r", encoding="utf-8") as f:
+                results_data = json.load(f)
+
+            logger.info(
+                f"Synchronizing progress with results file: {results_file_path}"
+            )
+
+            for batch_key, batch_data in results_data.items():
+                # Check if this batch is already marked as completed
+                if self.is_batch_completed(batch_key, llm_service):
+                    continue
+
+                # Count total results for this batch across all request types
+                total_results = 0
+                for request_type, results_list in batch_data.items():
+                    total_results += len(results_list)
+
+                    # Mark individual PDFs as processed
+                    for result in results_list:
+                        pdf_name = result.get("pdf_file")
+                        if pdf_name and result.get("success", False):
+                            self.mark_pdf_processed(
+                                batch_key, pdf_name, request_type, llm_service
+                            )
+
+                # If we have results, check if batch should be marked as completed
+                if total_results > 0:
+                    logger.info(
+                        f"Found {total_results} results for batch {batch_key}, checking completion status"
+                    )
+
+                    # For now, if there are any results, we assume the batch was attempted
+                    # The main automation logic will determine if it's truly complete
+                    # by checking against expected PDF counts
+
+            self._save_progress()
+            logger.info("Progress synchronization completed")
+
+        except Exception as e:
+            logger.error(f"Failed to sync with results file: {e}")
+
+    def mark_batch_completed_if_all_processed(
+        self,
+        batch_key: str,
+        expected_pdf_count: int,
+        expected_request_types: List[str],
+        llm_service: str = "chatgpt",
+    ) -> bool:
+        """Mark batch as completed only if all expected PDFs and request types are processed.
+
+        Returns True if batch was marked as completed, False otherwise.
+        """
+        if batch_key not in self.progress_data["completed_pdfs"]:
+            return False
+
+        batch_pdfs = self.progress_data["completed_pdfs"][batch_key]
+
+        # Count processed PDFs and request types
+        processed_pdfs = len(batch_pdfs)
+
+        # Check if all request types are covered for each PDF
+        total_processed_requests = 0
+        for pdf_name, requests in batch_pdfs.items():
+            for request_type in expected_request_types:
+                if request_type in requests:
+                    total_processed_requests += 1
+
+        expected_total_requests = expected_pdf_count * len(expected_request_types)
+
+        if (
+            processed_pdfs >= expected_pdf_count
+            and total_processed_requests >= expected_total_requests
+        ):
+            if not self.is_batch_completed(batch_key, llm_service):
+                self.mark_batch_completed(batch_key, llm_service)
+                logger.info(
+                    f"Batch {batch_key} marked as completed: {processed_pdfs} PDFs, {total_processed_requests} requests"
+                )
+                return True
+        else:
+            logger.debug(
+                f"Batch {batch_key} incomplete: {processed_pdfs}/{expected_pdf_count} PDFs, {total_processed_requests}/{expected_total_requests} requests"
+            )
+
+        return False

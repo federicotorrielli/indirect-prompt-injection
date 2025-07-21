@@ -48,6 +48,17 @@ class PDFReviewAutomator:
             logger.info(f"Initializing {self.config.llm_service} automation system...")
             logger.info(f"Using results file: {self.processor.consolidated_file}")
             logger.info(f"Using progress file: {self.progress_tracker.progress_file}")
+
+            # Sync progress tracker with existing results to fix any discrepancies
+            logger.info("Synchronizing progress tracker with existing results...")
+            self.progress_tracker.sync_with_results_file(
+                self.processor.consolidated_file, self.config.llm_service
+            )
+
+            # Fix any incorrectly marked completed batches
+            logger.info("Checking for incorrectly marked completed batches...")
+            self.fix_incorrect_completions(self.config.llm_service)
+
             return self.llm_automator.initialize()
         except Exception as e:
             logger.error(f"Failed to initialize: {e}")
@@ -169,13 +180,27 @@ class PDFReviewAutomator:
         )
 
         if not unprocessed_items:
-            logger.info(f"Batch {batch_key} already completed - skipping")
-            self.progress_tracker.mark_batch_completed(
-                batch_key, self.config.llm_service
+            # Double-check: verify batch completion by checking actual file counts
+            total_expected_items = len(pdf_files) * len(request_types)
+            batch_completed = (
+                self.progress_tracker.mark_batch_completed_if_all_processed(
+                    batch_key, len(pdf_files), request_types, self.config.llm_service
+                )
             )
+
+            if batch_completed:
+                logger.info(f"Batch {batch_key} verified as completed - skipping")
+            else:
+                logger.info(
+                    f"Batch {batch_key} appears complete but verification failed - skipping anyway"
+                )
+                self.progress_tracker.mark_batch_completed(
+                    batch_key, self.config.llm_service
+                )
+
             return {
                 "processed": 0,
-                "skipped": len(pdf_files) * len(request_types),
+                "skipped": total_expected_items,
                 "failed": 0,
             }
 
@@ -257,10 +282,33 @@ class PDFReviewAutomator:
                 )
                 stats["failed"] += 1
 
-        # Mark batch as completed
-        self.progress_tracker.mark_batch_completed(batch_key, self.config.llm_service)
+        # Mark batch as completed only if we processed all expected items successfully
+        # Check if all PDFs in this batch are actually processed
+        total_expected_items = len(pdf_files) * len(request_types)
 
-        logger.info(f"Batch {batch_key} completed: {stats}")
+        # Count actual completed items from progress tracker
+        completed_count = 0
+        for pdf_file in pdf_files:
+            pdf_name = Path(pdf_file).name
+            for request_type in request_types:
+                if self.progress_tracker.is_pdf_processed(
+                    batch_key, pdf_name, request_type
+                ):
+                    completed_count += 1
+
+        if completed_count >= total_expected_items:
+            self.progress_tracker.mark_batch_completed(
+                batch_key, self.config.llm_service
+            )
+            logger.info(
+                f"Batch {batch_key} fully completed: {completed_count}/{total_expected_items} items processed"
+            )
+        else:
+            logger.warning(
+                f"Batch {batch_key} incomplete: {completed_count}/{total_expected_items} items processed - NOT marking as complete"
+            )
+
+        logger.info(f"Batch {batch_key} processing finished: {stats}")
         return stats
 
     def _get_request_type(self, request_text: str) -> str:
@@ -513,6 +561,59 @@ class PDFReviewAutomator:
         ]
 
         return error_type in retryable_types
+
+    def fix_incorrect_completions(self, llm_service: str = "chatgpt"):
+        """Fix batches that are incorrectly marked as completed."""
+        logger.info("Checking for incorrectly marked completed batches...")
+
+        # Get all directories to check expected counts
+        directories = self.get_pdf_directories()
+
+        fixed_count = 0
+        for attack_type, prompt_type, injection_locus, pdf_dir in directories:
+            batch_key = f"{attack_type}_{prompt_type}_{injection_locus}"
+
+            if not self.progress_tracker.is_batch_completed(batch_key, llm_service):
+                continue
+
+            # Count expected items
+            pdf_files = self.get_pdfs_in_directory(pdf_dir)
+            review_requests = self.generate_review_requests(attack_type, prompt_type)
+            request_types = [self._get_request_type(req) for req in review_requests]
+            total_expected = len(pdf_files) * len(request_types)
+
+            # Count actual processed items
+            completed_count = 0
+            for pdf_file in pdf_files:
+                pdf_name = Path(pdf_file).name
+                for request_type in request_types:
+                    if self.progress_tracker.is_pdf_processed(
+                        batch_key, pdf_name, request_type
+                    ):
+                        completed_count += 1
+
+            # If not actually complete, remove from completed list
+            if completed_count < total_expected:
+                logger.warning(
+                    f"Batch {batch_key} incorrectly marked complete: {completed_count}/{total_expected} items"
+                )
+
+                # Remove from completed batches list
+                if (
+                    batch_key
+                    in self.progress_tracker.progress_data["completed_batches"]
+                ):
+                    self.progress_tracker.progress_data["completed_batches"].remove(
+                        batch_key
+                    )
+                    self.progress_tracker._save_progress()
+                    fixed_count += 1
+                    logger.info(f"Removed {batch_key} from completed batches list")
+
+        if fixed_count > 0:
+            logger.info(f"Fixed {fixed_count} incorrectly marked completed batches")
+        else:
+            logger.info("No incorrectly marked completed batches found")
 
 
 def main():
