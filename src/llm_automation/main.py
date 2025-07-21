@@ -566,7 +566,7 @@ def main():
             )
             sys.exit(0)
 
-        if args.show_progress:
+        if args.show_progress_only:
             progress_stats = automator.progress_tracker.get_statistics()
             result_counts = automator.processor.get_result_counts()
 
