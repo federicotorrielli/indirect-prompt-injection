@@ -148,19 +148,42 @@ class ProgressTracker:
         llm_service: str = "chatgpt",
     ) -> List[Tuple[str, str]]:
         """Get PDF/request combinations that haven't been processed yet or should be retried."""
+        logger.info(f"DEBUG: get_unprocessed_pdfs called with batch_key='{batch_key}', llm_service='{llm_service}'")
+        logger.info(f"DEBUG: Checking {len(pdf_files)} PDFs with {len(request_types)} request types")
+        
         unprocessed = []
+        debug_stats = {
+            "not_processed": 0,
+            "should_retry": 0,
+            "fully_processed": 0
+        }
 
         for pdf_file in pdf_files:
             pdf_name = os.path.basename(pdf_file)
             for request_type in request_types:
-                # Include if never processed OR failed but under retry limit
-                if not self.is_pdf_processed(
+                is_processed = self.is_pdf_processed(
                     batch_key, pdf_name, request_type, llm_service
-                ) or self.should_retry_failed_pdf(
+                )
+                should_retry = self.should_retry_failed_pdf(
                     batch_key, pdf_name, request_type, max_retries, llm_service
-                ):
+                )
+                
+                logger.info(f"DEBUG: {pdf_name} ({request_type}) - processed: {is_processed}, should_retry: {should_retry}")
+                
+                # Include if never processed OR failed but under retry limit
+                if not is_processed or should_retry:
                     unprocessed.append((pdf_file, request_type))
+                    if not is_processed:
+                        debug_stats["not_processed"] += 1
+                    if should_retry:
+                        debug_stats["should_retry"] += 1
+                        logger.info(f"DEBUG: {pdf_name} ({request_type}) - ADDING TO RETRY due to failure check")
+                else:
+                    debug_stats["fully_processed"] += 1
 
+        logger.info(f"DEBUG: Stats - not_processed: {debug_stats['not_processed']}, should_retry: {debug_stats['should_retry']}, fully_processed: {debug_stats['fully_processed']}")
+        logger.info(f"DEBUG: Total unprocessed items: {len(unprocessed)}")
+        
         return unprocessed
 
     def get_statistics(self) -> Dict:
@@ -247,9 +270,11 @@ class ProgressTracker:
             and request_type
             in self.progress_data["failed_pdfs"][full_batch_key][pdf_name]
         ):
-            return self.progress_data["failed_pdfs"][full_batch_key][pdf_name][
+            attempts = self.progress_data["failed_pdfs"][full_batch_key][pdf_name][
                 request_type
             ]["attempts"]
+            logger.info(f"DEBUG: get_failure_count - {pdf_name} ({request_type}) has {attempts} failure attempts")
+            return attempts
         return 0
 
     def clear_pdf_failure(
@@ -292,4 +317,11 @@ class ProgressTracker:
         failure_count = self.get_failure_count(
             batch_key, pdf_name, request_type, llm_service
         )
-        return failure_count < max_retries
+        
+        # Only retry if there ARE failures (failure_count > 0) AND it's under the retry limit
+        should_retry = failure_count > 0 and failure_count < max_retries
+        
+        if failure_count > 0:
+            logger.info(f"DEBUG: should_retry_failed_pdf - {pdf_name} ({request_type}) has {failure_count} failures, max_retries={max_retries}, should_retry={should_retry}")
+        
+        return should_retry
