@@ -17,7 +17,8 @@ from pathlib import Path
 class ResultsAnalyzer:
     """Analyzer for indirect prompt injection results."""
     
-    def __init__(self, results_file: str):
+    def __init__(self, results_file: str, model: str = "chatgpt"):
+        self.model = model
         self.results_file = results_file
         self.data = self.load_data()
         self.all_pdf_files = self.get_all_pdf_files()
@@ -26,14 +27,14 @@ class ResultsAnalyzer:
         """Get all PDF files from the data/redacted_pdfs directory."""
         pdf_dir = Path("data/redacted_pdfs")
         if not pdf_dir.exists():
-            print(f"⚠️  Warning: {pdf_dir} directory not found!")
+            print(f"Warning: {pdf_dir} directory not found!")
             return set()
         
         pdf_files = set()
         for pdf_file in pdf_dir.glob("*.pdf"):
             pdf_files.add(pdf_file.name)
         
-        print(f"📁 Found {len(pdf_files)} PDF files in {pdf_dir}")
+        print(f"Found {len(pdf_files)} PDF files in {pdf_dir}")
         return pdf_files
         
     def load_data(self) -> dict:
@@ -50,9 +51,9 @@ class ResultsAnalyzer:
         try:
             with open(self.results_file, 'w', encoding='utf-8') as f:
                 json.dump(self.data, f, indent=2, ensure_ascii=False)
-            print(f"✅ Updated {self.results_file} with PDF completeness information")
+            print(f"Updated {self.results_file} with PDF completeness information")
         except Exception as e:
-            print(f"❌ Error saving {self.results_file}: {e}")
+            print(f"Error saving {self.results_file}: {e}")
     
     def get_basic_statistics(self) -> dict:
         """Get basic counts and statistics."""
@@ -327,7 +328,7 @@ class ResultsAnalyzer:
     
     def generate_summary_report(self) -> str:
         """Generate a comprehensive summary report."""
-        print("🔍 Analyzing all_results.json...")
+        print(f"Analyzing all_results_{self.model}.json...")
         
         # Gather all statistics
         basic_stats = self.get_basic_statistics()
@@ -347,7 +348,7 @@ class ResultsAnalyzer:
         report.append("")
         
         # Basic Statistics
-        report.append("📊 BASIC STATISTICS")
+        report.append("BASIC STATISTICS")
         report.append("-" * 40)
         report.append(f"Total batch keys: {basic_stats['total_batch_keys']}")
         report.append(f"Total entries: {basic_stats['total_entries']}")
@@ -358,7 +359,7 @@ class ResultsAnalyzer:
         report.append("")
         
         # PDF Completeness
-        report.append("📂 PDF COMPLETENESS")
+        report.append("PDF COMPLETENESS")
         report.append("-" * 40)
         pdf_comp = basic_stats['pdf_completeness']
         report.append(f"Total PDFs available: {pdf_comp['total_expected_pdfs']}")
@@ -384,7 +385,7 @@ class ResultsAnalyzer:
         report.append("")
         
         # Attack Type Analysis
-        report.append("🎯 ATTACK TYPE BREAKDOWN")
+        report.append("ATTACK TYPE BREAKDOWN")
         report.append("-" * 40)
         for attack_type, stats in sorted(attack_stats.items()):
             success_rate = stats['successful'] / stats['total'] * 100 if stats['total'] > 0 else 0
@@ -398,7 +399,7 @@ class ResultsAnalyzer:
             report.append("")
         
         # Request Type Analysis
-        report.append("📝 REQUEST TYPE ANALYSIS")
+        report.append("REQUEST TYPE ANALYSIS")
         report.append("-" * 40)
         for req_type, stats in sorted(request_stats.items()):
             success_rate = stats['successful'] / stats['total'] * 100 if stats['total'] > 0 else 0
@@ -411,7 +412,7 @@ class ResultsAnalyzer:
         
         # Steering Attack Analysis
         if steering_analysis:
-            report.append("🎛️ STEERING ATTACK ANALYSIS")
+            report.append("STEERING ATTACK ANALYSIS")
             report.append("-" * 40)
             for attack_type, stats in steering_analysis.items():
                 report.append(f"{attack_type}:")
@@ -424,7 +425,7 @@ class ResultsAnalyzer:
                 report.append("")
         
         # Temporal Analysis
-        report.append("⏰ TEMPORAL ANALYSIS")
+        report.append("TEMPORAL ANALYSIS")
         report.append("-" * 40)
         if temporal_analysis['first_timestamp']:
             report.append(f"First timestamp: {temporal_analysis['first_timestamp']}")
@@ -443,7 +444,7 @@ class ResultsAnalyzer:
         report.append("")
         
         # PDF Analysis
-        report.append("📄 PDF ANALYSIS")
+        report.append("PDF ANALYSIS")
         report.append("-" * 40)
         report.append(f"Unique PDFs tested: {pdf_analysis['unique_pdfs']}")
         report.append("")
@@ -454,7 +455,7 @@ class ResultsAnalyzer:
         report.append("")
         
         # Summary
-        report.append("📋 SUMMARY")
+        report.append("SUMMARY")
         report.append("-" * 40)
         overall_success_rate = basic_stats['successful_entries'] / basic_stats['total_entries'] * 100
         report.append(f"Overall success rate: {overall_success_rate:.1f}%")
@@ -494,19 +495,20 @@ class ResultsAnalyzer:
         with open(output_file, 'w', encoding='utf-8') as f:
             json.dump(detailed_stats, f, indent=2, ensure_ascii=False)
         
-        print(f"📁 Detailed statistics saved to: {output_file}")
+        print(f"Detailed statistics saved to: {output_file}")
 
 
 def main():
     """Main function to run the analysis."""
-    results_file = "results/all_results.json"
+    model = "chatgpt"
+    results_file = f"results/all_results_{model}.json"
     
     if not os.path.exists(results_file):
-        print(f"❌ Error: {results_file} not found!")
+        print(f"Error: {results_file} not found!")
         return
     
     # Create analyzer
-    analyzer = ResultsAnalyzer(results_file)
+    analyzer = ResultsAnalyzer(results_file, model)
     
     # Generate and display summary report
     report = analyzer.generate_summary_report()
@@ -521,7 +523,7 @@ def main():
     report_output = f"results/summary_report_{timestamp}.txt"
     with open(report_output, 'w', encoding='utf-8') as f:
         f.write(report)
-    print(f"📄 Summary report saved to: {report_output}")
+    print(f"Summary report saved to: {report_output}")
 
 
 if __name__ == "__main__":
