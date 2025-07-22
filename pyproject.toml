@@ -28,5 +28,6 @@ dependencies = [
     "undetected-chromedriver==3.5.5",
     "gemini-webapi==1.14.3",
     "browser-cookie3==0.20.1",
+    "rich>=14.0.0",
 ]
 license = { text = "MIT" }
