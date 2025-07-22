@@ -3,7 +3,7 @@ Evaluates the success of prompt injection attacks using a local LLM.
 
 This script loads a specified Hugging Face model to evaluate the responses
 from the prompt injection attacks stored in a JSON file. It updates the
-'success' field for each result based on the model's evaluation.
+'evaluation_success' field for each result based on the model's evaluation.
 
 This version is optimized to use Hugging Face Datasets for batch processing,
 which significantly speeds up evaluation on a GPU.
@@ -25,7 +25,6 @@ import torch
 from datasets import Dataset  # type: ignore
 from rich.console import Console  # type: ignore
 from rich.logging import RichHandler  # type: ignore
-from rich.progress import track  # type: ignore
 from rich.table import Table  # type: ignore
 from sklearn.metrics import classification_report  # type: ignore
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
@@ -40,6 +39,80 @@ logging.basicConfig(
     datefmt="[%X]",
     handlers=[RichHandler(console=console, rich_tracebacks=True)],
 )
+
+
+def save_interim_results(results_data: Dict, output_file: str, progress_info: Dict):
+    """
+    Saves interim results to a temporary file for recovery purposes.
+    """
+    interim_file = f"{output_file}.interim"
+    interim_data = {
+        "results": results_data,
+        "progress": progress_info,
+        "timestamp": time.time(),
+    }
+
+    try:
+        with open(interim_file, "w", encoding="utf-8") as f:
+            json.dump(interim_data, f, indent=2)
+        console.print(f"[dim]💾 Interim results saved to {interim_file}[/dim]")
+    except Exception as e:
+        console.print(f"[yellow]⚠️  Failed to save interim results: {e}[/yellow]")
+
+
+def load_interim_results(output_file: str) -> tuple[Dict | None, Dict | None]:
+    """
+    Loads interim results if they exist.
+    Returns (results_data, progress_info) or (None, None) if no interim file exists.
+    """
+    interim_file = f"{output_file}.interim"
+
+    if not os.path.exists(interim_file):
+        return None, None
+
+    try:
+        with open(interim_file, "r", encoding="utf-8") as f:
+            interim_data = json.load(f)
+
+        console.print(
+            f"[green]🔄 Found interim results from {time.ctime(interim_data.get('timestamp', 0))}[/green]"
+        )
+        return interim_data.get("results"), interim_data.get("progress")
+    except Exception as e:
+        console.print(f"[yellow]⚠️  Failed to load interim results: {e}[/yellow]")
+        return None, None
+
+
+def cleanup_interim_files(output_file: str):
+    """
+    Removes interim files after successful completion.
+    """
+    interim_file = f"{output_file}.interim"
+    if os.path.exists(interim_file):
+        try:
+            os.remove(interim_file)
+            console.print("[dim]🗑️  Cleaned up interim file[/dim]")
+        except Exception as e:
+            console.print(f"[yellow]⚠️  Failed to cleanup interim file: {e}[/yellow]")
+
+
+def count_completed_evaluations(results_data: Dict) -> Dict[str, Dict[str, int]]:
+    """
+    Counts how many evaluations have already been completed.
+    Returns a dict with counts by attack type.
+    """
+    completed: Dict[str, int] = defaultdict(int)
+    total: Dict[str, int] = defaultdict(int)
+
+    for attack_key, attack_data in results_data.items():
+        for request_type, results in attack_data.items():
+            for result in results:
+                attack_type = result.get("attack_type", "unknown")
+                total[attack_type] += 1
+                if "evaluation_success" in result:
+                    completed[attack_type] += 1
+
+    return {"completed": dict(completed), "total": dict(total)}
 
 
 def has_homoglyph_watermark(
@@ -162,16 +235,23 @@ class AttackEvaluator:
             console.print(f"[red]❌ Model test failed: {e}[/red]")
             raise
 
-    def evaluate_dataset(self, dataset: Dataset, batch_size: int = 8) -> List[bool]:
+    def evaluate_dataset(
+        self,
+        dataset: Dataset,
+        batch_size: int = 8,
+        output_file: str | None = None,
+        progress_callback=None,
+    ) -> List[bool]:
         """
-        Evaluates a dataset of responses in batches.
+        Evaluates a dataset of responses in batches with interim saving capability.
         """
         console.print(
             f"[blue]Evaluating {len(dataset)} records with batch size {batch_size}..."
         )
 
         prompts: List[List[Dict[str, str]] | None] = []
-        for item in track(dataset, description="Formatting prompts"):
+        console.print("[cyan]🔄 Formatting prompts...[/cyan]")
+        for item in dataset:
             attack_type = item["attack_type"]
             response = item["response"]
             attack_key = item["attack_key"]
@@ -335,6 +415,10 @@ class AttackEvaluator:
                         f"[green]✅ Batch {current_batch_num} complete ({batch_time:.1f}s, ETA: {eta_seconds:.0f}s)[/green]"
                     )
 
+                    # Call progress callback if provided
+                    if progress_callback:
+                        progress_callback(current_batch_num, num_batches)
+
                 except Exception as batch_error:
                     console.print(
                         f"[red]❌ Error in batch {current_batch_num}: {batch_error}[/red]"
@@ -411,7 +495,7 @@ def print_evaluation_summary(evaluated_records: List[Dict]):
             if not attack_type or not attack_key:
                 continue
 
-            if record.get("success", False):
+            if record.get("evaluation_success", False):
                 overall_success += 1
                 type_summary[attack_type]["success"] += 1
                 key_summary[attack_key]["success"] += 1
@@ -473,7 +557,7 @@ def print_evaluation_summary(evaluated_records: List[Dict]):
 
     y_true = [r.get("attack_key", "unknown") for r in evaluated_records]
     y_pred = [
-        r.get("attack_key", "unknown") if r.get("success") else "failure"
+        r.get("attack_key", "unknown") if r.get("evaluation_success") else "failure"
         for r in evaluated_records
     ]
 
@@ -500,7 +584,7 @@ def main(
     batch_size: int,
 ):
     """
-    Main function to load data, evaluate, and save results.
+    Main function to load data, evaluate, and save results with interim saving support.
     """
     console.print("[bold cyan]🚀 Prompt Injection Attack Evaluator[/bold cyan]\n")
 
@@ -512,6 +596,22 @@ def main(
     with open(input_file, "r", encoding="utf-8") as f:
         results_data = json.load(f)
 
+    # Check for interim results
+    interim_results, interim_progress = load_interim_results(output_file)
+    if interim_results:
+        user_input = (
+            input(
+                "[yellow]Found interim results. Resume from where we left off? (y/N): [/yellow]"
+            )
+            .strip()
+            .lower()
+        )
+        if user_input == "y":
+            results_data = interim_results
+            console.print("[green]🔄 Resuming from interim results[/green]")
+        else:
+            console.print("[blue]🔄 Starting fresh evaluation[/blue]")
+
     # Flatten the data for batch processing
     flat_data = []
     for attack_key, attack_data in results_data.items():
@@ -521,15 +621,28 @@ def main(
                 record["attack_key"] = attack_key
                 record["request_type"] = request_type
                 record["original_index"] = i
-                flat_data.append(record)
+
+                # Skip already evaluated records if resuming
+                if "evaluation_success" not in record:
+                    flat_data.append(record)
 
     if not flat_data:
-        console.print("[yellow]⚠️  No data to evaluate.[/yellow]")
+        console.print("[green]✅ All records already evaluated![/green]")
+        print_evaluation_summary([])
         return
 
     console.print(f"[green]📊 Found {len(flat_data)} records to evaluate[/green]")
 
-    # Separate watermark and external site attacks for direct evaluation
+    # Show completion status
+    completion_stats = count_completed_evaluations(results_data)
+    if completion_stats["completed"]:
+        console.print("[cyan]📈 Current completion status:[/cyan]")
+        for attack_type, completed in completion_stats["completed"].items():
+            total = completion_stats["total"][attack_type]
+            pct = (completed / total) * 100 if total > 0 else 0
+            console.print(f"  {attack_type}: {completed}/{total} ({pct:.1f}%)")
+
+    # Separate attack types for different evaluation methods
     watermark_records = [
         r for r in flat_data if "watermark" in r.get("attack_type", "")
     ]
@@ -545,68 +658,125 @@ def main(
         )
     ]
 
-    console.print(f"[cyan]🔍 Watermark attacks: {len(watermark_records)}[/cyan]")
     console.print(
-        f"[yellow]🌐 External site attacks: {len(external_site_records)}[/yellow]"
+        f"[cyan]🔍 Watermark attacks to evaluate: {len(watermark_records)}[/cyan]"
     )
-    console.print(f"[blue]🤖 LLM-evaluated attacks: {len(llm_records)}[/blue]\n")
-
-    evaluator = AttackEvaluator(
-        model_name=model_name, think=think, batch_size=batch_size
+    console.print(
+        f"[yellow]🌐 External site attacks to evaluate: {len(external_site_records)}[/yellow]"
+    )
+    console.print(
+        f"[blue]🤖 LLM-evaluated attacks to evaluate: {len(llm_records)}[/blue]\n"
     )
 
-    # Process watermark attacks with direct evaluation
-    if watermark_records:
-        for record in track(
-            watermark_records, description="[green]Evaluating watermark attacks"
-        ):
-            response = record.get("response", "")
-            success = has_homoglyph_watermark(response)
-            record["success"] = success
-
-    # Process external site attacks with direct evaluation
-    if external_site_records:
-        for record in track(
-            external_site_records,
-            description="[yellow]Evaluating external site attacks",
-        ):
-            response = record.get("response", "")
-            success = has_external_site_redirection(response)
-            record["success"] = success
-
-    # Process LLM-evaluated attacks, including clean requests
+    evaluator = None
     if llm_records:
-        console.print("[blue]🤖 Processing LLM-evaluated attacks...[/blue]")
-        llm_dataset = Dataset.from_list(llm_records)
-        llm_results = evaluator.evaluate_dataset(llm_dataset, batch_size=batch_size)
-        for i, record in enumerate(llm_records):
-            record["success"] = llm_results[i]
-
-    # Combine and reconstruct the original data structure
-    all_evaluated_records = watermark_records + external_site_records + llm_records
-    for record in track(
-        all_evaluated_records, description="[cyan]Reconstructing results"
-    ):
-        attack_key = record["attack_key"]
-        request_type = record["request_type"]
-        index = record["original_index"]
-        results_data[attack_key][request_type][index]["success"] = record.get(
-            "success", False
+        evaluator = AttackEvaluator(
+            model_name=model_name, think=think, batch_size=batch_size
         )
 
-    # Print the summary of evaluation results
-    print_evaluation_summary(all_evaluated_records)
+    # Progress callback for interim saving
+    def save_progress_callback(batch_num, total_batches):
+        progress_info = {
+            "batch_completed": batch_num,
+            "total_batches": total_batches,
+            "timestamp": time.time(),
+        }
+        save_interim_results(results_data, output_file, progress_info)
 
-    # Ensure the output directory exists
-    output_dir = os.path.dirname(output_file)
-    if output_dir:
-        os.makedirs(output_dir, exist_ok=True)
+    try:
+        # Process watermark attacks with direct evaluation
+        if watermark_records:
+            console.print("[green]🔍 Evaluating watermark attacks...[/green]")
+            for record in watermark_records:
+                response = record.get("response", "")
+                evaluation_success = has_homoglyph_watermark(response)
+                record["evaluation_success"] = evaluation_success
 
-    console.print(f"\n[green]💾 Saving evaluated results to: {output_file}[/green]")
-    with open(output_file, "w", encoding="utf-8") as f:
-        json.dump(results_data, f, indent=2)
+                # Update original results
+                attack_key = record["attack_key"]
+                request_type = record["request_type"]
+                index = record["original_index"]
+                results_data[attack_key][request_type][index]["evaluation_success"] = (
+                    evaluation_success
+                )
 
-    console.print("[bold green]✅ Evaluation complete![/bold green]")
+            # Save interim after watermark evaluation
+            save_interim_results(
+                results_data, output_file, {"phase": "watermark_complete"}
+            )
+
+        # Process external site attacks with direct evaluation
+        if external_site_records:
+            console.print("[yellow]🌐 Evaluating external site attacks...[/yellow]")
+            for record in external_site_records:
+                response = record.get("response", "")
+                evaluation_success = has_external_site_redirection(response)
+                record["evaluation_success"] = evaluation_success
+
+                # Update original results
+                attack_key = record["attack_key"]
+                request_type = record["request_type"]
+                index = record["original_index"]
+                results_data[attack_key][request_type][index]["evaluation_success"] = (
+                    evaluation_success
+                )
+
+            # Save interim after external site evaluation
+            save_interim_results(
+                results_data, output_file, {"phase": "external_site_complete"}
+            )
+
+        # Process LLM-evaluated attacks
+        if llm_records and evaluator:
+            console.print("[blue]🤖 Processing LLM-evaluated attacks...[/blue]")
+            llm_dataset = Dataset.from_list(llm_records)
+            llm_results = evaluator.evaluate_dataset(
+                llm_dataset,
+                batch_size=batch_size,
+                output_file=output_file,
+                progress_callback=save_progress_callback,
+            )
+            for i, record in enumerate(llm_records):
+                record["evaluation_success"] = llm_results[i]
+
+                # Update original results
+                attack_key = record["attack_key"]
+                request_type = record["request_type"]
+                index = record["original_index"]
+                results_data[attack_key][request_type][index]["evaluation_success"] = (
+                    record["evaluation_success"]
+                )
+
+        # Combine all evaluated records for summary
+        all_evaluated_records = watermark_records + external_site_records + llm_records
+
+        # Print the summary of evaluation results
+        print_evaluation_summary(all_evaluated_records)
+
+        # Ensure the output directory exists
+        output_dir = os.path.dirname(output_file)
+        if output_dir:
+            os.makedirs(output_dir, exist_ok=True)
+
+        console.print(f"\n[green]💾 Saving evaluated results to: {output_file}[/green]")
+        with open(output_file, "w", encoding="utf-8") as f:
+            json.dump(results_data, f, indent=2)
+
+        # Clean up interim files on successful completion
+        cleanup_interim_files(output_file)
+
+        console.print("[bold green]✅ Evaluation complete![/bold green]")
+
+    except KeyboardInterrupt:
+        console.print("\n[yellow]⚠️  Evaluation interrupted by user[/yellow]")
+        console.print(
+            "[blue]💾 Interim results have been saved and can be resumed later[/blue]"
+        )
+        raise
+    except Exception as e:
+        console.print(f"\n[red]❌ Error during evaluation: {e}[/red]")
+        console.print("[blue]💾 Interim results have been saved for recovery[/blue]")
+        raise
 
 
 if __name__ == "__main__":
