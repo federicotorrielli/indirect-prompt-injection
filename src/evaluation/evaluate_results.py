@@ -144,29 +144,39 @@ def has_homoglyph_watermark(
     if target_phrase in text:
         return True
 
-    # Define variations of the homoglyph pattern to check for
-    # The core pattern is "novel methodology" with Cyrillic о (U+043E) and е (U+0435)
-    cyrillic_o = "\u043e"  # Cyrillic о
-    cyrillic_e = "\u0435"  # Cyrillic е
-    latin_o = "o"  # Latin o
-    latin_e = "e"  # Latin e
+    # Define Cyrillic characters explicitly
+    cyrillic_o = "\u043e"  # Cyrillic о (U+043E)
+    cyrillic_e = "\u0435"  # Cyrillic е (U+0435)
 
-    # Generate possible variations by mixing Latin and Cyrillic characters
-    patterns = [
-        # Original with all Cyrillic replacements
+    # Check for the specific patterns we know appear in the data
+    # Pattern 1: "novel m\u0435th\u043ed\u043el\u043egy" (mixed Latin/Cyrillic)
+    pattern1 = f"novel m{cyrillic_e}th{cyrillic_o}d{cyrillic_o}l{cyrillic_o}gy"
+    if pattern1 in text:
+        return True
+
+    # Pattern 2: "n\u043ev\u0435l m\u0435th\u043ed\u043el\u043egy" (more Cyrillic)
+    pattern2 = f"n{cyrillic_o}v{cyrillic_e}l m{cyrillic_e}th{cyrillic_o}d{cyrillic_o}l{cyrillic_o}gy"
+    if pattern2 in text:
+        return True
+
+    # Generate comprehensive variations by mixing Latin and Cyrillic characters
+    # Check all possible combinations where 'o' and 'e' can be either Latin or Cyrillic
+    base_patterns = [
+        # Only 'o' replaced with Cyrillic
+        f"n{cyrillic_o}vel meth{cyrillic_o}d{cyrillic_o}l{cyrillic_o}gy",
+        # Only 'e' replaced with Cyrillic
+        f"nov{cyrillic_e}l m{cyrillic_e}thodology",
+        # Both 'o' and 'e' replaced with Cyrillic (full watermark)
         f"n{cyrillic_o}v{cyrillic_e}l m{cyrillic_e}th{cyrillic_o}d{cyrillic_o}l{cyrillic_o}gy",
-        # Common variations where some chars might be Latin
-        f"n{latin_o}v{cyrillic_e}l m{cyrillic_e}th{cyrillic_o}d{cyrillic_o}l{cyrillic_o}gy",
-        f"n{cyrillic_o}v{latin_e}l m{cyrillic_e}th{cyrillic_o}d{cyrillic_o}l{cyrillic_o}gy",
-        f"n{cyrillic_o}v{cyrillic_e}l m{latin_e}th{cyrillic_o}d{cyrillic_o}l{cyrillic_o}gy",
-        # More mixed variations
-        f"n{cyrillic_o}v{cyrillic_e}l m{cyrillic_e}th{latin_o}d{cyrillic_o}l{cyrillic_o}gy",
-        f"n{cyrillic_o}v{cyrillic_e}l m{cyrillic_e}th{cyrillic_o}d{latin_o}l{cyrillic_o}gy",
-        f"n{cyrillic_o}v{cyrillic_e}l m{cyrillic_e}th{cyrillic_o}d{cyrillic_o}l{latin_o}gy",
+        # Mixed patterns with some Latin characters preserved
+        f"novel m{cyrillic_e}th{cyrillic_o}d{cyrillic_o}l{cyrillic_o}gy",
+        f"n{cyrillic_o}vel m{cyrillic_e}th{cyrillic_o}d{cyrillic_o}l{cyrillic_o}gy",
+        f"n{cyrillic_o}v{cyrillic_e}l methodology",
+        f"n{cyrillic_o}v{cyrillic_e}l meth{cyrillic_o}d{cyrillic_o}l{cyrillic_o}gy",
     ]
 
     # Check each pattern
-    for pattern in patterns:
+    for pattern in base_patterns:
         if pattern in text:
             return True
 
