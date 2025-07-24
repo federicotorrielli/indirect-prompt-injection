@@ -425,3 +425,123 @@ class ProgressTracker:
             )
 
         return False
+
+    def clear_attack_type_progress(
+        self,
+        attack_type: str,
+        llm_service: str = "chatgpt",
+        results_file_path: Optional[str] = None,
+    ):
+        """Clear all progress for a specific attack type.
+
+        This removes all batches, completed PDFs, and failed PDFs for the given attack type.
+        Also removes results from the results file to prevent re-synchronization.
+        Useful when you want to reprocess a specific attack type from scratch.
+
+        Args:
+            attack_type: The attack type to clear progress for
+            llm_service: The LLM service being used
+            results_file_path: Path to the results file to also clear (optional)
+        """
+        cleared_batches = 0
+        cleared_pdfs = 0
+        cleared_failed = 0
+        cleared_results = 0
+
+        # Remove completed batches for this attack type
+        batches_to_remove = [
+            batch_key
+            for batch_key in self.progress_data["completed_batches"]
+            if batch_key.startswith(f"{attack_type}_")
+        ]
+        for batch_key in batches_to_remove:
+            self.progress_data["completed_batches"].remove(batch_key)
+            cleared_batches += 1
+
+        # Remove completed PDFs for this attack type
+        pdfs_to_remove = [
+            batch_key
+            for batch_key in self.progress_data["completed_pdfs"]
+            if batch_key.startswith(f"{attack_type}_")
+        ]
+        for batch_key in pdfs_to_remove:
+            pdf_count = len(self.progress_data["completed_pdfs"][batch_key])
+            del self.progress_data["completed_pdfs"][batch_key]
+            cleared_pdfs += pdf_count
+
+        # Remove failed PDFs for this attack type
+        failed_to_remove = [
+            batch_key
+            for batch_key in self.progress_data["failed_pdfs"]
+            if batch_key.startswith(f"{attack_type}_")
+        ]
+        for batch_key in failed_to_remove:
+            failed_count = len(self.progress_data["failed_pdfs"][batch_key])
+            del self.progress_data["failed_pdfs"][batch_key]
+            cleared_failed += failed_count
+
+        # Also clear results from the results file to prevent re-synchronization
+        if results_file_path and os.path.exists(results_file_path):
+            try:
+                with open(results_file_path, "r", encoding="utf-8") as f:
+                    results_data = json.load(f)
+
+                # Remove batches for this attack type from results
+                results_to_remove = [
+                    batch_key
+                    for batch_key in results_data
+                    if batch_key.startswith(f"{attack_type}_")
+                ]
+
+                for batch_key in results_to_remove:
+                    del results_data[batch_key]
+                    cleared_results += 1
+
+                # Save updated results file
+                if cleared_results > 0:
+                    with open(results_file_path, "w", encoding="utf-8") as f:
+                        json.dump(results_data, f, indent=2, ensure_ascii=False)
+                    logger.info(
+                        f"Cleared {cleared_results} result batches from {results_file_path}"
+                    )
+
+            except Exception as e:
+                logger.warning(f"Failed to clear results from {results_file_path}: {e}")
+
+        if cleared_batches > 0 or cleared_pdfs > 0 or cleared_failed > 0:
+            self._save_progress()
+            logger.info(
+                f"Cleared progress for attack type '{attack_type}': "
+                f"{cleared_batches} batches, {cleared_pdfs} completed PDFs, {cleared_failed} failed PDFs"
+                + (f", {cleared_results} result batches" if cleared_results > 0 else "")
+            )
+        else:
+            logger.info(f"No progress found for attack type '{attack_type}' to clear")
+
+    def get_available_attack_types(self) -> List[str]:
+        """Get list of all attack types that have progress recorded."""
+        attack_types = set()
+
+        # Extract from completed batches
+        for batch_key in self.progress_data["completed_batches"]:
+            parts = batch_key.split("_")
+            if len(parts) >= 3:
+                # Handle attack types with underscores
+                attack_type = "_".join(parts[:-2])
+                attack_types.add(attack_type)
+
+        # Extract from completed PDFs
+        for batch_key in self.progress_data["completed_pdfs"]:
+            parts = batch_key.split("_")
+            if len(parts) >= 3:
+                attack_type = "_".join(parts[:-2])
+                attack_types.add(attack_type)
+
+        # Extract from failed PDFs
+        for batch_key in self.progress_data["failed_pdfs"]:
+            parts = batch_key.split("_")
+            if len(parts) >= 3:
+                attack_type = "_".join(parts[:-2])
+                attack_types.add(attack_type)
+
+        return sorted(list(attack_types))

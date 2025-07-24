@@ -449,6 +449,15 @@ class ChatGPTAutomator:
             logger.info("Waiting for file upload to complete...")
             if self._wait_for_upload_completion_by_button():
                 logger.info("PDF uploaded successfully")
+
+                # Check specifically for unknown error after upload
+                time.sleep(1)  # Brief wait for any error to appear
+                if self._check_for_unknown_error_after_upload():
+                    self._handle_usage_limit_error(
+                        "Unknown error occurred after upload"
+                    )
+                    # This won't return since _handle_usage_limit_error calls exit()
+
                 return True
             else:
                 logger.warning("Upload timeout reached, but continuing...")
@@ -879,6 +888,9 @@ class ChatGPTAutomator:
                 "div[class*='text-token-text-error']",
                 "div[class*='border-token-surface-error']",
                 "aside[class*='rounded-3xl'][class*='border']",
+                "div[class*='border-red-500'][role='alert']",  # Red alert banners
+                "div.border-red-500[role='alert']",  # Specific red error alerts
+                "[role='alert'][class*='border-red-500']",  # Alert role with red border
             ]
 
             # Usage limit patterns to detect
@@ -886,6 +898,8 @@ class ChatGPTAutomator:
                 "usage cap for gpt",
                 "hit the edu plan limit",
                 "plan limit for gpt",
+                "unknown error occurred",  # Generic error that often indicates limits
+                "internal error",  # Another generic error indicating system issues/limits
             ]
 
             # Use cached selector for performance if available
@@ -1134,4 +1148,42 @@ class ChatGPTAutomator:
 
         except Exception as e:
             logger.warning(f"Error monitoring upload via button state: {e}")
+            return False
+
+    def _check_for_unknown_error_after_upload(self) -> bool:
+        """Check specifically for 'unknown error' messages in red alert boxes after upload."""
+        try:
+            if not self.driver:
+                return False
+
+            logger.debug("Checking for unknown error after upload...")
+
+            # Specific selectors for red alert banners that appear after upload
+            error_selectors = [
+                "div[class*='border-red-500'][role='alert']",  # Red alert banners
+                "div.border-red-500[role='alert']",  # Specific red error alerts
+                "[role='alert'][class*='border-red-500']",  # Alert role with red border
+            ]
+
+            # Only check for "unknown error occurred" pattern
+            unknown_error_pattern = "unknown error occurred"
+
+            for selector in error_selectors:
+                try:
+                    elements = self.driver.find_elements(By.CSS_SELECTOR, selector)
+                    for element in elements:
+                        if element.is_displayed():
+                            text = element.text.lower()
+                            if unknown_error_pattern in text:
+                                logger.error(
+                                    f"Unknown error detected after upload: {element.text}"
+                                )
+                                return True
+                except Exception:
+                    continue
+
+            return False
+
+        except Exception as e:
+            logger.warning(f"Error checking for unknown error after upload: {e}")
             return False
