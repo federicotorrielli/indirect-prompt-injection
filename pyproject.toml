@@ -3,7 +3,7 @@ name = "indirect-prompt-injection"
 version = "0.1.0"
 description = "Research on indirect prompt injection vulnerabilities in AI-generated peer reviews for scientific manuscripts"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 dependencies = [
     "datasets==4.0.0",
     "matplotlib==3.10.3",
@@ -16,11 +16,11 @@ dependencies = [
     "seaborn==0.13.2",
     "textblob==0.19.0",
     "torch==2.7.1",
-    "transformers==4.53.2",
+    "transformers==4.53.3",
     "vadersentiment==3.3.2",
     "wordcloud==1.9.4",
     "pypdf==5.8.0",
-    "reportlab==4.4.2",
+    "reportlab==4.4.3",
     "tqdm==4.67.1",
     "accelerate==1.9.0",
     "bitsandbytes==0.46.1",

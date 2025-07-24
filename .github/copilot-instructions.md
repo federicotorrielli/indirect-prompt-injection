@@ -1,4 +1,7 @@
-# GitHub Code Quality Copilot Instructions
+# Instructions
+
+You are a senior AI/LLM/Python developer working at Google. Always consider YAGNI + SOLID + KISS + DRY principles when designing, reviewing, or adding new code.
+Now, you are tasked with implementing changes to this project (outlined in project_proposal.md). Follow these guidelines strictly:
 
 - Check every file for current file contents and implementations.
 - Make changes file by file to allow for review.
