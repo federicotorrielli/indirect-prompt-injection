@@ -461,3 +461,71 @@ class ResultsProcessor:
 
         except Exception as e:
             logger.error(f"Failed to export responses: {e}")
+
+    def order_results_file(self):
+        """Order the consolidated results file for consistent Git commits."""
+        try:
+            all_results = self.load_existing_results()
+            if not all_results:
+                logger.info("No results to order")
+                return
+
+            logger.info("Ordering results file for consistent Git commits...")
+
+            # Create ordered structure
+            ordered_results = {}
+
+            # Sort batch keys (attack_type_prompt_type_injection_locus)
+            sorted_batch_keys = sorted(all_results.keys())
+
+            for batch_key in sorted_batch_keys:
+                batch_data = all_results[batch_key]
+                ordered_batch = {}
+
+                # Sort request types within each batch
+                sorted_request_types = sorted(batch_data.keys())
+
+                for request_type in sorted_request_types:
+                    results_list = batch_data[request_type]
+
+                    # Sort results within each request type by pdf_file name
+                    ordered_results_list = sorted(
+                        results_list, key=lambda x: x.get("pdf_file", "")
+                    )
+
+                    # Clean up each result for consistent ordering
+                    cleaned_results = []
+                    for result in ordered_results_list:
+                        # Create ordered dict with consistent key order
+                        ordered_result = {
+                            "pdf_file": result.get("pdf_file"),
+                            "attack_type": result.get("attack_type"),
+                            "prompt_type": result.get("prompt_type"),
+                            "injection_locus": result.get("injection_locus"),
+                            "request_type": result.get("request_type"),
+                            "request_text": result.get("request_text"),
+                            "response": result.get("response"),
+                            "timestamp": result.get("timestamp"),
+                            "success": result.get("success"),
+                            "error": result.get("error"),
+                        }
+                        # Remove None values to keep the file clean
+                        cleaned_result = {
+                            k: v for k, v in ordered_result.items() if v is not None
+                        }
+                        cleaned_results.append(cleaned_result)
+
+                    ordered_batch[request_type] = cleaned_results
+
+                ordered_results[batch_key] = ordered_batch
+
+            # Save the ordered results back to file
+            with open(self.consolidated_file, "w", encoding="utf-8") as f:
+                json.dump(
+                    ordered_results, f, indent=2, ensure_ascii=False, sort_keys=True
+                )
+
+            logger.info(f"Successfully ordered results file: {self.consolidated_file}")
+
+        except Exception as e:
+            logger.error(f"Failed to order results file: {e}")
