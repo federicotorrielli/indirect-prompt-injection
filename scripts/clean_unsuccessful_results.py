@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Script to clean up unsuccessful (success: false) results from all_results.json
-and the corresponding entries from automation_progress.json before restarting the automation.
+Script to clean up unsuccessful (success: false) results from model-specific results files
+and the corresponding entries from automation_progress files before restarting the automation.
 """
 
 import json
@@ -17,17 +17,20 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def clean_unsuccessful_results(results_dir="results"):
+def clean_unsuccessful_results(results_dir="results", llm_service="chatgpt"):
     """
-    Remove all unsuccessful results (where success=False) from all_results.json
-    and the corresponding entries from automation_progress.json.
+    Remove all unsuccessful results (where success=False) from model-specific results files
+    and the corresponding entries from automation_progress files.
     """
     # File paths
-    results_file = os.path.join(results_dir, "all_results.json")
-    progress_file = os.path.join(results_dir, "automation_progress.json")
+    results_file = os.path.join(results_dir, f"all_results_{llm_service}.json")
+    progress_file = os.path.join(results_dir, f"automation_progress_{llm_service}.json")
 
     if not os.path.exists(results_file) or not os.path.exists(progress_file):
-        logger.error(f"Results file or progress file not found in {results_dir}")
+        logger.error(
+            f"Results file or progress file not found for {llm_service} in {results_dir}"
+        )
+        logger.error(f"Expected files: {results_file}, {progress_file}")
         return False
 
     # Load results
@@ -137,7 +140,7 @@ def clean_unsuccessful_results(results_dir="results"):
     with open(progress_file, "w", encoding="utf-8") as f:
         json.dump(progress_data, f, indent=2, ensure_ascii=False)
 
-    logger.info("Successfully cleaned up results and progress files")
+    logger.info(f"Successfully cleaned up {llm_service} results and progress files")
     logger.info(f"Original result count: {original_result_count}")
     logger.info(f"New result count: {new_result_count}")
     logger.info(
@@ -157,4 +160,25 @@ def count_results(results_dict):
 
 
 if __name__ == "__main__":
-    clean_unsuccessful_results()
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Clean unsuccessful results from model-specific files"
+    )
+    parser.add_argument(
+        "--llm-service",
+        choices=["chatgpt", "copilot", "gemini"],
+        default="chatgpt",
+        help="LLM service to clean results for (default: chatgpt)",
+    )
+    parser.add_argument(
+        "--results-dir",
+        default="results",
+        help="Results directory path (default: results)",
+    )
+
+    args = parser.parse_args()
+
+    logger.info(f"Cleaning unsuccessful results for {args.llm_service}")
+    success = clean_unsuccessful_results(args.results_dir, args.llm_service)
+    exit(0 if success else 1)
