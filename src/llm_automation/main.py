@@ -42,7 +42,7 @@ class PDFReviewAutomator:
         )
         self.progress_tracker = ProgressTracker(progress_file, config.llm_service)
 
-    def initialize(self, attack_type_filter: Optional[str] = None) -> bool:
+    def initialize(self, attack_type_filter: Optional[str] = None, attack_mode_filter: Optional[str] = None) -> bool:
         """Initialize the automation system."""
         try:
             logger.info(f"Initializing {self.config.llm_service} automation system...")
@@ -57,7 +57,7 @@ class PDFReviewAutomator:
 
             # Fix any incorrectly marked completed batches
             logger.info("Checking for incorrectly marked completed batches...")
-            self.fix_incorrect_completions(self.config.llm_service, attack_type_filter)
+            self.fix_incorrect_completions(self.config.llm_service, attack_type_filter, attack_mode_filter)
 
             return self.llm_automator.initialize()
         except Exception as e:
@@ -70,12 +70,13 @@ class PDFReviewAutomator:
         self.llm_automator.cleanup()
 
     def get_pdf_directories(
-        self, attack_type_filter: Optional[str] = None
+        self, attack_type_filter: Optional[str] = None, attack_mode_filter: Optional[str] = None
     ) -> List[Tuple[str, str, str, str]]:
         """Get all PDF directories to process.
 
         Args:
             attack_type_filter: If specified, only include directories with this attack type
+            attack_mode_filter: If specified, only include directories with this attack mode (narrative/policy)
 
         Returns:
             List of (attack_type, prompt_type, injection_locus, directory_path) tuples
@@ -148,6 +149,14 @@ class PDFReviewAutomator:
             if attack_type_filter and attack_type != attack_type_filter:
                 continue
 
+            # Apply attack mode filter if specified
+            if attack_mode_filter:
+                # Map attack mode to prompt type patterns
+                if attack_mode_filter == "narrative" and prompt_type != "narrative":
+                    continue
+                elif attack_mode_filter == "policy" and not prompt_type.startswith("policy"):
+                    continue
+
             directories.append((attack_type, prompt_type, injection_locus, str(subdir)))
 
         logger.info(
@@ -155,6 +164,11 @@ class PDFReviewAutomator:
             + (
                 f" (filtered by attack_type: {attack_type_filter})"
                 if attack_type_filter
+                else ""
+            )
+            + (
+                f" (filtered by attack_mode: {attack_mode_filter})"
+                if attack_mode_filter
                 else ""
             )
         )
@@ -372,36 +386,39 @@ class PDFReviewAutomator:
         else:
             return "standard_request"
 
-    def run_full_automation(self, attack_type_filter: Optional[str] = None) -> bool:
+    def run_full_automation(self, attack_type_filter: Optional[str] = None, attack_mode_filter: Optional[str] = None) -> bool:
         """Run the complete automation process.
 
         Args:
             attack_type_filter: If specified, only process batches with this attack type
+            attack_mode_filter: If specified, only process batches with this attack mode
         """
         try:
-            if not self.initialize(attack_type_filter):
+            if not self.initialize(attack_type_filter, attack_mode_filter):
                 logger.error("Failed to initialize automation system")
                 return False
 
-            logger.info(
-                "Starting full PDF review automation..."
-                + (
-                    f" (attack_type: {attack_type_filter})"
-                    if attack_type_filter
-                    else ""
-                )
-            )
+            filter_info = ""
+            if attack_type_filter:
+                filter_info += f" (attack_type: {attack_type_filter})"
+            if attack_mode_filter:
+                filter_info += f" (attack_mode: {attack_mode_filter})"
+
+            logger.info(f"Starting full PDF review automation...{filter_info}")
 
             # Show progress statistics
             progress_stats = self.progress_tracker.get_statistics()
             logger.info(f"Progress stats: {progress_stats}")
 
-            directories = self.get_pdf_directories(attack_type_filter)
+            directories = self.get_pdf_directories(attack_type_filter, attack_mode_filter)
             if not directories:
-                if attack_type_filter:
-                    logger.error(
-                        f"No PDF directories found for attack type: {attack_type_filter}"
-                    )
+                if attack_type_filter or attack_mode_filter:
+                    filters = []
+                    if attack_type_filter:
+                        filters.append(f"attack type: {attack_type_filter}")
+                    if attack_mode_filter:
+                        filters.append(f"attack mode: {attack_mode_filter}")
+                    logger.error(f"No PDF directories found for {', '.join(filters)}")
                 else:
                     logger.error("No PDF directories found to process")
                 return False
@@ -631,16 +648,19 @@ class PDFReviewAutomator:
         return error_type in retryable_types
 
     def fix_incorrect_completions(
-        self, llm_service: str = "chatgpt", attack_type_filter: Optional[str] = None
+        self, llm_service: str = "chatgpt", attack_type_filter: Optional[str] = None, attack_mode_filter: Optional[str] = None
     ):
         """Fix batches that are incorrectly marked as completed."""
-        logger.info(
-            "Checking for incorrectly marked completed batches..."
-            + (f" (attack_type: {attack_type_filter})" if attack_type_filter else "")
-        )
+        filter_info = ""
+        if attack_type_filter:
+            filter_info += f" (attack_type: {attack_type_filter})"
+        if attack_mode_filter:
+            filter_info += f" (attack_mode: {attack_mode_filter})"
+
+        logger.info(f"Checking for incorrectly marked completed batches...{filter_info}")
 
         # Get all directories to check expected counts
-        directories = self.get_pdf_directories(attack_type_filter)
+        directories = self.get_pdf_directories(attack_type_filter, attack_mode_filter)
 
         fixed_count = 0
         for attack_type, prompt_type, injection_locus, pdf_dir in directories:
@@ -702,6 +722,7 @@ def main():
         "--config", default="config.json", help="Configuration file path"
     )
     parser.add_argument("--attack-type", help="Process only specific attack type")
+    parser.add_argument("--attack-mode", choices=["narrative", "policy"], help="Process only specific attack mode (narrative or policy). Use 'narrative' for narrative prompts or 'policy' for policy_puppetry prompts.")
     parser.add_argument("--prompt-type", help="Process only specific prompt type")
     parser.add_argument(
         "--injection-locus", help="Process only specific injection locus"
@@ -834,6 +855,8 @@ def main():
 
         # Handle force-attack-type option (clear progress and continue processing)
         attack_type_filter = None
+        attack_mode_filter = None
+        
         if args.force_attack_type:
             attack_type_filter = args.force_attack_type
             available_types = automator.progress_tracker.get_available_attack_types()
@@ -857,6 +880,10 @@ def main():
             attack_type_filter = args.attack_type
             logger.info(f"Filtering by attack type: {args.attack_type}")
 
+        if args.attack_mode:
+            attack_mode_filter = args.attack_mode
+            logger.info(f"Filtering by attack mode: {args.attack_mode}")
+
         # Process based on arguments
         if args.attack_type and args.prompt_type and args.injection_locus:
             # Run single batch
@@ -864,8 +891,8 @@ def main():
                 args.attack_type, args.prompt_type, args.injection_locus
             )
         else:
-            # Run full automation (possibly filtered by attack type)
-            success = automator.run_full_automation(attack_type_filter)
+            # Run full automation (possibly filtered by attack type and/or attack mode)
+            success = automator.run_full_automation(attack_type_filter, attack_mode_filter)
 
         sys.exit(0 if success else 1)
 
