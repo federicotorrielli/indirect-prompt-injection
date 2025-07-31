@@ -1,6 +1,6 @@
 {
   "session_start": "2025-07-11T16:44:03.694269",
-  "last_updated": "2025-07-31T12:01:20.722360",
+  "last_updated": "2025-07-31T14:42:11.273858",
   "completed_pdfs": {
     "refusal_attack_narrative_first": {
       "--gvHfE3Xf5.pdf": {
@@ -3119,6 +3119,136 @@
       "zWy1uxjDdZJ.pdf": {
         "standard_request": true
       }
+    },
+    "pos_steering_attack_narrative_last": {
+      "--gvHfE3Xf5.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "0-uUGPbIjD.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "026hEw26i3-.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "0qbEq5UBfGD.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "3q5IqUrkcF.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "49A1Y6tRhaq.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "4hBXGTdS6Lc.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "4pfqv2FCo0R.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "5USOVm2HkfG.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "5l9zj5G7vDY.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "6gLEKETxUWp.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "7WwYBADS3E_.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "8nXkyH2_s6.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "AADxnPG-PR.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "AT7jak63NNK.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "Al7Wpsy49g.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "B1g30j0qF7.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "BIIwfP55pp.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "BJe4oxHYPB.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "BJlPOlBKDB.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "BygSP6Vtvr.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "CrCvGNHAIrz.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "DFIoGDZejIB.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "DTXZqTNV5nW.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "E3UZoJKHxuk.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "FoM-RnF6SNe.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "H1lJJnR5Ym.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "HG7vlodGGm.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "HHiiQKWsOcV.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "Hw2Za4N5hy0.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "HygBZnRctX.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "IrofNLZuWF.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      }
     }
   },
   "completed_batches": [
@@ -3132,7 +3262,7 @@
     "pos_steering_attack_policy_puppetry_first",
     "pos_steering_attack_narrative_first"
   ],
-  "total_pdfs_processed": 101,
-  "total_requests_sent": 1300,
+  "total_pdfs_processed": 133,
+  "total_requests_sent": 1404,
   "failed_pdfs": {}
 }
