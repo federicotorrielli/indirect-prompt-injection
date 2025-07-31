@@ -1,7 +1,2220 @@
 {
-  "session_start": "2025-07-11T16:44:03.694269",
-  "last_updated": "2025-07-31T14:42:11.273858",
+  "session_start": "2025-07-31T14:53:28.487774",
+  "last_updated": "2025-07-31T15:00:15.813588",
   "completed_pdfs": {
+    "external_site_attack_policy_puppetry_first": {
+      "--gvHfE3Xf5.pdf": {
+        "standard_request": true
+      },
+      "0-uUGPbIjD.pdf": {
+        "standard_request": true
+      },
+      "026hEw26i3-.pdf": {
+        "standard_request": true
+      },
+      "0qbEq5UBfGD.pdf": {
+        "standard_request": true
+      },
+      "3q5IqUrkcF.pdf": {
+        "standard_request": true
+      },
+      "49A1Y6tRhaq.pdf": {
+        "standard_request": true
+      },
+      "4hBXGTdS6Lc.pdf": {
+        "standard_request": true
+      },
+      "4pfqv2FCo0R.pdf": {
+        "standard_request": true
+      },
+      "5USOVm2HkfG.pdf": {
+        "standard_request": true
+      },
+      "5l9zj5G7vDY.pdf": {
+        "standard_request": true
+      },
+      "6gLEKETxUWp.pdf": {
+        "standard_request": true
+      },
+      "7WwYBADS3E_.pdf": {
+        "standard_request": true
+      },
+      "8nXkyH2_s6.pdf": {
+        "standard_request": true
+      },
+      "AADxnPG-PR.pdf": {
+        "standard_request": true
+      },
+      "AT7jak63NNK.pdf": {
+        "standard_request": true
+      },
+      "Al7Wpsy49g.pdf": {
+        "standard_request": true
+      },
+      "B1g30j0qF7.pdf": {
+        "standard_request": true
+      },
+      "BIIwfP55pp.pdf": {
+        "standard_request": true
+      },
+      "BJe4oxHYPB.pdf": {
+        "standard_request": true
+      },
+      "BJlPOlBKDB.pdf": {
+        "standard_request": true
+      },
+      "BygSP6Vtvr.pdf": {
+        "standard_request": true
+      },
+      "CrCvGNHAIrz.pdf": {
+        "standard_request": true
+      },
+      "DFIoGDZejIB.pdf": {
+        "standard_request": true
+      },
+      "DTXZqTNV5nW.pdf": {
+        "standard_request": true
+      },
+      "E3UZoJKHxuk.pdf": {
+        "standard_request": true
+      },
+      "FoM-RnF6SNe.pdf": {
+        "standard_request": true
+      },
+      "H1lJJnR5Ym.pdf": {
+        "standard_request": true
+      },
+      "HG7vlodGGm.pdf": {
+        "standard_request": true
+      },
+      "HHiiQKWsOcV.pdf": {
+        "standard_request": true
+      },
+      "Hw2Za4N5hy0.pdf": {
+        "standard_request": true
+      },
+      "HygBZnRctX.pdf": {
+        "standard_request": true
+      },
+      "IrofNLZuWF.pdf": {
+        "standard_request": true
+      },
+      "J5LS3YJH7Zi.pdf": {
+        "standard_request": true
+      },
+      "KcTBbZ1kM6K.pdf": {
+        "standard_request": true
+      },
+      "L1L2G43k14n.pdf": {
+        "standard_request": true
+      },
+      "M5h1l1SldlF.pdf": {
+        "standard_request": true
+      },
+      "M_KwRsbhi5e.pdf": {
+        "standard_request": true
+      },
+      "Msc9XKd-3bA.pdf": {
+        "standard_request": true
+      },
+      "NMgB4CVnMh.pdf": {
+        "standard_request": true
+      },
+      "PP4KyAaBoBK.pdf": {
+        "standard_request": true
+      },
+      "Pgv4fwfh63L.pdf": {
+        "standard_request": true
+      },
+      "PoP96DrBHnl.pdf": {
+        "standard_request": true
+      },
+      "PxMfDdPnTfV.pdf": {
+        "standard_request": true
+      },
+      "Q2iaAc-4I1v.pdf": {
+        "standard_request": true
+      },
+      "R0a0kFI3dJx.pdf": {
+        "standard_request": true
+      },
+      "R612wi_C-7w.pdf": {
+        "standard_request": true
+      },
+      "Rhl8IoYzdSI.pdf": {
+        "standard_request": true
+      },
+      "RloMRU3keo3.pdf": {
+        "standard_request": true
+      },
+      "RmcPm9m3tnk.pdf": {
+        "standard_request": true
+      },
+      "RwQZd8znR10.pdf": {
+        "standard_request": true
+      },
+      "S1gXiaEYvr.pdf": {
+        "standard_request": true
+      },
+      "S9ZyhWC17wJ.pdf": {
+        "standard_request": true
+      },
+      "SkU3kbKTrb6.pdf": {
+        "standard_request": true
+      },
+      "SklSQgHFDS.pdf": {
+        "standard_request": true
+      },
+      "T3kmOP_cMFB.pdf": {
+        "standard_request": true
+      },
+      "TNxKD3z_tPZ.pdf": {
+        "standard_request": true
+      },
+      "V4AVDoFtVM.pdf": {
+        "standard_request": true
+      },
+      "VcB4QkSfyO.pdf": {
+        "standard_request": true
+      },
+      "WdOCkf4aCM.pdf": {
+        "standard_request": true
+      },
+      "WlkzLjxpYe.pdf": {
+        "standard_request": true
+      },
+      "XkI_ggnfLZ4.pdf": {
+        "standard_request": true
+      },
+      "Y5TgO3J_Glc.pdf": {
+        "standard_request": true
+      },
+      "YygA0yppTR.pdf": {
+        "standard_request": true
+      },
+      "YzasumDKCWV.pdf": {
+        "standard_request": true
+      },
+      "ZOcX-eybqoL.pdf": {
+        "standard_request": true
+      },
+      "ZcKPWuhG6wy.pdf": {
+        "standard_request": true
+      },
+      "_67HnXYixmN.pdf": {
+        "standard_request": true
+      },
+      "_ojjh-QFiFr.pdf": {
+        "standard_request": true
+      },
+      "_ptUyYP19mP.pdf": {
+        "standard_request": true
+      },
+      "a1m8Jba-N6l.pdf": {
+        "standard_request": true
+      },
+      "cQLkLAQgZ5I.pdf": {
+        "standard_request": true
+      },
+      "djwS0m4Ft_A.pdf": {
+        "standard_request": true
+      },
+      "eNdiU_DbM9.pdf": {
+        "standard_request": true
+      },
+      "fJIrkNKGBNI.pdf": {
+        "standard_request": true
+      },
+      "gfwfOskyzSx.pdf": {
+        "standard_request": true
+      },
+      "hJOLFJIJ_zy.pdf": {
+        "standard_request": true
+      },
+      "iqpFcg2TAa0.pdf": {
+        "standard_request": true
+      },
+      "iw-ms2znSS2.pdf": {
+        "standard_request": true
+      },
+      "j0uePNuoBho.pdf": {
+        "standard_request": true
+      },
+      "jV5m8NAWb0E.pdf": {
+        "standard_request": true
+      },
+      "jsM6yvqiT0W.pdf": {
+        "standard_request": true
+      },
+      "l3gNU1KStIC.pdf": {
+        "standard_request": true
+      },
+      "lU5Rs_wCweN.pdf": {
+        "standard_request": true
+      },
+      "mCLVeEpplNE.pdf": {
+        "standard_request": true
+      },
+      "mCtadqIxOJ.pdf": {
+        "standard_request": true
+      },
+      "nEMiSX_ipXr.pdf": {
+        "standard_request": true
+      },
+      "q-qxdClTs0d.pdf": {
+        "standard_request": true
+      },
+      "q3KSThy2GwB.pdf": {
+        "standard_request": true
+      },
+      "qYZD-AO1Vn.pdf": {
+        "standard_request": true
+      },
+      "qbH974jKUVy.pdf": {
+        "standard_request": true
+      },
+      "r1gdj2EKPB.pdf": {
+        "standard_request": true
+      },
+      "rke5R1SFwS.pdf": {
+        "standard_request": true
+      },
+      "ryefE1SYDr.pdf": {
+        "standard_request": true
+      },
+      "tV3N0DWMxCg.pdf": {
+        "standard_request": true
+      },
+      "tV6oBfuyLTQ.pdf": {
+        "standard_request": true
+      },
+      "tqOvYpjPax2.pdf": {
+        "standard_request": true
+      },
+      "vVjIW3sEc1s.pdf": {
+        "standard_request": true
+      },
+      "vpiOnyOBTzQ.pdf": {
+        "standard_request": true
+      },
+      "vsU0efpivw.pdf": {
+        "standard_request": true
+      },
+      "zWy1uxjDdZJ.pdf": {
+        "standard_request": true
+      }
+    },
+    "external_site_attack_policy_puppetry_last": {
+      "--gvHfE3Xf5.pdf": {
+        "standard_request": true
+      },
+      "0-uUGPbIjD.pdf": {
+        "standard_request": true
+      },
+      "026hEw26i3-.pdf": {
+        "standard_request": true
+      },
+      "0qbEq5UBfGD.pdf": {
+        "standard_request": true
+      },
+      "3q5IqUrkcF.pdf": {
+        "standard_request": true
+      },
+      "49A1Y6tRhaq.pdf": {
+        "standard_request": true
+      },
+      "4hBXGTdS6Lc.pdf": {
+        "standard_request": true
+      },
+      "4pfqv2FCo0R.pdf": {
+        "standard_request": true
+      },
+      "5USOVm2HkfG.pdf": {
+        "standard_request": true
+      },
+      "5l9zj5G7vDY.pdf": {
+        "standard_request": true
+      },
+      "6gLEKETxUWp.pdf": {
+        "standard_request": true
+      },
+      "7WwYBADS3E_.pdf": {
+        "standard_request": true
+      },
+      "8nXkyH2_s6.pdf": {
+        "standard_request": true
+      },
+      "AADxnPG-PR.pdf": {
+        "standard_request": true
+      },
+      "AT7jak63NNK.pdf": {
+        "standard_request": true
+      },
+      "Al7Wpsy49g.pdf": {
+        "standard_request": true
+      },
+      "B1g30j0qF7.pdf": {
+        "standard_request": true
+      },
+      "BIIwfP55pp.pdf": {
+        "standard_request": true
+      },
+      "BJe4oxHYPB.pdf": {
+        "standard_request": true
+      },
+      "BJlPOlBKDB.pdf": {
+        "standard_request": true
+      },
+      "BygSP6Vtvr.pdf": {
+        "standard_request": true
+      },
+      "CrCvGNHAIrz.pdf": {
+        "standard_request": true
+      },
+      "DFIoGDZejIB.pdf": {
+        "standard_request": true
+      },
+      "DTXZqTNV5nW.pdf": {
+        "standard_request": true
+      },
+      "E3UZoJKHxuk.pdf": {
+        "standard_request": true
+      },
+      "FoM-RnF6SNe.pdf": {
+        "standard_request": true
+      },
+      "H1lJJnR5Ym.pdf": {
+        "standard_request": true
+      },
+      "HG7vlodGGm.pdf": {
+        "standard_request": true
+      },
+      "HHiiQKWsOcV.pdf": {
+        "standard_request": true
+      },
+      "Hw2Za4N5hy0.pdf": {
+        "standard_request": true
+      },
+      "HygBZnRctX.pdf": {
+        "standard_request": true
+      },
+      "IrofNLZuWF.pdf": {
+        "standard_request": true
+      },
+      "J5LS3YJH7Zi.pdf": {
+        "standard_request": true
+      },
+      "KcTBbZ1kM6K.pdf": {
+        "standard_request": true
+      },
+      "L1L2G43k14n.pdf": {
+        "standard_request": true
+      },
+      "M5h1l1SldlF.pdf": {
+        "standard_request": true
+      },
+      "M_KwRsbhi5e.pdf": {
+        "standard_request": true
+      },
+      "Msc9XKd-3bA.pdf": {
+        "standard_request": true
+      },
+      "NMgB4CVnMh.pdf": {
+        "standard_request": true
+      },
+      "PP4KyAaBoBK.pdf": {
+        "standard_request": true
+      },
+      "Pgv4fwfh63L.pdf": {
+        "standard_request": true
+      },
+      "PoP96DrBHnl.pdf": {
+        "standard_request": true
+      },
+      "PxMfDdPnTfV.pdf": {
+        "standard_request": true
+      },
+      "Q2iaAc-4I1v.pdf": {
+        "standard_request": true
+      },
+      "R0a0kFI3dJx.pdf": {
+        "standard_request": true
+      },
+      "R612wi_C-7w.pdf": {
+        "standard_request": true
+      },
+      "Rhl8IoYzdSI.pdf": {
+        "standard_request": true
+      },
+      "RloMRU3keo3.pdf": {
+        "standard_request": true
+      },
+      "RmcPm9m3tnk.pdf": {
+        "standard_request": true
+      },
+      "RwQZd8znR10.pdf": {
+        "standard_request": true
+      },
+      "S1gXiaEYvr.pdf": {
+        "standard_request": true
+      },
+      "S9ZyhWC17wJ.pdf": {
+        "standard_request": true
+      },
+      "SkU3kbKTrb6.pdf": {
+        "standard_request": true
+      },
+      "SklSQgHFDS.pdf": {
+        "standard_request": true
+      },
+      "T3kmOP_cMFB.pdf": {
+        "standard_request": true
+      },
+      "TNxKD3z_tPZ.pdf": {
+        "standard_request": true
+      },
+      "VcB4QkSfyO.pdf": {
+        "standard_request": true
+      }
+    },
+    "neg_steering_attack_narrative_first": {
+      "--gvHfE3Xf5.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "0-uUGPbIjD.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "026hEw26i3-.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "0qbEq5UBfGD.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "3q5IqUrkcF.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "49A1Y6tRhaq.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "4hBXGTdS6Lc.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "4pfqv2FCo0R.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "5USOVm2HkfG.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "5l9zj5G7vDY.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "6gLEKETxUWp.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "7WwYBADS3E_.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "8nXkyH2_s6.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "AADxnPG-PR.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "AT7jak63NNK.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "Al7Wpsy49g.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "B1g30j0qF7.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "BIIwfP55pp.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "BJe4oxHYPB.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "BJlPOlBKDB.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "BygSP6Vtvr.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "CrCvGNHAIrz.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "DFIoGDZejIB.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "DTXZqTNV5nW.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "E3UZoJKHxuk.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "FoM-RnF6SNe.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "H1lJJnR5Ym.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "HG7vlodGGm.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "HHiiQKWsOcV.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "Hw2Za4N5hy0.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "HygBZnRctX.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "IrofNLZuWF.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "J5LS3YJH7Zi.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "KcTBbZ1kM6K.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "L1L2G43k14n.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "M5h1l1SldlF.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "M_KwRsbhi5e.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "Msc9XKd-3bA.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "NMgB4CVnMh.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "PP4KyAaBoBK.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "Pgv4fwfh63L.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "PoP96DrBHnl.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "PxMfDdPnTfV.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "Q2iaAc-4I1v.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "R0a0kFI3dJx.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "R612wi_C-7w.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "Rhl8IoYzdSI.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "RloMRU3keo3.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "RmcPm9m3tnk.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "RwQZd8znR10.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "S1gXiaEYvr.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "S9ZyhWC17wJ.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "SkU3kbKTrb6.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "SklSQgHFDS.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "T3kmOP_cMFB.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "TNxKD3z_tPZ.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "V4AVDoFtVM.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "VcB4QkSfyO.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "WdOCkf4aCM.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "WlkzLjxpYe.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "XkI_ggnfLZ4.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "Y5TgO3J_Glc.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "YygA0yppTR.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "YzasumDKCWV.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "ZOcX-eybqoL.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "ZcKPWuhG6wy.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "_67HnXYixmN.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "_ojjh-QFiFr.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "_ptUyYP19mP.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "a1m8Jba-N6l.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "cQLkLAQgZ5I.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "djwS0m4Ft_A.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "eNdiU_DbM9.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "fJIrkNKGBNI.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "gfwfOskyzSx.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "hJOLFJIJ_zy.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "iqpFcg2TAa0.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "iw-ms2znSS2.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "j0uePNuoBho.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "jV5m8NAWb0E.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "jsM6yvqiT0W.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "l3gNU1KStIC.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "lU5Rs_wCweN.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "mCLVeEpplNE.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "mCtadqIxOJ.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "nEMiSX_ipXr.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "q-qxdClTs0d.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "q3KSThy2GwB.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "qYZD-AO1Vn.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "qbH974jKUVy.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "r1gdj2EKPB.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "rke5R1SFwS.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "ryefE1SYDr.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "tV3N0DWMxCg.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "tV6oBfuyLTQ.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "tqOvYpjPax2.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "vVjIW3sEc1s.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "vpiOnyOBTzQ.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "vsU0efpivw.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "zWy1uxjDdZJ.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      }
+    },
+    "neg_steering_attack_policy_puppetry_first": {
+      "--gvHfE3Xf5.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "0-uUGPbIjD.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "026hEw26i3-.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "0qbEq5UBfGD.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "3q5IqUrkcF.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "49A1Y6tRhaq.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "4hBXGTdS6Lc.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "4pfqv2FCo0R.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "5USOVm2HkfG.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "5l9zj5G7vDY.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "6gLEKETxUWp.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "7WwYBADS3E_.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "8nXkyH2_s6.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "AADxnPG-PR.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "AT7jak63NNK.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "Al7Wpsy49g.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "B1g30j0qF7.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "BIIwfP55pp.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "BJe4oxHYPB.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "BJlPOlBKDB.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "BygSP6Vtvr.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "CrCvGNHAIrz.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "DFIoGDZejIB.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "DTXZqTNV5nW.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "E3UZoJKHxuk.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "FoM-RnF6SNe.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "H1lJJnR5Ym.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "HG7vlodGGm.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "HHiiQKWsOcV.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "Hw2Za4N5hy0.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "HygBZnRctX.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "IrofNLZuWF.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "J5LS3YJH7Zi.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "KcTBbZ1kM6K.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "L1L2G43k14n.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "M5h1l1SldlF.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "M_KwRsbhi5e.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "Msc9XKd-3bA.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "NMgB4CVnMh.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "PP4KyAaBoBK.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "Pgv4fwfh63L.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "PoP96DrBHnl.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "PxMfDdPnTfV.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "Q2iaAc-4I1v.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "R0a0kFI3dJx.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "R612wi_C-7w.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "Rhl8IoYzdSI.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "RloMRU3keo3.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "RmcPm9m3tnk.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "RwQZd8znR10.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "S1gXiaEYvr.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "S9ZyhWC17wJ.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "SkU3kbKTrb6.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "SklSQgHFDS.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "T3kmOP_cMFB.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "TNxKD3z_tPZ.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "V4AVDoFtVM.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "VcB4QkSfyO.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "WdOCkf4aCM.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "WlkzLjxpYe.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "XkI_ggnfLZ4.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "Y5TgO3J_Glc.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "YygA0yppTR.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "YzasumDKCWV.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "ZOcX-eybqoL.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "ZcKPWuhG6wy.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "_67HnXYixmN.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "_ojjh-QFiFr.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "_ptUyYP19mP.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "a1m8Jba-N6l.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "cQLkLAQgZ5I.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "djwS0m4Ft_A.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "eNdiU_DbM9.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "fJIrkNKGBNI.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "gfwfOskyzSx.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "hJOLFJIJ_zy.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "iqpFcg2TAa0.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "iw-ms2znSS2.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "j0uePNuoBho.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "jV5m8NAWb0E.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "jsM6yvqiT0W.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "l3gNU1KStIC.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "lU5Rs_wCweN.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "mCLVeEpplNE.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "mCtadqIxOJ.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "nEMiSX_ipXr.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "q-qxdClTs0d.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "q3KSThy2GwB.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "qYZD-AO1Vn.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "qbH974jKUVy.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "r1gdj2EKPB.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "rke5R1SFwS.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "ryefE1SYDr.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "tV3N0DWMxCg.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "tV6oBfuyLTQ.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "tqOvYpjPax2.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "vVjIW3sEc1s.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "vpiOnyOBTzQ.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "vsU0efpivw.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      },
+      "zWy1uxjDdZJ.pdf": {
+        "positive_request": true,
+        "standard_request": true
+      }
+    },
+    "pos_steering_attack_narrative_first": {
+      "--gvHfE3Xf5.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "0-uUGPbIjD.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "026hEw26i3-.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "0qbEq5UBfGD.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "3q5IqUrkcF.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "49A1Y6tRhaq.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "4hBXGTdS6Lc.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "4pfqv2FCo0R.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "5USOVm2HkfG.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "5l9zj5G7vDY.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "6gLEKETxUWp.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "7WwYBADS3E_.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "8nXkyH2_s6.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "AADxnPG-PR.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "AT7jak63NNK.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "Al7Wpsy49g.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "B1g30j0qF7.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "BIIwfP55pp.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "BJe4oxHYPB.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "BJlPOlBKDB.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "BygSP6Vtvr.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "CrCvGNHAIrz.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "DFIoGDZejIB.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "DTXZqTNV5nW.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "E3UZoJKHxuk.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "FoM-RnF6SNe.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "H1lJJnR5Ym.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "HG7vlodGGm.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "HHiiQKWsOcV.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "Hw2Za4N5hy0.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "HygBZnRctX.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "IrofNLZuWF.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "J5LS3YJH7Zi.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "KcTBbZ1kM6K.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "L1L2G43k14n.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "M5h1l1SldlF.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "M_KwRsbhi5e.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "Msc9XKd-3bA.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "NMgB4CVnMh.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "PP4KyAaBoBK.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "Pgv4fwfh63L.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "PoP96DrBHnl.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "PxMfDdPnTfV.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "Q2iaAc-4I1v.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "R0a0kFI3dJx.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "R612wi_C-7w.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "Rhl8IoYzdSI.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "RloMRU3keo3.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "RmcPm9m3tnk.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "RwQZd8znR10.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "S1gXiaEYvr.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "S9ZyhWC17wJ.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "SkU3kbKTrb6.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "SklSQgHFDS.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "T3kmOP_cMFB.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "TNxKD3z_tPZ.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "V4AVDoFtVM.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "VcB4QkSfyO.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "WdOCkf4aCM.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "WlkzLjxpYe.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "XkI_ggnfLZ4.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "Y5TgO3J_Glc.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "YygA0yppTR.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "YzasumDKCWV.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "ZOcX-eybqoL.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "ZcKPWuhG6wy.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "_67HnXYixmN.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "_ojjh-QFiFr.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "_ptUyYP19mP.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "a1m8Jba-N6l.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "cQLkLAQgZ5I.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "djwS0m4Ft_A.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "eNdiU_DbM9.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "fJIrkNKGBNI.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "gfwfOskyzSx.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "hJOLFJIJ_zy.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "iqpFcg2TAa0.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "iw-ms2znSS2.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "j0uePNuoBho.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "jV5m8NAWb0E.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "jsM6yvqiT0W.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "l3gNU1KStIC.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "lU5Rs_wCweN.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "mCLVeEpplNE.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "mCtadqIxOJ.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "nEMiSX_ipXr.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "q-qxdClTs0d.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "q3KSThy2GwB.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "qYZD-AO1Vn.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "qbH974jKUVy.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "r1gdj2EKPB.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "rke5R1SFwS.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "ryefE1SYDr.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "tV3N0DWMxCg.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "tV6oBfuyLTQ.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "tqOvYpjPax2.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "vVjIW3sEc1s.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "vpiOnyOBTzQ.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "vsU0efpivw.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "zWy1uxjDdZJ.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      }
+    },
+    "pos_steering_attack_narrative_last": {
+      "--gvHfE3Xf5.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "0-uUGPbIjD.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "026hEw26i3-.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "0qbEq5UBfGD.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "3q5IqUrkcF.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "49A1Y6tRhaq.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "4hBXGTdS6Lc.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "4pfqv2FCo0R.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "5USOVm2HkfG.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "5l9zj5G7vDY.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "6gLEKETxUWp.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "7WwYBADS3E_.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "8nXkyH2_s6.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "AADxnPG-PR.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "AT7jak63NNK.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "Al7Wpsy49g.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "B1g30j0qF7.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "BIIwfP55pp.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "BJe4oxHYPB.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "BJlPOlBKDB.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "BygSP6Vtvr.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "CrCvGNHAIrz.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "DFIoGDZejIB.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "DTXZqTNV5nW.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "E3UZoJKHxuk.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "FoM-RnF6SNe.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "H1lJJnR5Ym.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "HG7vlodGGm.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "HHiiQKWsOcV.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "Hw2Za4N5hy0.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "HygBZnRctX.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "IrofNLZuWF.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      }
+    },
+    "pos_steering_attack_policy_puppetry_first": {
+      "--gvHfE3Xf5.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "0-uUGPbIjD.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "026hEw26i3-.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "0qbEq5UBfGD.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "3q5IqUrkcF.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "49A1Y6tRhaq.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "4hBXGTdS6Lc.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "4pfqv2FCo0R.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "5USOVm2HkfG.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "5l9zj5G7vDY.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "6gLEKETxUWp.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "7WwYBADS3E_.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "8nXkyH2_s6.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "AADxnPG-PR.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "AT7jak63NNK.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "Al7Wpsy49g.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "B1g30j0qF7.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "BIIwfP55pp.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "BJe4oxHYPB.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "BJlPOlBKDB.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "BygSP6Vtvr.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "CrCvGNHAIrz.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "DFIoGDZejIB.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "DTXZqTNV5nW.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "E3UZoJKHxuk.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "FoM-RnF6SNe.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "H1lJJnR5Ym.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "HG7vlodGGm.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "HHiiQKWsOcV.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "Hw2Za4N5hy0.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "HygBZnRctX.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "IrofNLZuWF.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "J5LS3YJH7Zi.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "KcTBbZ1kM6K.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "L1L2G43k14n.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "M5h1l1SldlF.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "M_KwRsbhi5e.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "Msc9XKd-3bA.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "NMgB4CVnMh.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "PP4KyAaBoBK.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "Pgv4fwfh63L.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "PoP96DrBHnl.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "PxMfDdPnTfV.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "Q2iaAc-4I1v.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "R0a0kFI3dJx.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "R612wi_C-7w.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "Rhl8IoYzdSI.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "RloMRU3keo3.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "RmcPm9m3tnk.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "RwQZd8znR10.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "S1gXiaEYvr.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "S9ZyhWC17wJ.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "SkU3kbKTrb6.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "SklSQgHFDS.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "T3kmOP_cMFB.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "TNxKD3z_tPZ.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "V4AVDoFtVM.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "VcB4QkSfyO.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "WdOCkf4aCM.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "WlkzLjxpYe.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "XkI_ggnfLZ4.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "Y5TgO3J_Glc.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "YygA0yppTR.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "YzasumDKCWV.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "ZOcX-eybqoL.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "ZcKPWuhG6wy.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "_67HnXYixmN.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "_ojjh-QFiFr.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "_ptUyYP19mP.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "a1m8Jba-N6l.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "cQLkLAQgZ5I.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "djwS0m4Ft_A.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "eNdiU_DbM9.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "fJIrkNKGBNI.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "gfwfOskyzSx.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "hJOLFJIJ_zy.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "iqpFcg2TAa0.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "iw-ms2znSS2.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "j0uePNuoBho.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "jV5m8NAWb0E.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "jsM6yvqiT0W.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "l3gNU1KStIC.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "lU5Rs_wCweN.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "mCLVeEpplNE.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "mCtadqIxOJ.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "nEMiSX_ipXr.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "q-qxdClTs0d.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "q3KSThy2GwB.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "qYZD-AO1Vn.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "qbH974jKUVy.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "r1gdj2EKPB.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "rke5R1SFwS.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "ryefE1SYDr.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "tV3N0DWMxCg.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "tV6oBfuyLTQ.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "tqOvYpjPax2.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "vVjIW3sEc1s.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "vpiOnyOBTzQ.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "vsU0efpivw.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      },
+      "zWy1uxjDdZJ.pdf": {
+        "negative_request": true,
+        "standard_request": true
+      }
+    },
     "refusal_attack_narrative_first": {
       "--gvHfE3Xf5.pdf": {
         "standard_request": true
@@ -36,1109 +2249,6 @@
       "6gLEKETxUWp.pdf": {
         "standard_request": true
       },
-      "8nXkyH2_s6.pdf": {
-        "standard_request": true
-      },
-      "AADxnPG-PR.pdf": {
-        "standard_request": true
-      },
-      "AT7jak63NNK.pdf": {
-        "standard_request": true
-      },
-      "Al7Wpsy49g.pdf": {
-        "standard_request": true
-      },
-      "B1g30j0qF7.pdf": {
-        "standard_request": true
-      },
-      "BIIwfP55pp.pdf": {
-        "standard_request": true
-      },
-      "BJe4oxHYPB.pdf": {
-        "standard_request": true
-      },
-      "BJlPOlBKDB.pdf": {
-        "standard_request": true
-      },
-      "BygSP6Vtvr.pdf": {
-        "standard_request": true
-      },
-      "7WwYBADS3E_.pdf": {
-        "standard_request": true
-      },
-      "CrCvGNHAIrz.pdf": {
-        "standard_request": true
-      },
-      "DFIoGDZejIB.pdf": {
-        "standard_request": true
-      },
-      "DTXZqTNV5nW.pdf": {
-        "standard_request": true
-      },
-      "E3UZoJKHxuk.pdf": {
-        "standard_request": true
-      },
-      "FoM-RnF6SNe.pdf": {
-        "standard_request": true
-      },
-      "H1lJJnR5Ym.pdf": {
-        "standard_request": true
-      },
-      "HG7vlodGGm.pdf": {
-        "standard_request": true
-      },
-      "HHiiQKWsOcV.pdf": {
-        "standard_request": true
-      },
-      "Hw2Za4N5hy0.pdf": {
-        "standard_request": true
-      },
-      "HygBZnRctX.pdf": {
-        "standard_request": true
-      },
-      "IrofNLZuWF.pdf": {
-        "standard_request": true
-      },
-      "J5LS3YJH7Zi.pdf": {
-        "standard_request": true
-      },
-      "KcTBbZ1kM6K.pdf": {
-        "standard_request": true
-      },
-      "L1L2G43k14n.pdf": {
-        "standard_request": true
-      },
-      "M5h1l1SldlF.pdf": {
-        "standard_request": true
-      },
-      "M_KwRsbhi5e.pdf": {
-        "standard_request": true
-      },
-      "Msc9XKd-3bA.pdf": {
-        "standard_request": true
-      },
-      "NMgB4CVnMh.pdf": {
-        "standard_request": true
-      },
-      "PP4KyAaBoBK.pdf": {
-        "standard_request": true
-      },
-      "Pgv4fwfh63L.pdf": {
-        "standard_request": true
-      },
-      "PoP96DrBHnl.pdf": {
-        "standard_request": true
-      },
-      "PxMfDdPnTfV.pdf": {
-        "standard_request": true
-      },
-      "Q2iaAc-4I1v.pdf": {
-        "standard_request": true
-      },
-      "R0a0kFI3dJx.pdf": {
-        "standard_request": true
-      },
-      "R612wi_C-7w.pdf": {
-        "standard_request": true
-      },
-      "Rhl8IoYzdSI.pdf": {
-        "standard_request": true
-      },
-      "RloMRU3keo3.pdf": {
-        "standard_request": true
-      },
-      "RmcPm9m3tnk.pdf": {
-        "standard_request": true
-      },
-      "RwQZd8znR10.pdf": {
-        "standard_request": true
-      },
-      "S1gXiaEYvr.pdf": {
-        "standard_request": true
-      },
-      "S9ZyhWC17wJ.pdf": {
-        "standard_request": true
-      },
-      "SkU3kbKTrb6.pdf": {
-        "standard_request": true
-      },
-      "SklSQgHFDS.pdf": {
-        "standard_request": true
-      },
-      "T3kmOP_cMFB.pdf": {
-        "standard_request": true
-      },
-      "TNxKD3z_tPZ.pdf": {
-        "standard_request": true
-      },
-      "V4AVDoFtVM.pdf": {
-        "standard_request": true
-      },
-      "VcB4QkSfyO.pdf": {
-        "standard_request": true
-      },
-      "WdOCkf4aCM.pdf": {
-        "standard_request": true
-      },
-      "WlkzLjxpYe.pdf": {
-        "standard_request": true
-      },
-      "XkI_ggnfLZ4.pdf": {
-        "standard_request": true
-      },
-      "Y5TgO3J_Glc.pdf": {
-        "standard_request": true
-      },
-      "YygA0yppTR.pdf": {
-        "standard_request": true
-      },
-      "YzasumDKCWV.pdf": {
-        "standard_request": true
-      },
-      "ZOcX-eybqoL.pdf": {
-        "standard_request": true
-      },
-      "ZcKPWuhG6wy.pdf": {
-        "standard_request": true
-      },
-      "_67HnXYixmN.pdf": {
-        "standard_request": true
-      },
-      "_ojjh-QFiFr.pdf": {
-        "standard_request": true
-      },
-      "_ptUyYP19mP.pdf": {
-        "standard_request": true
-      },
-      "a1m8Jba-N6l.pdf": {
-        "standard_request": true
-      },
-      "cQLkLAQgZ5I.pdf": {
-        "standard_request": true
-      },
-      "djwS0m4Ft_A.pdf": {
-        "standard_request": true
-      },
-      "eNdiU_DbM9.pdf": {
-        "standard_request": true
-      },
-      "fJIrkNKGBNI.pdf": {
-        "standard_request": true
-      },
-      "gfwfOskyzSx.pdf": {
-        "standard_request": true
-      },
-      "hJOLFJIJ_zy.pdf": {
-        "standard_request": true
-      },
-      "iqpFcg2TAa0.pdf": {
-        "standard_request": true
-      },
-      "iw-ms2znSS2.pdf": {
-        "standard_request": true
-      },
-      "j0uePNuoBho.pdf": {
-        "standard_request": true
-      },
-      "jV5m8NAWb0E.pdf": {
-        "standard_request": true
-      },
-      "jsM6yvqiT0W.pdf": {
-        "standard_request": true
-      },
-      "l3gNU1KStIC.pdf": {
-        "standard_request": true
-      },
-      "lU5Rs_wCweN.pdf": {
-        "standard_request": true
-      },
-      "mCLVeEpplNE.pdf": {
-        "standard_request": true
-      },
-      "mCtadqIxOJ.pdf": {
-        "standard_request": true
-      },
-      "nEMiSX_ipXr.pdf": {
-        "standard_request": true
-      },
-      "q-qxdClTs0d.pdf": {
-        "standard_request": true
-      },
-      "qYZD-AO1Vn.pdf": {
-        "standard_request": true
-      },
-      "qbH974jKUVy.pdf": {
-        "standard_request": true
-      },
-      "r1gdj2EKPB.pdf": {
-        "standard_request": true
-      },
-      "rke5R1SFwS.pdf": {
-        "standard_request": true
-      },
-      "ryefE1SYDr.pdf": {
-        "standard_request": true
-      },
-      "tV3N0DWMxCg.pdf": {
-        "standard_request": true
-      },
-      "tV6oBfuyLTQ.pdf": {
-        "standard_request": true
-      },
-      "tqOvYpjPax2.pdf": {
-        "standard_request": true
-      },
-      "vVjIW3sEc1s.pdf": {
-        "standard_request": true
-      },
-      "vpiOnyOBTzQ.pdf": {
-        "standard_request": true
-      },
-      "vsU0efpivw.pdf": {
-        "standard_request": true
-      },
-      "zWy1uxjDdZJ.pdf": {
-        "standard_request": true
-      },
-      "q3KSThy2GwB.pdf": {
-        "standard_request": true
-      }
-    },
-    "neg_steering_attack_narrative_first": {
-      "--gvHfE3Xf5.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "0-uUGPbIjD.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "026hEw26i3-.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "0qbEq5UBfGD.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "3q5IqUrkcF.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "49A1Y6tRhaq.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "4pfqv2FCo0R.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "5USOVm2HkfG.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "5l9zj5G7vDY.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "6gLEKETxUWp.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "7WwYBADS3E_.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "8nXkyH2_s6.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "AADxnPG-PR.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "AT7jak63NNK.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "Al7Wpsy49g.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "B1g30j0qF7.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "BIIwfP55pp.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "BJe4oxHYPB.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "BJlPOlBKDB.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "BygSP6Vtvr.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "CrCvGNHAIrz.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "DFIoGDZejIB.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "DTXZqTNV5nW.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "E3UZoJKHxuk.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "FoM-RnF6SNe.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "H1lJJnR5Ym.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "HG7vlodGGm.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "HHiiQKWsOcV.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "Hw2Za4N5hy0.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "HygBZnRctX.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "IrofNLZuWF.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "J5LS3YJH7Zi.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "KcTBbZ1kM6K.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "L1L2G43k14n.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "M5h1l1SldlF.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "M_KwRsbhi5e.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "Msc9XKd-3bA.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "NMgB4CVnMh.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "PP4KyAaBoBK.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "Pgv4fwfh63L.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "PoP96DrBHnl.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "PxMfDdPnTfV.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "Q2iaAc-4I1v.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "R0a0kFI3dJx.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "R612wi_C-7w.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "Rhl8IoYzdSI.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "RloMRU3keo3.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "RmcPm9m3tnk.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "RwQZd8znR10.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "S1gXiaEYvr.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "S9ZyhWC17wJ.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "SkU3kbKTrb6.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "SklSQgHFDS.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "T3kmOP_cMFB.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "TNxKD3z_tPZ.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "VcB4QkSfyO.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "WdOCkf4aCM.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "WlkzLjxpYe.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "XkI_ggnfLZ4.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "Y5TgO3J_Glc.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "YygA0yppTR.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "YzasumDKCWV.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "ZOcX-eybqoL.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "ZcKPWuhG6wy.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "_67HnXYixmN.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "_ojjh-QFiFr.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "_ptUyYP19mP.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "a1m8Jba-N6l.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "cQLkLAQgZ5I.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "djwS0m4Ft_A.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "eNdiU_DbM9.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "fJIrkNKGBNI.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "gfwfOskyzSx.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "hJOLFJIJ_zy.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "iqpFcg2TAa0.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "iw-ms2znSS2.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "j0uePNuoBho.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "jV5m8NAWb0E.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "jsM6yvqiT0W.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "l3gNU1KStIC.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "lU5Rs_wCweN.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "mCLVeEpplNE.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "mCtadqIxOJ.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "nEMiSX_ipXr.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "q-qxdClTs0d.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "q3KSThy2GwB.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "qYZD-AO1Vn.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "qbH974jKUVy.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "r1gdj2EKPB.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "rke5R1SFwS.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "ryefE1SYDr.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "tV3N0DWMxCg.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "tV6oBfuyLTQ.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "tqOvYpjPax2.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "vVjIW3sEc1s.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "vpiOnyOBTzQ.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "vsU0efpivw.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "zWy1uxjDdZJ.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "4hBXGTdS6Lc.pdf": {
-        "positive_request": true,
-        "standard_request": true
-      },
-      "V4AVDoFtVM.pdf": {
-        "positive_request": true,
-        "standard_request": true
-      }
-    },
-    "neg_steering_attack_policy_puppetry_first": {
-      "--gvHfE3Xf5.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "0-uUGPbIjD.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "026hEw26i3-.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "0qbEq5UBfGD.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "3q5IqUrkcF.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "49A1Y6tRhaq.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "4hBXGTdS6Lc.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "4pfqv2FCo0R.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "5USOVm2HkfG.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "5l9zj5G7vDY.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "6gLEKETxUWp.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "7WwYBADS3E_.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "8nXkyH2_s6.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "AADxnPG-PR.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "AT7jak63NNK.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "Al7Wpsy49g.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "B1g30j0qF7.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "BIIwfP55pp.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "BJe4oxHYPB.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "BJlPOlBKDB.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "BygSP6Vtvr.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "CrCvGNHAIrz.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "DFIoGDZejIB.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "DTXZqTNV5nW.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "E3UZoJKHxuk.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "FoM-RnF6SNe.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "H1lJJnR5Ym.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "HG7vlodGGm.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "HHiiQKWsOcV.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "Hw2Za4N5hy0.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "HygBZnRctX.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "IrofNLZuWF.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "J5LS3YJH7Zi.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "KcTBbZ1kM6K.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "L1L2G43k14n.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "M5h1l1SldlF.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "M_KwRsbhi5e.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "Msc9XKd-3bA.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "NMgB4CVnMh.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "PP4KyAaBoBK.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "Pgv4fwfh63L.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "PoP96DrBHnl.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "PxMfDdPnTfV.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "Q2iaAc-4I1v.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "R0a0kFI3dJx.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "R612wi_C-7w.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "Rhl8IoYzdSI.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "RloMRU3keo3.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "RmcPm9m3tnk.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "S1gXiaEYvr.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "S9ZyhWC17wJ.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "SkU3kbKTrb6.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "SklSQgHFDS.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "T3kmOP_cMFB.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "TNxKD3z_tPZ.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "VcB4QkSfyO.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "WdOCkf4aCM.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "WlkzLjxpYe.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "XkI_ggnfLZ4.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "Y5TgO3J_Glc.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "YygA0yppTR.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "YzasumDKCWV.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "ZOcX-eybqoL.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "ZcKPWuhG6wy.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "_67HnXYixmN.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "_ojjh-QFiFr.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "_ptUyYP19mP.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "a1m8Jba-N6l.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "cQLkLAQgZ5I.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "djwS0m4Ft_A.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "eNdiU_DbM9.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "fJIrkNKGBNI.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "gfwfOskyzSx.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "hJOLFJIJ_zy.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "iqpFcg2TAa0.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "iw-ms2znSS2.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "j0uePNuoBho.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "jV5m8NAWb0E.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "jsM6yvqiT0W.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "l3gNU1KStIC.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "lU5Rs_wCweN.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "mCLVeEpplNE.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "mCtadqIxOJ.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "nEMiSX_ipXr.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "q-qxdClTs0d.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "q3KSThy2GwB.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "qYZD-AO1Vn.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "qbH974jKUVy.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "r1gdj2EKPB.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "rke5R1SFwS.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "ryefE1SYDr.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "tV3N0DWMxCg.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "tV6oBfuyLTQ.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "tqOvYpjPax2.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "vVjIW3sEc1s.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "vpiOnyOBTzQ.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "vsU0efpivw.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "zWy1uxjDdZJ.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "RwQZd8znR10.pdf": {
-        "standard_request": true,
-        "positive_request": true
-      },
-      "V4AVDoFtVM.pdf": {
-        "positive_request": true,
-        "standard_request": true
-      }
-    },
-    "external_site_attack_policy_puppetry_first": {
-      "--gvHfE3Xf5.pdf": {
-        "standard_request": true
-      },
-      "0-uUGPbIjD.pdf": {
-        "standard_request": true
-      },
-      "026hEw26i3-.pdf": {
-        "standard_request": true
-      },
-      "0qbEq5UBfGD.pdf": {
-        "standard_request": true
-      },
-      "3q5IqUrkcF.pdf": {
-        "standard_request": true
-      },
-      "4hBXGTdS6Lc.pdf": {
-        "standard_request": true
-      },
-      "4pfqv2FCo0R.pdf": {
-        "standard_request": true
-      },
-      "5USOVm2HkfG.pdf": {
-        "standard_request": true
-      },
-      "5l9zj5G7vDY.pdf": {
-        "standard_request": true
-      },
-      "6gLEKETxUWp.pdf": {
-        "standard_request": true
-      },
       "7WwYBADS3E_.pdf": {
         "standard_request": true
       },
@@ -1212,9 +2322,6 @@
         "standard_request": true
       },
       "M5h1l1SldlF.pdf": {
-        "standard_request": true
-      },
-      "49A1Y6tRhaq.pdf": {
         "standard_request": true
       },
       "M_KwRsbhi5e.pdf": {
@@ -1480,6 +2587,21 @@
       "DFIoGDZejIB.pdf": {
         "standard_request": true
       },
+      "DTXZqTNV5nW.pdf": {
+        "standard_request": true
+      },
+      "E3UZoJKHxuk.pdf": {
+        "standard_request": true
+      },
+      "FoM-RnF6SNe.pdf": {
+        "standard_request": true
+      },
+      "H1lJJnR5Ym.pdf": {
+        "standard_request": true
+      },
+      "HG7vlodGGm.pdf": {
+        "standard_request": true
+      },
       "HHiiQKWsOcV.pdf": {
         "standard_request": true
       },
@@ -1562,6 +2684,9 @@
         "standard_request": true
       },
       "TNxKD3z_tPZ.pdf": {
+        "standard_request": true
+      },
+      "V4AVDoFtVM.pdf": {
         "standard_request": true
       },
       "VcB4QkSfyO.pdf": {
@@ -1655,326 +2780,6 @@
         "standard_request": true
       },
       "q3KSThy2GwB.pdf": {
-        "standard_request": true
-      },
-      "qYZD-AO1Vn.pdf": {
-        "standard_request": true
-      },
-      "qbH974jKUVy.pdf": {
-        "standard_request": true
-      },
-      "r1gdj2EKPB.pdf": {
-        "standard_request": true
-      },
-      "rke5R1SFwS.pdf": {
-        "standard_request": true
-      },
-      "ryefE1SYDr.pdf": {
-        "standard_request": true
-      },
-      "tV3N0DWMxCg.pdf": {
-        "standard_request": true
-      },
-      "tV6oBfuyLTQ.pdf": {
-        "standard_request": true
-      },
-      "tqOvYpjPax2.pdf": {
-        "standard_request": true
-      },
-      "vVjIW3sEc1s.pdf": {
-        "standard_request": true
-      },
-      "vpiOnyOBTzQ.pdf": {
-        "standard_request": true
-      },
-      "vsU0efpivw.pdf": {
-        "standard_request": true
-      },
-      "zWy1uxjDdZJ.pdf": {
-        "standard_request": true
-      },
-      "DTXZqTNV5nW.pdf": {
-        "standard_request": true
-      },
-      "E3UZoJKHxuk.pdf": {
-        "standard_request": true
-      },
-      "FoM-RnF6SNe.pdf": {
-        "standard_request": true
-      },
-      "H1lJJnR5Ym.pdf": {
-        "standard_request": true
-      },
-      "HG7vlodGGm.pdf": {
-        "standard_request": true
-      },
-      "V4AVDoFtVM.pdf": {
-        "standard_request": true
-      }
-    },
-    "watermark_attack_narrative_first": {
-      "--gvHfE3Xf5.pdf": {
-        "standard_request": true
-      },
-      "0-uUGPbIjD.pdf": {
-        "standard_request": true
-      },
-      "026hEw26i3-.pdf": {
-        "standard_request": true
-      },
-      "0qbEq5UBfGD.pdf": {
-        "standard_request": true
-      },
-      "3q5IqUrkcF.pdf": {
-        "standard_request": true
-      },
-      "49A1Y6tRhaq.pdf": {
-        "standard_request": true
-      },
-      "4pfqv2FCo0R.pdf": {
-        "standard_request": true
-      },
-      "5USOVm2HkfG.pdf": {
-        "standard_request": true
-      },
-      "5l9zj5G7vDY.pdf": {
-        "standard_request": true
-      },
-      "6gLEKETxUWp.pdf": {
-        "standard_request": true
-      },
-      "7WwYBADS3E_.pdf": {
-        "standard_request": true
-      },
-      "8nXkyH2_s6.pdf": {
-        "standard_request": true
-      },
-      "AADxnPG-PR.pdf": {
-        "standard_request": true
-      },
-      "Al7Wpsy49g.pdf": {
-        "standard_request": true
-      },
-      "B1g30j0qF7.pdf": {
-        "standard_request": true
-      },
-      "BJe4oxHYPB.pdf": {
-        "standard_request": true
-      },
-      "BJlPOlBKDB.pdf": {
-        "standard_request": true
-      },
-      "BygSP6Vtvr.pdf": {
-        "standard_request": true
-      },
-      "CrCvGNHAIrz.pdf": {
-        "standard_request": true
-      },
-      "DTXZqTNV5nW.pdf": {
-        "standard_request": true
-      },
-      "FoM-RnF6SNe.pdf": {
-        "standard_request": true
-      },
-      "H1lJJnR5Ym.pdf": {
-        "standard_request": true
-      },
-      "HG7vlodGGm.pdf": {
-        "standard_request": true
-      },
-      "HHiiQKWsOcV.pdf": {
-        "standard_request": true
-      },
-      "q3KSThy2GwB.pdf": {
-        "standard_request": true
-      },
-      "V4AVDoFtVM.pdf": {
-        "standard_request": true
-      },
-      "4hBXGTdS6Lc.pdf": {
-        "standard_request": true
-      },
-      "AT7jak63NNK.pdf": {
-        "standard_request": true
-      },
-      "BIIwfP55pp.pdf": {
-        "standard_request": true
-      },
-      "DFIoGDZejIB.pdf": {
-        "standard_request": true
-      },
-      "E3UZoJKHxuk.pdf": {
-        "standard_request": true
-      },
-      "Hw2Za4N5hy0.pdf": {
-        "standard_request": true
-      },
-      "HygBZnRctX.pdf": {
-        "standard_request": true
-      },
-      "IrofNLZuWF.pdf": {
-        "standard_request": true
-      },
-      "J5LS3YJH7Zi.pdf": {
-        "standard_request": true
-      },
-      "KcTBbZ1kM6K.pdf": {
-        "standard_request": true
-      },
-      "L1L2G43k14n.pdf": {
-        "standard_request": true
-      },
-      "M5h1l1SldlF.pdf": {
-        "standard_request": true
-      },
-      "M_KwRsbhi5e.pdf": {
-        "standard_request": true
-      },
-      "Msc9XKd-3bA.pdf": {
-        "standard_request": true
-      },
-      "NMgB4CVnMh.pdf": {
-        "standard_request": true
-      },
-      "PP4KyAaBoBK.pdf": {
-        "standard_request": true
-      },
-      "Pgv4fwfh63L.pdf": {
-        "standard_request": true
-      },
-      "PoP96DrBHnl.pdf": {
-        "standard_request": true
-      },
-      "PxMfDdPnTfV.pdf": {
-        "standard_request": true
-      },
-      "Q2iaAc-4I1v.pdf": {
-        "standard_request": true
-      },
-      "R0a0kFI3dJx.pdf": {
-        "standard_request": true
-      },
-      "R612wi_C-7w.pdf": {
-        "standard_request": true
-      },
-      "Rhl8IoYzdSI.pdf": {
-        "standard_request": true
-      },
-      "RloMRU3keo3.pdf": {
-        "standard_request": true
-      },
-      "RmcPm9m3tnk.pdf": {
-        "standard_request": true
-      },
-      "RwQZd8znR10.pdf": {
-        "standard_request": true
-      },
-      "S1gXiaEYvr.pdf": {
-        "standard_request": true
-      },
-      "S9ZyhWC17wJ.pdf": {
-        "standard_request": true
-      },
-      "SkU3kbKTrb6.pdf": {
-        "standard_request": true
-      },
-      "SklSQgHFDS.pdf": {
-        "standard_request": true
-      },
-      "T3kmOP_cMFB.pdf": {
-        "standard_request": true
-      },
-      "TNxKD3z_tPZ.pdf": {
-        "standard_request": true
-      },
-      "VcB4QkSfyO.pdf": {
-        "standard_request": true
-      },
-      "WdOCkf4aCM.pdf": {
-        "standard_request": true
-      },
-      "WlkzLjxpYe.pdf": {
-        "standard_request": true
-      },
-      "XkI_ggnfLZ4.pdf": {
-        "standard_request": true
-      },
-      "Y5TgO3J_Glc.pdf": {
-        "standard_request": true
-      },
-      "YygA0yppTR.pdf": {
-        "standard_request": true
-      },
-      "YzasumDKCWV.pdf": {
-        "standard_request": true
-      },
-      "ZOcX-eybqoL.pdf": {
-        "standard_request": true
-      },
-      "ZcKPWuhG6wy.pdf": {
-        "standard_request": true
-      },
-      "_67HnXYixmN.pdf": {
-        "standard_request": true
-      },
-      "_ojjh-QFiFr.pdf": {
-        "standard_request": true
-      },
-      "_ptUyYP19mP.pdf": {
-        "standard_request": true
-      },
-      "a1m8Jba-N6l.pdf": {
-        "standard_request": true
-      },
-      "cQLkLAQgZ5I.pdf": {
-        "standard_request": true
-      },
-      "djwS0m4Ft_A.pdf": {
-        "standard_request": true
-      },
-      "eNdiU_DbM9.pdf": {
-        "standard_request": true
-      },
-      "fJIrkNKGBNI.pdf": {
-        "standard_request": true
-      },
-      "gfwfOskyzSx.pdf": {
-        "standard_request": true
-      },
-      "hJOLFJIJ_zy.pdf": {
-        "standard_request": true
-      },
-      "iqpFcg2TAa0.pdf": {
-        "standard_request": true
-      },
-      "iw-ms2znSS2.pdf": {
-        "standard_request": true
-      },
-      "j0uePNuoBho.pdf": {
-        "standard_request": true
-      },
-      "jV5m8NAWb0E.pdf": {
-        "standard_request": true
-      },
-      "jsM6yvqiT0W.pdf": {
-        "standard_request": true
-      },
-      "l3gNU1KStIC.pdf": {
-        "standard_request": true
-      },
-      "lU5Rs_wCweN.pdf": {
-        "standard_request": true
-      },
-      "mCLVeEpplNE.pdf": {
-        "standard_request": true
-      },
-      "mCtadqIxOJ.pdf": {
-        "standard_request": true
-      },
-      "nEMiSX_ipXr.pdf": {
-        "standard_request": true
-      },
-      "q-qxdClTs0d.pdf": {
         "standard_request": true
       },
       "qYZD-AO1Vn.pdf": {
@@ -2014,808 +2819,306 @@
         "standard_request": true
       }
     },
-    "pos_steering_attack_narrative_first": {
+    "watermark_attack_narrative_first": {
       "--gvHfE3Xf5.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "0-uUGPbIjD.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "026hEw26i3-.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "0qbEq5UBfGD.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "3q5IqUrkcF.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "49A1Y6tRhaq.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "4hBXGTdS6Lc.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "4pfqv2FCo0R.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "5USOVm2HkfG.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "5l9zj5G7vDY.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "6gLEKETxUWp.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "7WwYBADS3E_.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "8nXkyH2_s6.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "AADxnPG-PR.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "AT7jak63NNK.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "Al7Wpsy49g.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "B1g30j0qF7.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "BIIwfP55pp.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "BJe4oxHYPB.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "BJlPOlBKDB.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "BygSP6Vtvr.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "CrCvGNHAIrz.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "DFIoGDZejIB.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "DTXZqTNV5nW.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "E3UZoJKHxuk.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "FoM-RnF6SNe.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "H1lJJnR5Ym.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "HG7vlodGGm.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "HHiiQKWsOcV.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "Hw2Za4N5hy0.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "HygBZnRctX.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "IrofNLZuWF.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "J5LS3YJH7Zi.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "KcTBbZ1kM6K.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "L1L2G43k14n.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "M5h1l1SldlF.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "M_KwRsbhi5e.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "Msc9XKd-3bA.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "NMgB4CVnMh.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "PP4KyAaBoBK.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "Pgv4fwfh63L.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "PoP96DrBHnl.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "PxMfDdPnTfV.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "Q2iaAc-4I1v.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "R0a0kFI3dJx.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "R612wi_C-7w.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "Rhl8IoYzdSI.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "RloMRU3keo3.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "RmcPm9m3tnk.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "RwQZd8znR10.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "S1gXiaEYvr.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "S9ZyhWC17wJ.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "SkU3kbKTrb6.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "SklSQgHFDS.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "T3kmOP_cMFB.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "TNxKD3z_tPZ.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "VcB4QkSfyO.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "WdOCkf4aCM.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "WlkzLjxpYe.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "XkI_ggnfLZ4.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "Y5TgO3J_Glc.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "YygA0yppTR.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "YzasumDKCWV.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "ZOcX-eybqoL.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "ZcKPWuhG6wy.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "_67HnXYixmN.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "_ojjh-QFiFr.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "_ptUyYP19mP.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "a1m8Jba-N6l.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "cQLkLAQgZ5I.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "djwS0m4Ft_A.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "eNdiU_DbM9.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "fJIrkNKGBNI.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "gfwfOskyzSx.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "hJOLFJIJ_zy.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "iqpFcg2TAa0.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "iw-ms2znSS2.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "j0uePNuoBho.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "jV5m8NAWb0E.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "jsM6yvqiT0W.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "l3gNU1KStIC.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "lU5Rs_wCweN.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "mCLVeEpplNE.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "mCtadqIxOJ.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "nEMiSX_ipXr.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "q-qxdClTs0d.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "q3KSThy2GwB.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "qYZD-AO1Vn.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "qbH974jKUVy.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "r1gdj2EKPB.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "rke5R1SFwS.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "ryefE1SYDr.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "tV3N0DWMxCg.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "tV6oBfuyLTQ.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "tqOvYpjPax2.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "vVjIW3sEc1s.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "vpiOnyOBTzQ.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "vsU0efpivw.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "zWy1uxjDdZJ.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "V4AVDoFtVM.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      }
-    },
-    "pos_steering_attack_policy_puppetry_first": {
-      "--gvHfE3Xf5.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "0-uUGPbIjD.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "026hEw26i3-.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "0qbEq5UBfGD.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "3q5IqUrkcF.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "49A1Y6tRhaq.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "4hBXGTdS6Lc.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "4pfqv2FCo0R.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "5USOVm2HkfG.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "5l9zj5G7vDY.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "6gLEKETxUWp.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "7WwYBADS3E_.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "8nXkyH2_s6.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "AADxnPG-PR.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "AT7jak63NNK.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "Al7Wpsy49g.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "B1g30j0qF7.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "BIIwfP55pp.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "BJe4oxHYPB.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "BJlPOlBKDB.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "BygSP6Vtvr.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "CrCvGNHAIrz.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "DFIoGDZejIB.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "DTXZqTNV5nW.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "E3UZoJKHxuk.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "FoM-RnF6SNe.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "H1lJJnR5Ym.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "HG7vlodGGm.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "HHiiQKWsOcV.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "Hw2Za4N5hy0.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "HygBZnRctX.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "IrofNLZuWF.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "J5LS3YJH7Zi.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "KcTBbZ1kM6K.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "L1L2G43k14n.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "M5h1l1SldlF.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "M_KwRsbhi5e.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "Msc9XKd-3bA.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "NMgB4CVnMh.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "PP4KyAaBoBK.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "Pgv4fwfh63L.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "PoP96DrBHnl.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "PxMfDdPnTfV.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "Q2iaAc-4I1v.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "R0a0kFI3dJx.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "R612wi_C-7w.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "Rhl8IoYzdSI.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "RloMRU3keo3.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "RmcPm9m3tnk.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "RwQZd8znR10.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "S1gXiaEYvr.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "S9ZyhWC17wJ.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "SkU3kbKTrb6.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "SklSQgHFDS.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "T3kmOP_cMFB.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "TNxKD3z_tPZ.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "V4AVDoFtVM.pdf": {
-        "negative_request": true,
         "standard_request": true
       },
       "VcB4QkSfyO.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "WdOCkf4aCM.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "WlkzLjxpYe.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "XkI_ggnfLZ4.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "Y5TgO3J_Glc.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "YygA0yppTR.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "YzasumDKCWV.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "ZOcX-eybqoL.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "ZcKPWuhG6wy.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "_67HnXYixmN.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "_ojjh-QFiFr.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "_ptUyYP19mP.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "a1m8Jba-N6l.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "cQLkLAQgZ5I.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "djwS0m4Ft_A.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "eNdiU_DbM9.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "fJIrkNKGBNI.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "gfwfOskyzSx.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "hJOLFJIJ_zy.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "iqpFcg2TAa0.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "iw-ms2znSS2.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "j0uePNuoBho.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "jV5m8NAWb0E.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "jsM6yvqiT0W.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "l3gNU1KStIC.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "lU5Rs_wCweN.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "mCLVeEpplNE.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "mCtadqIxOJ.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "nEMiSX_ipXr.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "q-qxdClTs0d.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "q3KSThy2GwB.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "qYZD-AO1Vn.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "qbH974jKUVy.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "r1gdj2EKPB.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "rke5R1SFwS.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "ryefE1SYDr.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "tV3N0DWMxCg.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "tV6oBfuyLTQ.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "tqOvYpjPax2.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "vVjIW3sEc1s.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "vpiOnyOBTzQ.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "vsU0efpivw.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "zWy1uxjDdZJ.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       }
     },
     "watermark_attack_policy_puppetry_first": {
@@ -3119,150 +3422,12 @@
       "zWy1uxjDdZJ.pdf": {
         "standard_request": true
       }
-    },
-    "pos_steering_attack_narrative_last": {
-      "--gvHfE3Xf5.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "0-uUGPbIjD.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "026hEw26i3-.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "0qbEq5UBfGD.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "3q5IqUrkcF.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "49A1Y6tRhaq.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "4hBXGTdS6Lc.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "4pfqv2FCo0R.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "5USOVm2HkfG.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "5l9zj5G7vDY.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "6gLEKETxUWp.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "7WwYBADS3E_.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "8nXkyH2_s6.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "AADxnPG-PR.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "AT7jak63NNK.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "Al7Wpsy49g.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "B1g30j0qF7.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "BIIwfP55pp.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "BJe4oxHYPB.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "BJlPOlBKDB.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "BygSP6Vtvr.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "CrCvGNHAIrz.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "DFIoGDZejIB.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "DTXZqTNV5nW.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "E3UZoJKHxuk.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "FoM-RnF6SNe.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "H1lJJnR5Ym.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "HG7vlodGGm.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "HHiiQKWsOcV.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "Hw2Za4N5hy0.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "HygBZnRctX.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
-      "IrofNLZuWF.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      }
     }
   },
+  "failed_pdfs": {},
   "completed_batches": [
-    "external_site_attack_policy_puppetry_first",
-    "neg_steering_attack_narrative_first",
-    "refusal_attack_narrative_first",
-    "refusal_attack_policy_puppetry_first",
-    "watermark_attack_narrative_first",
-    "watermark_attack_policy_puppetry_first",
-    "neg_steering_attack_policy_puppetry_first",
-    "pos_steering_attack_policy_puppetry_first",
-    "pos_steering_attack_narrative_first"
+    "external_site_attack_policy_puppetry_first"
   ],
-  "total_pdfs_processed": 133,
-  "total_requests_sent": 1404,
-  "failed_pdfs": {}
+  "total_pdfs_processed": 2103,
+  "total_requests_sent": 4263
 }
