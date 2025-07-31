@@ -1,6 +1,6 @@
 {
   "session_start": "2025-07-11T16:44:03.694269",
-  "last_updated": "2025-07-30T23:17:05.071372",
+  "last_updated": "2025-07-31T12:01:20.722360",
   "completed_pdfs": {
     "refusal_attack_narrative_first": {
       "--gvHfE3Xf5.pdf": {
@@ -2012,10 +2012,6 @@
       },
       "zWy1uxjDdZJ.pdf": {
         "standard_request": true
-
-      },
-      "V4AVDoFtVM.pdf": {
-        "standard_request": true
       }
     },
     "pos_steering_attack_narrative_first": {
@@ -2243,10 +2239,6 @@
         "standard_request": true,
         "negative_request": true
       },
-      "V4AVDoFtVM.pdf": {
-        "standard_request": true,
-        "negative_request": true
-      },
       "VcB4QkSfyO.pdf": {
         "standard_request": true,
         "negative_request": true
@@ -2416,6 +2408,10 @@
         "negative_request": true
       },
       "zWy1uxjDdZJ.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "V4AVDoFtVM.pdf": {
         "standard_request": true,
         "negative_request": true
       }
@@ -2646,8 +2642,8 @@
         "negative_request": true
       },
       "V4AVDoFtVM.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "negative_request": true,
+        "standard_request": true
       },
       "VcB4QkSfyO.pdf": {
         "standard_request": true,
@@ -3136,7 +3132,7 @@
     "pos_steering_attack_policy_puppetry_first",
     "pos_steering_attack_narrative_first"
   ],
-  "total_pdfs_processed": 1051,
-  "total_requests_sent": 4438,
+  "total_pdfs_processed": 101,
+  "total_requests_sent": 1300,
   "failed_pdfs": {}
 }
