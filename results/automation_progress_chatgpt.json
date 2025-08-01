@@ -1,6 +1,6 @@
 {
   "session_start": "2025-07-31T14:53:28.487774",
-  "last_updated": "2025-07-31T18:59:00.240312",
+  "last_updated": "2025-08-01T10:58:44.904300",
   "completed_pdfs": {
     "external_site_attack_policy_puppetry_first": {
       "--gvHfE3Xf5.pdf": {
@@ -2017,7 +2017,32 @@
         "negative_request": true
       },
       "mCLVeEpplNE.pdf": {
-        "standard_request": true
+        "standard_request": true,
+        "negative_request": true
+      },
+      "mCtadqIxOJ.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "nEMiSX_ipXr.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "q-qxdClTs0d.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "q3KSThy2GwB.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "qYZD-AO1Vn.pdf": {
+        "standard_request": true,
+        "negative_request": true
+      },
+      "qbH974jKUVy.pdf": {
+        "standard_request": true,
+        "negative_request": true
       }
     },
     "pos_steering_attack_policy_puppetry_first": {
@@ -3636,6 +3661,6 @@
     "external_site_attack_policy_puppetry_first",
     "pos_steering_attack_policy_puppetry_first"
   ],
-  "total_pdfs_processed": 1965,
-  "total_requests_sent": 6281
+  "total_pdfs_processed": 3802,
+  "total_requests_sent": 11209
 }
