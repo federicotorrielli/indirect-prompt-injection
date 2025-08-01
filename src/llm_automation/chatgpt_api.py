@@ -37,10 +37,18 @@ class ChatGPTAutomator:
             # Setup Chrome options
             options = uc.ChromeOptions()
 
+            user_agent = (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/114.0.0.0 Safari/537.36"
+            )
+
+            options.add_argument(f"user-agent={user_agent}")
+
             # Add arguments for stability
             options.add_argument("--no-sandbox")
+            # options.add_argument("--disable-gpu")
             options.add_argument("--disable-dev-shm-usage")
-            options.add_argument("--disable-gpu")
             options.add_argument("--disable-software-rasterizer")
             options.add_argument("--disable-extensions")
             options.add_argument("--disable-notifications")
