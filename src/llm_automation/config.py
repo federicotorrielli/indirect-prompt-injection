@@ -21,10 +21,10 @@ class Config:
     chrome_headless: bool = False
     chrome_window_size: str = "1920,1080"
     page_load_timeout: int = 30
-    implicit_wait: int = 10
+    implicit_wait: int = 5
 
     # Request settings
-    request_delay: float = 5.0  # Seconds between requests
+    request_delay: float = 3.0  # Seconds between requests
     upload_timeout: int = 60  # Seconds to wait for file upload
     response_timeout: int = 300  # Seconds to wait for response
     max_retries: int = 3
