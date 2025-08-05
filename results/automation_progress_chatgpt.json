@@ -1,6 +1,6 @@
 {
   "session_start": "2025-07-31T14:53:28.487774",
-  "last_updated": "2025-08-04T18:10:58.608486",
+  "last_updated": "2025-08-05T23:23:04.652964",
   "completed_pdfs": {
     "external_site_attack_policy_puppetry_first": {
       "--gvHfE3Xf5.pdf": {
@@ -4242,6 +4242,6 @@
     "watermark_attack_narrative_first",
     "watermark_attack_policy_puppetry_first"
   ],
-  "total_pdfs_processed": 2313,
-  "total_requests_sent": 6770
+  "total_pdfs_processed": 3216,
+  "total_requests_sent": 8873
 }
