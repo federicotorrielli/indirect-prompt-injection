@@ -540,24 +540,81 @@ class ChatGPTAutomator:
                 logger.error("Could not find text input area")
                 return False
 
-            # Clear and type message with stale element handling
-            try:
-                text_input.clear()
-                text_input.send_keys(message)
-                time.sleep(1)
-            except Exception as e:
-                if "stale element reference" in str(e).lower():
-                    logger.debug("Stale element during text input, retrying...")
-                    text_input = self._find_text_input_with_retry()
-                    if text_input:
+            # Clear and type message with stale element handling and validation
+            message_sent_successfully = False
+            max_attempts = 3
+
+            for attempt in range(max_attempts):
+                try:
+                    # Clear the input first
+                    text_input.clear()
+                    time.sleep(0.5)  # Brief pause after clearing
+
+                    # Send the message
+                    text_input.send_keys(message)
+                    time.sleep(1)  # Wait for text to be typed
+
+                    # Validate that the message was actually typed
+                    current_value = self._get_text_input_value(text_input)
+                    if current_value and message.strip() in current_value.strip():
+                        logger.debug(
+                            f"Message successfully typed (attempt {attempt + 1})"
+                        )
+                        message_sent_successfully = True
+                        break
+                    elif current_value and len(current_value.strip()) > 0:
+                        # Text input has content but doesn't match our message
+                        logger.warning(
+                            f"Text input contains unexpected content (attempt {attempt + 1}): '{current_value[:100]}...'"
+                        )
+                        # Try to clear and re-type
                         text_input.clear()
+                        time.sleep(0.5)
                         text_input.send_keys(message)
                         time.sleep(1)
+                        # Re-check
+                        current_value = self._get_text_input_value(text_input)
+                        if current_value and message.strip() in current_value.strip():
+                            logger.debug(
+                                f"Message successfully typed after clearing (attempt {attempt + 1})"
+                            )
+                            message_sent_successfully = True
+                            break
                     else:
-                        logger.error("Could not re-find text input after stale element")
-                        return False
-                else:
-                    raise
+                        logger.warning(
+                            f"Message not properly typed (attempt {attempt + 1}): expected '{message[:50]}...', got '{current_value[:50] if current_value else 'empty'}...'"
+                        )
+                        if attempt < max_attempts - 1:
+                            time.sleep(1)  # Wait before retry
+                            # Try to re-find the text input in case it changed
+                            text_input = self._find_text_input_with_retry()
+                            if not text_input:
+                                logger.error("Could not re-find text input for retry")
+                                return False
+
+                except Exception as e:
+                    if "stale element reference" in str(e).lower():
+                        logger.debug(
+                            f"Stale element during text input (attempt {attempt + 1}), retrying..."
+                        )
+                        text_input = self._find_text_input_with_retry()
+                        if not text_input:
+                            logger.error(
+                                "Could not re-find text input after stale element"
+                            )
+                            return False
+                    else:
+                        logger.warning(
+                            f"Error typing message (attempt {attempt + 1}): {e}"
+                        )
+                        if attempt == max_attempts - 1:
+                            raise
+
+            if not message_sent_successfully:
+                logger.error(
+                    "Failed to type message into text input after all attempts"
+                )
+                return False
 
             # Find and click send button with retry logic
             send_button = self._find_send_button_with_retry()
@@ -565,6 +622,38 @@ class ChatGPTAutomator:
             if send_button:
                 try:
                     send_button.click()
+
+                    # Verify the message was sent by checking if text input was cleared
+                    time.sleep(1)  # Brief wait for UI to update
+                    current_text_input = self._find_text_input_with_retry()
+                    if current_text_input:
+                        remaining_value = self._get_text_input_value(current_text_input)
+                        if not remaining_value or remaining_value.strip() == "":
+                            logger.info(
+                                "Message sent successfully - text input cleared"
+                            )
+                            return True
+                        else:
+                            logger.warning(
+                                f"Message may not have been sent - text input still contains: '{remaining_value[:50]}...'"
+                            )
+                            # Try clicking send again
+                            send_button_retry = self._find_send_button_with_retry()
+                            if send_button_retry and send_button_retry.is_enabled():
+                                send_button_retry.click()
+                                time.sleep(1)
+                                # Check again
+                                final_text_input = self._find_text_input_with_retry()
+                                if final_text_input:
+                                    final_value = self._get_text_input_value(
+                                        final_text_input
+                                    )
+                                    if not final_value or final_value.strip() == "":
+                                        logger.info(
+                                            "Message sent successfully on retry"
+                                        )
+                                        return True
+
                     logger.info("Message sent successfully")
                     return True
                 except Exception as e:
@@ -584,8 +673,18 @@ class ChatGPTAutomator:
                 fresh_text_input = self._find_text_input_with_retry()
                 if fresh_text_input:
                     fresh_text_input.send_keys(Keys.RETURN)
-                    logger.info("Message sent successfully via Enter key")
-                    return True
+
+                    # Verify the message was sent by checking if text input was cleared
+                    time.sleep(1)
+                    post_enter_value = self._get_text_input_value(fresh_text_input)
+                    if not post_enter_value or post_enter_value.strip() == "":
+                        logger.info("Message sent successfully via Enter key")
+                        return True
+                    else:
+                        logger.warning(
+                            "Enter key may not have sent message - text input not cleared"
+                        )
+                        return False
                 else:
                     logger.error("Could not find text input for Enter key fallback")
                     return False
@@ -632,6 +731,28 @@ class ChatGPTAutomator:
                 time.sleep(0.5)
 
         return None
+
+    def _get_text_input_value(self, text_input_element) -> str:
+        """Get the current value from a text input element."""
+        try:
+            # For regular textarea elements
+            value = text_input_element.get_attribute("value")
+            if value:
+                return value
+
+            # For contenteditable divs (common in modern chat interfaces)
+            if text_input_element.get_attribute("contenteditable") == "true":
+                return text_input_element.text
+
+            # Fallback: try to get text content
+            text_content = text_input_element.text
+            if text_content:
+                return text_content
+
+            return ""
+        except Exception as e:
+            logger.debug(f"Error getting text input value: {e}")
+            return ""
 
     def _find_send_button_with_retry(self):
         """Find send button with retry logic to handle dynamic content."""
@@ -747,7 +868,7 @@ class ChatGPTAutomator:
 
                         last_length = current_length
 
-                    time.sleep(0.5)
+                    time.sleep(2)
 
                 except Exception as e:
                     logger.warning(f"Error checking response: {e}")
@@ -886,28 +1007,15 @@ class ChatGPTAutomator:
             if not self.driver:
                 return None
 
-            logger.info("Checking for usage limit errors... This will take a bit.")
-
-            # Common selectors where error messages appear
-            error_selectors = [
-                ".text-token-text-error",
-                "div.text-token-text-error",
-                "aside.flex.w-full",
-                "div[class*='text-token-text-error']",
-                "div[class*='border-token-surface-error']",
-                "aside[class*='rounded-3xl'][class*='border']",
-                "div[class*='border-red-500'][role='alert']",  # Red alert banners
-                "div.border-red-500[role='alert']",  # Specific red error alerts
-                "[role='alert'][class*='border-red-500']",  # Alert role with red border
-            ]
+            logger.debug("Checking for usage limit errors...")
 
             # Usage limit patterns to detect
             limit_patterns = [
                 "usage cap for gpt",
                 "hit the edu plan limit",
                 "plan limit for gpt",
-                "unknown error occurred",  # Generic error that often indicates limits
-                "internal error",  # Another generic error indicating system issues/limits
+                "unknown error occurred",
+                "internal error",
             ]
 
             # Use cached selector for performance if available
@@ -930,31 +1038,42 @@ class ChatGPTAutomator:
                     logger.debug("Cached usage limit selector failed")
                     del self.selector_cache["usage_limit_error"]
 
-            # Check all selectors for usage limit messages
-            for selector in error_selectors:
-                try:
-                    elements = self.driver.find_elements(By.CSS_SELECTOR, selector)
-                    for element in elements:
-                        if element.is_displayed():
-                            text = element.text.lower()
-                            for pattern in limit_patterns:
-                                if pattern in text:
-                                    logger.error(
-                                        f"Usage limit detected: {element.text}"
-                                    )
-                                    # Cache the successful selector for future use
-                                    self.selector_cache["usage_limit_error"] = selector
-                                    return element.text
-                except Exception:
-                    continue
+            # Combined selector for faster single DOM query
+            combined_selector = (
+                ".text-token-text-error, "
+                "div.text-token-text-error, "
+                "aside.flex.w-full, "
+                "div[class*='text-token-text-error'], "
+                "div[class*='border-token-surface-error'], "
+                "aside[class*='rounded-3xl'][class*='border'], "
+                "div[class*='border-red-500'][role='alert'], "
+                "div.border-red-500[role='alert'], "
+                "[role='alert'][class*='border-red-500']"
+            )
 
-            # Additional check for specific regenerate button that appears with usage caps
+            # Single DOM query for all error elements
+            try:
+                elements = self.driver.find_elements(By.CSS_SELECTOR, combined_selector)
+                for element in elements:
+                    if element.is_displayed():
+                        text = element.text.lower()
+                        for pattern in limit_patterns:
+                            if pattern in text:
+                                logger.error(f"Usage limit detected: {element.text}")
+                                # Simple caching - just cache the combined selector since it worked
+                                self.selector_cache["usage_limit_error"] = (
+                                    combined_selector
+                                )
+                                return element.text
+            except Exception:
+                pass
+
+            # Quick check for regenerate button (single query)
             try:
                 regenerate_button = self.driver.find_element(
                     By.CSS_SELECTOR, "[data-testid='regenerate-thread-error-button']"
                 )
                 if regenerate_button and regenerate_button.is_displayed():
-                    # Look for the associated error message near the button
                     parent = regenerate_button.find_element(By.XPATH, "./..")
                     if parent:
                         error_text = parent.text.lower()
@@ -966,13 +1085,23 @@ class ChatGPTAutomator:
             except Exception:
                 pass
 
-            # Check if attachment/upload button is disabled (another indicator of usage limits)
+            # Optimized attachment button check (only if no other errors found)
             try:
-                if self._is_attachment_button_disabled():
-                    logger.error("Usage limit detected: Attachment button is disabled")
-                    return (
-                        "Attachment functionality disabled - likely due to usage limits"
+                attachment_btn = self._find_attachment_button()
+                if attachment_btn:
+                    # Quick disabled check without extensive attribute analysis
+                    is_disabled = (
+                        not attachment_btn.is_enabled()
+                        or attachment_btn.get_attribute("disabled") is not None
+                        or attachment_btn.get_attribute("aria-disabled") == "true"
                     )
+                    if is_disabled:
+                        aria_label = attachment_btn.get_attribute("aria-label") or ""
+                        if "unavailable" in aria_label.lower():
+                            logger.error(
+                                "Usage limit detected: Attachment button is disabled"
+                            )
+                            return "Attachment functionality disabled - likely due to usage limits"
             except Exception:
                 pass
 
