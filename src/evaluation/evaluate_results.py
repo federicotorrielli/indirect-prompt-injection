@@ -228,7 +228,6 @@ class AttackEvaluator:
             # Use device_map="auto" for all models - it works for both small and large models
             self.model = AutoModelForCausalLM.from_pretrained(
                 model_name,
-                torch_dtype=torch.bfloat16,
                 trust_remote_code=True,
                 device_map="auto",
             )
