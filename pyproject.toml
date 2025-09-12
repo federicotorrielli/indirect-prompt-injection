@@ -31,6 +31,7 @@ dependencies = [
     "kernels~=0.10.1",
     "triton~=3.4.0",
     "triton-kernels",
+    "python-dotenv>=1.1.1",
 ]
 license = { text = "MIT" }
 

@@ -7,6 +7,7 @@ Uses the gemini-webapi package to interact with Google Gemini web interface.
 import asyncio
 import logging
 import os
+import sys
 import time
 from pathlib import Path
 from typing import Optional
@@ -18,6 +19,7 @@ except ImportError as e:
         "gemini-webapi package not found. Please install it with: pip install gemini-webapi"
     ) from e
 
+sys.path.insert(0, str(Path(__file__).parent))  # Ensure src/ is in sys.path
 from config import Config
 
 logger = logging.getLogger(__name__)
@@ -34,6 +36,15 @@ class GeminiAutomator:
         # Gemini-specific settings
         self.secure_1psid = os.getenv("GEMINI_SECURE_1PSID")
         self.secure_1psidts = os.getenv("GEMINI_SECURE_1PSIDTS")
+
+        # If cookies are not present in the current environment, try loading from .env
+        if not self.secure_1psid or not self.secure_1psidts:
+            self._load_env_from_dotenv()
+            # Re-read after attempting to load from .env (do not override existing values)
+            self.secure_1psid = self.secure_1psid or os.getenv("GEMINI_SECURE_1PSID")
+            self.secure_1psidts = self.secure_1psidts or os.getenv(
+                "GEMINI_SECURE_1PSIDTS"
+            )
 
     def initialize(self) -> bool:
         """Initialize the Gemini client."""
@@ -183,3 +194,30 @@ class GeminiAutomator:
         # Gemini API handles most errors internally
         # This is mainly for consistency with other automators
         return None
+
+    def _load_env_from_dotenv(self) -> None:
+        """Attempt to load environment variables from a .env file.
+
+        This is a no-op if python-dotenv is not installed or if no .env file is found.
+        Existing process environment variables take precedence (no override).
+        """
+        try:
+            # Lazy import to avoid hard dependency if env is already configured
+            from dotenv import find_dotenv, load_dotenv  # type: ignore
+
+            dotenv_path = find_dotenv(usecwd=True)
+            if dotenv_path:
+                loaded = load_dotenv(dotenv_path=dotenv_path, override=False)
+                if loaded:
+                    logger.info(
+                        f"Loaded environment variables from .env at: {dotenv_path}"
+                    )
+                else:
+                    logger.debug(
+                        ".env file found but no variables were loaded (possibly already set)."
+                    )
+            else:
+                logger.debug("No .env file found via find_dotenv; skipping .env load.")
+        except Exception as e:
+            # Keep failures non-fatal; just log for diagnostics
+            logger.debug(f"Skipping .env loading due to: {e}")
