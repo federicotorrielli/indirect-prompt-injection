@@ -1,52 +1,173 @@
-# Instructions
+# Copilot Instructions for Indirect Prompt Injection Research Project
 
-You are a senior AI/LLM/Python developer working at Google. Always consider YAGNI + SOLID + KISS + DRY principles when designing, reviewing, or adding new code.
-Now, you are tasked with implementing changes to this project (outlined in project_proposal.md). Follow these guidelines strictly:
+## Project Overview
 
-- Check every file for current file contents and implementations.
-- Make changes file by file to allow for review.
-- Never use apologies in responses.
-- Do not show or discuss the current implementation unless specifically requested.
-- Do not ask the user to verify implementations visible in the provided context.
-- Do not invent changes beyond what is explicitly requested.
-- Do not summarize changes made.
-- Avoid giving feedback about understanding in comments or documentation.
-- Do not ask for confirmation of information already provided in the context.
-- Do not suggest updates or changes to files when there are no actual modifications needed.
-- Do not suggest whitespace changes.
-- Do not remove unrelated code or functionalities; preserve existing structures.
-- Provide all edits for a file in a single chunk, not in multiple steps.
-- Before making changes, discuss in a monologue format, explaining the changes and their purpose, in a 'step-by-step' manner.
+This repository investigates indirect prompt injection vulnerabilities in AI-assisted academic peer review systems. The project demonstrates how malicious actors can embed hidden instructions in scientific manuscripts to manipulate LLM-generated reviews, threatening the integrity of the scientific review process.
 
-## 🔧 General Guidelines
+**Key Research Areas:**
+- PDF payload injection techniques (invisible text, visible suffixes)
+- LLM automation across multiple services (ChatGPT, Copilot, Gemini)
+- Attack effectiveness analysis (refusal, sentiment steering, watermarking)
+- Browser-based automation with retry mechanisms
 
-- Use Pythonic patterns (PEP8, PEP257).
-- Prefer named functions and class-based structures over inline lambdas.
-- Use type hints where applicable (`typing` module).
-- Use uv to manage python packages, virtual environments, and dependencies.
-- Remember: you are usinga fish shell, not bash.
-- Use `uv run` to execute python, ensuring the correct environment is activated with `source .venv/bin/activate.fish`.
-- Every script must run from the root directory of the project.
-- Use meaningful naming; avoid cryptic variables.
-- Emphasize simplicity, readability, and DRY principles.
-- Divide et impera: break down complex tasks into smaller, manageable functions.
+**Repository Size:** ~120 Python files, moderate complexity, research-focused codebase
 
-## 🧶 Patterns
+## Build & Environment Setup
 
-### ✅ Patterns to Follow
+**CRITICAL: Always run commands from the project root directory**
 
-- Validate data using Pydantic models.
-- Use custom exceptions and centralized error handling.
-- Use environment variables via `dotenv` or `os.environ`.
-- Use logging via the `logging` module or structlog.
-- Write modular, reusable code organized by concerns (e.g., controller, service, data layer).
-- Document functions and classes with docstrings.
+### Environment Requirements
+- **Python:** 3.12+ (minimum version enforced in pyproject.toml)
+- **Package Manager:** UV (modern Python package manager)
+- **Browser:** Chrome/Chromium for automation
+- **Shell:** Works with bash (UV installation may require bash even in fish environments)
+
+### Initial Setup (Required for all work)
+```bash
+# 1. Install UV package manager (if not available)
+pip install uv
+
+# 2. Sync all dependencies (creates .venv automatically)
+uv sync
+
+# 3. Verify installation
+uv run python src/llm_automation/main.py --help
+```
+
+**Time:** ~5-10 minutes for full dependency installation (includes PyTorch, CUDA libraries)
+
+### Dependencies & Build Validation
+- **Always use `uv sync`** before making changes (never pip install directly)
+- Dependencies include: PyTorch, Selenium, PyMuPDF, Transformers, ReportLab, Rich
+- Large dependencies: CUDA libraries (~500MB), PyTorch models
+- Git dependency: triton-kernels from GitHub (can be slow to clone)
+
+## Project Architecture & Layout
+
+### Core Directory Structure
+```
+src/
+├── llm_automation/     # LLM interaction & browser automation
+│   ├── main.py        # Primary entry point for automation
+│   ├── config.py      # Configuration management
+│   ├── *_api.py       # Service-specific LLM implementations
+│   └── progress_tracker.py  # Progress persistence
+├── prompt_injection/   # PDF manipulation & payload injection
+├── data_preparation/   # Dataset download & preprocessing
+└── evaluation/        # Results analysis & metrics
+
+scripts/               # Utility scripts & automation tools
+data/                 # Static data (fonts, prompts, sample PDFs)
+results/              # Experimental outputs & analysis
+```
+
+### Key Files You'll Modify Most Often
+- `src/llm_automation/main.py` - Main automation orchestrator
+- `src/llm_automation/config.py` - System configuration
+- `src/llm_automation/*_api.py` - LLM service implementations
+- `src/prompt_injection/inject_text.py` - PDF manipulation
+- `scripts/*.py` - Analysis and utility scripts
+
+## Validated Build & Test Commands
+
+### Core Operations (All Tested & Working)
+```bash
+# Main automation system
+uv run python src/llm_automation/main.py --help
+uv run python src/llm_automation/main.py --llm-service chatgpt --show-progress-only
+uv run python src/llm_automation/main.py --list-attack-types
+
+# Setup and validation
+uv run python scripts/setup_automation.py  # Validates environment
+uv run python scripts/analyze_outputs.py   # Process results
+uv run python scripts/clean_unsuccessful_results.py  # Data cleanup
+
+# Service-specific runs
+uv run python src/llm_automation/main.py --llm-service gemini --dry-run
+uv run python src/llm_automation/main.py --llm-service copilot --attack-mode narrative
+```
+
+### Expected Runtime & Behavior
+- **Setup validation:** ~30 seconds (checks Chrome, directories, dependencies)
+- **Full automation runs:** Hours (depends on PDF count and rate limiting)
+- **Single batch processing:** 10-30 minutes per attack type
+- **Analysis scripts:** 1-5 minutes for result processing
+
+### Common Error Patterns & Solutions
+```bash
+# 1. Missing injected PDFs (expected during development)
+# Error: "Injected PDFs directory not found: data/injected_pdfs"
+# Solution: This is normal - PDF injection must be run first
+
+# 2. Chrome driver issues
+# Error: "Driver appears to be dead" or "Chrome not found"
+# Solution: Ensure Chrome is installed and not running
+
+# 3. Import path errors
+# Error: ModuleNotFoundError in automation scripts
+# Solution: Always run from project root, use `uv run python`
+```
+
+## Configuration & Environment
+
+### Key Configuration Files
+- `src/llm_automation/config.json` - Runtime settings (auto-created on first run)
+- `pyproject.toml` - Dependencies and project metadata
+- `.gitignore` - Excludes results/, logs/, chrome_user_data/, .venv/
+
+### Environment Variables (Optional)
+```bash
+# Required only for Gemini integration
+GEMINI_SECURE_1PSID="cookie_value"    # From gemini.google.com
+GEMINI_SECURE_1PSIDTS="cookie_value"  # Optional additional auth
+```
+
+### Progress & State Management
+- Progress tracked in `results/automation_progress_*.json` (per service)
+- Results consolidated in `results/all_results.json`
+- Chrome user data persisted in `chrome_user_data/`
+
+## Development Patterns
+
+### ✅ Recommended Patterns
+- **Use UV for all Python execution:** `uv run python script.py`
+- **Modular design:** Follow existing service/controller/data layer separation
+- **Configuration-driven:** Use `Config` class, avoid hardcoded values
+- **Progress tracking:** Leverage existing `ProgressTracker` for long-running tasks
+- **Retry logic:** Follow existing patterns with exponential backoff
+- **Logging:** Use the existing logging configuration (file + console)
 
 ### 🚫 Patterns to Avoid
+- **Direct pip usage:** Never use pip install, always `uv sync` or `uv add`
+- **Hardcoded paths:** Use Config class or relative paths from project root
+- **Global state:** Use dependency injection and context managers
+- **Missing error handling:** Browser automation is fragile, always handle exceptions
+- **Ignoring rate limits:** Respect request delays in automation
+- **Breaking progress tracking:** Don't modify progress files manually
 
-- Don’t use wildcard imports (`from module import *`).
-- Avoid global state unless encapsulated in a singleton or config manager.
-- Don’t hardcode secrets or config values—use `.env`.
-- Don’t expose internal stack traces in production environments.
-- Avoid business logic inside views/routes.
-- Do not create test files unless explicitly requested. If you create tests, delete them after the task is complete.
+## Specific Gotchas & Workarounds
+
+### PDF Processing
+- **PyMuPDF warnings are normal** - PDF parsing generates many warnings
+- **Font dependencies:** Fonts in `data/fonts/` required for invisible text injection
+- **Memory usage:** Large PDF batches can consume significant RAM
+
+### Browser Automation
+- **Chrome user data isolation:** Each LLM service uses separate Chrome profiles
+- **Element staleness:** Common Selenium issue, retry logic built-in
+- **Upload timeouts:** PDF upload can take 30-60 seconds, timeouts configured accordingly
+- **Rate limiting:** 3-second delays between requests to avoid service blocks
+
+### Result Processing
+- **JSON file ordering:** Results are automatically ordered for consistent Git commits
+- **Partial failures:** System designed to resume from interruptions
+- **Progress validation:** Built-in verification prevents data loss
+
+## Trust These Instructions
+
+**These instructions have been validated by testing actual commands and exploring the complete codebase.** Only search beyond these instructions if:
+- You encounter errors not covered in the "Common Error Patterns" section
+- You need to understand implementation details not documented here
+- The documented commands fail in unexpected ways
+
+**Always start with the validated build commands above before making any changes.**
