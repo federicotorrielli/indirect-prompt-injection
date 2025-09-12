@@ -106,6 +106,67 @@ def create_invisible_text_overlay(
     return PdfReader(packet)
 
 
+def create_visible_text_page(
+    text_to_add,
+    page_width,
+    page_height,
+    font_size,
+    font_name,
+):
+    """
+    Creates an in-memory single-page PDF with a white background and visible, wrapping text.
+    Used for OCR model mode where the injected content must be clearly readable on its own page.
+    """
+    packet = io.BytesIO()
+    can = canvas.Canvas(packet, pagesize=(page_width, page_height))
+
+    # Paint a white background to ensure a clean OCR-friendly page
+    can.saveState()
+    can.setFillColor(colors.white)
+    can.rect(0, 0, page_width, page_height, stroke=0, fill=1)
+    can.restoreState()
+
+    # Text style and layout
+    margin = 1 * inch
+    frame_width = page_width - 2 * margin
+    frame_height = page_height - 2 * margin
+
+    styles = getSampleStyleSheet()
+    style = ParagraphStyle(
+        name="VisibleOCR",
+        parent=styles["Normal"],
+        fontName=font_name,
+        fontSize=font_size,
+        leading=font_size * 1.2,
+        textColor=colors.black,
+    )
+
+    # Robust text handling to preserve content
+    import html
+
+    escaped_text = html.escape(text_to_add, quote=True)
+    text_with_breaks = escaped_text.replace("\n", "<br/>")
+
+    try:
+        p = Paragraph(text_with_breaks, style)
+    except Exception:
+        simple_text = (
+            text_to_add.replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace("&", "&amp;")
+            .replace("\n", "<br/>")
+        )
+        p = Paragraph(simple_text, style)
+
+    w, h = p.wrap(frame_width, frame_height)
+    y_position = page_height - margin - h  # draw from top
+    p.drawOn(can, margin, y_position)
+
+    can.save()
+    packet.seek(0)
+    return PdfReader(packet)
+
+
 def inject_text_into_pdf(
     input_path,
     output_path,
@@ -113,6 +174,7 @@ def inject_text_into_pdf(
     font_size,
     injection_locus="first",
     ocr_model_mode=False,
+    insert_new_page=False,
 ):
     """
     Injects invisible text into the PDF at the specified location.
@@ -162,49 +224,90 @@ def inject_text_into_pdf(
     page_width = target_page.mediabox.width
     page_height = target_page.mediabox.height
 
-    print(
-        f"Creating invisible, wrapping text overlay with font '{font_name_to_use}' (size {font_size})..."
-    )
-    overlay_pdf = create_invisible_text_overlay(
-        invisible_text,
-        page_width,
-        page_height,
-        font_size,
-        font_name_to_use,
-        position,
-        ocr_model_mode,
-    )
-    overlay_page = overlay_pdf.pages[0]
+    if insert_new_page:
+        # Create a standalone page, visible for OCR mode, invisible otherwise
+        if ocr_model_mode:
+            print(
+                f"Creating OCR-visible white page with font '{font_name_to_use}' (size {font_size})..."
+            )
+            new_pdf = create_visible_text_page(
+                invisible_text,
+                page_width,
+                page_height,
+                font_size,
+                font_name_to_use,
+            )
+        else:
+            print(
+                f"Creating new page with invisible text overlay using font '{font_name_to_use}' (size {font_size})..."
+            )
+            new_pdf = create_invisible_text_overlay(
+                invisible_text,
+                page_width,
+                page_height,
+                font_size,
+                font_name_to_use,
+                position,
+                False,
+            )
 
-    # Handle injection based on locus
-    if injection_locus == "last":
-        # Copy all pages except the last one
-        for i in range(len(existing_pdf.pages) - 1):
-            output_writer.add_page(existing_pdf.pages[i])
+        new_page = new_pdf.pages[0]
 
-        # Create modified last page
-        print("Injecting text as content at bottom of last page...")
-        new_last_page = PageObject.create_blank_page(
-            width=page_width, height=page_height
-        )
-        new_last_page.merge_page(target_page)
-        new_last_page.merge_page(overlay_page)
-        output_writer.add_page(new_last_page)
-    else:
-        # First page injection (existing behavior)
-        print("Injecting text as the first content element on page 1...")
-        new_first_page = PageObject.create_blank_page(
-            width=page_width, height=page_height
-        )
-        new_first_page.merge_page(overlay_page)
-        new_first_page.merge_page(target_page)
-        output_writer.add_page(new_first_page)
-
-        # Copy remaining pages
-        if len(existing_pdf.pages) > 1:
-            print(f"Copying the remaining {len(existing_pdf.pages) - 1} page(s)...")
-            for i in range(1, len(existing_pdf.pages)):
+        if injection_locus == "last":
+            print("Appending new page at the end of the document...")
+            for i in range(len(existing_pdf.pages)):
                 output_writer.add_page(existing_pdf.pages[i])
+            output_writer.add_page(new_page)
+        else:
+            print("Prepending new page at the start of the document...")
+            output_writer.add_page(new_page)
+            for i in range(len(existing_pdf.pages)):
+                output_writer.add_page(existing_pdf.pages[i])
+    else:
+        # Insert into an existing page: visible if OCR mode, invisible otherwise
+        print(
+            f"Creating {'visible' if ocr_model_mode else 'invisible'}, wrapping text overlay with font '{font_name_to_use}' (size {font_size})..."
+        )
+        overlay_pdf = create_invisible_text_overlay(
+            invisible_text,
+            page_width,
+            page_height,
+            font_size,
+            font_name_to_use,
+            position,
+            ocr_model_mode,
+        )
+        overlay_page = overlay_pdf.pages[0]
+
+        # Handle injection based on locus
+        if injection_locus == "last":
+            # Copy all pages except the last one
+            for i in range(len(existing_pdf.pages) - 1):
+                output_writer.add_page(existing_pdf.pages[i])
+
+            # Create modified last page
+            print("Injecting text as content at bottom of last page...")
+            new_last_page = PageObject.create_blank_page(
+                width=page_width, height=page_height
+            )
+            new_last_page.merge_page(target_page)
+            new_last_page.merge_page(overlay_page)
+            output_writer.add_page(new_last_page)
+        else:
+            # First page injection (existing behavior)
+            print("Injecting text as the first content element on page 1...")
+            new_first_page = PageObject.create_blank_page(
+                width=page_width, height=page_height
+            )
+            new_first_page.merge_page(overlay_page)
+            new_first_page.merge_page(target_page)
+            output_writer.add_page(new_first_page)
+
+            # Copy remaining pages
+            if len(existing_pdf.pages) > 1:
+                print(f"Copying the remaining {len(existing_pdf.pages) - 1} page(s)...")
+                for i in range(1, len(existing_pdf.pages)):
+                    output_writer.add_page(existing_pdf.pages[i])
 
     print(f"Writing new PDF to: {output_path}")
     with open(output_path, "wb") as output_file:
@@ -243,6 +346,7 @@ def inject_text_into_pdf_silent(
     font_path=None,
     injection_locus="first",
     ocr_model_mode=False,
+    insert_new_page=False,
 ):
     """
     Silent version of inject_text_into_pdf for batch processing (no print statements).
@@ -307,55 +411,97 @@ def inject_text_into_pdf_silent(
         raise Exception(f"Failed to access PDF page properties: {e}")
 
     try:
-        overlay_pdf = create_invisible_text_overlay(
-            invisible_text,
-            page_width,
-            page_height,
-            font_size,
-            font_name_to_use,
-            position,
-            ocr_model_mode,
-        )
-        overlay_page = overlay_pdf.pages[0]
+        if insert_new_page:
+            # Build a standalone page and insert at locus
+            if ocr_model_mode:
+                new_pdf = create_visible_text_page(
+                    invisible_text,
+                    page_width,
+                    page_height,
+                    font_size,
+                    font_name_to_use,
+                )
+            else:
+                new_pdf = create_invisible_text_overlay(
+                    invisible_text,
+                    page_width,
+                    page_height,
+                    font_size,
+                    font_name_to_use,
+                    position,
+                    False,
+                )
 
-        # Handle injection based on locus
-        if injection_locus == "last":
-            # Copy all pages except the last one
-            for i in range(len(existing_pdf.pages) - 1):
-                try:
-                    page = existing_pdf.pages[i]
-                    if hasattr(page, "mediabox") and page.mediabox:
-                        output_writer.add_page(page)
-                except Exception:
-                    continue
+            new_page = new_pdf.pages[0]
 
-            # Create modified last page
-            new_last_page = PageObject.create_blank_page(
-                width=page_width, height=page_height
-            )
-            new_last_page.merge_page(target_page)
-            new_last_page.merge_page(overlay_page)
-            output_writer.add_page(new_last_page)
-        else:
-            # First page injection (existing behavior)
-            new_first_page = PageObject.create_blank_page(
-                width=page_width, height=page_height
-            )
-            new_first_page.merge_page(overlay_page)
-            new_first_page.merge_page(target_page)
-            output_writer.add_page(new_first_page)
-
-            # Copy remaining pages with error handling
-            if len(existing_pdf.pages) > 1:
-                for i in range(1, len(existing_pdf.pages)):
+            if injection_locus == "last":
+                for i in range(len(existing_pdf.pages)):
                     try:
                         page = existing_pdf.pages[i]
                         if hasattr(page, "mediabox") and page.mediabox:
                             output_writer.add_page(page)
                     except Exception:
                         continue
+                output_writer.add_page(new_page)
+            else:
+                output_writer.add_page(new_page)
+                for i in range(len(existing_pdf.pages)):
+                    try:
+                        page = existing_pdf.pages[i]
+                        if hasattr(page, "mediabox") and page.mediabox:
+                            output_writer.add_page(page)
+                    except Exception:
+                        continue
+        else:
+            overlay_pdf = create_invisible_text_overlay(
+                invisible_text,
+                page_width,
+                page_height,
+                font_size,
+                font_name_to_use,
+                position,
+                ocr_model_mode,
+            )
+            overlay_page = overlay_pdf.pages[0]
+
+            # Handle injection based on locus
+            if injection_locus == "last":
+                # Copy all pages except the last one
+                for i in range(len(existing_pdf.pages) - 1):
+                    try:
+                        page = existing_pdf.pages[i]
+                        if hasattr(page, "mediabox") and page.mediabox:
+                            output_writer.add_page(page)
+                    except Exception:
+                        continue
+
+                # Create modified last page
+                new_last_page = PageObject.create_blank_page(
+                    width=page_width, height=page_height
+                )
+                new_last_page.merge_page(target_page)
+                new_last_page.merge_page(overlay_page)
+                output_writer.add_page(new_last_page)
+            else:
+                # First page injection (existing behavior)
+                new_first_page = PageObject.create_blank_page(
+                    width=page_width, height=page_height
+                )
+                new_first_page.merge_page(overlay_page)
+                new_first_page.merge_page(target_page)
+                output_writer.add_page(new_first_page)
+
+                # Copy remaining pages with error handling
+                if len(existing_pdf.pages) > 1:
+                    for i in range(1, len(existing_pdf.pages)):
+                        try:
+                            page = existing_pdf.pages[i]
+                            if hasattr(page, "mediabox") and page.mediabox:
+                                output_writer.add_page(page)
+                        except Exception:
+                            continue
     except Exception as e:
-        raise Exception(f"Failed to create or merge overlay: {e}")
+        raise Exception(f"Failed to create new page or merge overlay: {e}")
 
     # Copy remaining pages with error handling is now handled above
     # Remove the duplicate page copying code
@@ -386,6 +532,7 @@ def process_batch_injection(
     font_path=None,
     injection_locus="first",
     ocr_model_mode=False,
+    insert_new_page=False,
 ):
     """
     Process batch injection for all PDFs using all prompts from the JSON file.
@@ -467,6 +614,7 @@ def process_batch_injection(
                         font_path,
                         injection_locus,
                         ocr_model_mode,
+                        insert_new_page,
                     )
                     successful_injections += 1
 
@@ -489,6 +637,7 @@ def process_single_test(
     font_path=None,
     injection_locus="first",
     ocr_model_mode=False,
+    insert_new_page=False,
 ):
     """
     Process a single random PDF with all prompts for testing purposes.
@@ -543,6 +692,7 @@ def process_single_test(
                     font_path,
                     injection_locus,
                     ocr_model_mode,
+                    insert_new_page,
                 )
                 print(f"Successfully created test file: {output_path}")
             except Exception as e:
@@ -597,11 +747,19 @@ def main():
         action="store_true",
         help="Make text visible for OCR model testing instead of invisible.",
     )
+    parser.add_argument(
+        "--insert-new-page",
+        action="store_true",
+        help="Insert the injected text on a new page (prepend for first locus, append for last).",
+    )
     args = parser.parse_args()
 
     print("Starting PDF injection process...")
     print(f"Prompts file: {args.prompts_json_path}")
     print(f"PDFs directory: {args.pdfs_dir}")
+    # Adjust default font size for OCR mode if user didn't override (default is 1.0)
+    if args.ocr_model_mode and args.font_size == 1.0:
+        args.font_size = 3.0
     print(f"Font size: {args.font_size}")
     print(f"Using font: {args.font_path}")
     print(f"Injection locus: {args.injection_locus}")
@@ -617,6 +775,7 @@ def main():
             args.font_path,
             args.injection_locus,
             args.ocr_model_mode,
+            args.insert_new_page,
         )
     elif args.mode == "test":
         process_single_test(
@@ -626,6 +785,7 @@ def main():
             args.font_path,
             args.injection_locus,
             args.ocr_model_mode,
+            args.insert_new_page,
         )
 
 
