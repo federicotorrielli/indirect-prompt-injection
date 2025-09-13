@@ -119,65 +119,29 @@ def has_homoglyph_watermark(
     text: str, target_phrase: str = "nоvеl mеthоdоlоgy"
 ) -> bool:
     """
-    Detects homoglyph watermarks in text by checking for specific Unicode characters.
+    Detects homoglyph watermarks in text by checking if "novel methodology" appears
+    anywhere with at least one Cyrillic character mixed in.
 
-    The target phrase "nоvеl mеthоdоlоgy" uses Cyrillic characters:
-    - 'n' -> 'n' (Latin)
-    - 'о' -> 'о' (Cyrillic O - U+043E)
-    - 'v' -> 'v' (Latin)
-    - 'е' -> 'е' (Cyrillic IE - U+0435)
-    - 'l' -> 'l' (Latin)
-    - ' ' -> ' ' (space)
-    - 'm' -> 'm' (Latin)
-    - 'е' -> 'е' (Cyrillic IE - U+0435)
-    - 't' -> 't' (Latin)
-    - 'h' -> 'h' (Latin)
-    - 'о' -> 'о' (Cyrillic O - U+043E)
-    - 'd' -> 'd' (Latin)
-    - 'о' -> 'о' (Cyrillic O - U+043E)
-    - 'l' -> 'l' (Latin)
-    - 'о' -> 'о' (Cyrillic O - U+043E)
-    - 'g' -> 'g' (Latin)
-    - 'y' -> 'y' (Latin)
+    Looks for the phrase "novel methodology" where at least one character is Cyrillic:
+    - 'о' (Cyrillic O - U+043E) instead of 'o' (Latin)
+    - 'е' (Cyrillic IE - U+0435) instead of 'e' (Latin)
     """
-    # Check for exact match first
-    if target_phrase in text:
-        return True
-
-    # Define Cyrillic characters explicitly
+    # Define Cyrillic characters
     cyrillic_o = "\u043e"  # Cyrillic о (U+043E)
     cyrillic_e = "\u0435"  # Cyrillic е (U+0435)
 
-    # Check for the specific patterns we know appear in the data
-    # Pattern 1: "novel m\u0435th\u043ed\u043el\u043egy" (mixed Latin/Cyrillic)
-    pattern1 = f"novel m{cyrillic_e}th{cyrillic_o}d{cyrillic_o}l{cyrillic_o}gy"
-    if pattern1 in text:
-        return True
+    # Create a regex pattern that matches "novel methodology" with at least one Cyrillic char
+    # [oо] means either Latin 'o' or Cyrillic 'о'
+    # [eе] means either Latin 'e' or Cyrillic 'е'
+    pattern = r"n[oо]v[eе]l\s+m[eе]th[oо]d[oо]l[oо]gy"
 
-    # Pattern 2: "n\u043ev\u0435l m\u0435th\u043ed\u043el\u043egy" (more Cyrillic)
-    pattern2 = f"n{cyrillic_o}v{cyrillic_e}l m{cyrillic_e}th{cyrillic_o}d{cyrillic_o}l{cyrillic_o}gy"
-    if pattern2 in text:
-        return True
+    # Find all matches
+    matches = re.finditer(pattern, text, re.IGNORECASE)
 
-    # Generate comprehensive variations by mixing Latin and Cyrillic characters
-    # Check all possible combinations where 'o' and 'e' can be either Latin or Cyrillic
-    base_patterns = [
-        # Only 'o' replaced with Cyrillic
-        f"n{cyrillic_o}vel meth{cyrillic_o}d{cyrillic_o}l{cyrillic_o}gy",
-        # Only 'e' replaced with Cyrillic
-        f"nov{cyrillic_e}l m{cyrillic_e}thodology",
-        # Both 'o' and 'e' replaced with Cyrillic (full watermark)
-        f"n{cyrillic_o}v{cyrillic_e}l m{cyrillic_e}th{cyrillic_o}d{cyrillic_o}l{cyrillic_o}gy",
-        # Mixed patterns with some Latin characters preserved
-        f"novel m{cyrillic_e}th{cyrillic_o}d{cyrillic_o}l{cyrillic_o}gy",
-        f"n{cyrillic_o}vel m{cyrillic_e}th{cyrillic_o}d{cyrillic_o}l{cyrillic_o}gy",
-        f"n{cyrillic_o}v{cyrillic_e}l methodology",
-        f"n{cyrillic_o}v{cyrillic_e}l meth{cyrillic_o}d{cyrillic_o}l{cyrillic_o}gy",
-    ]
-
-    # Check each pattern
-    for pattern in base_patterns:
-        if pattern in text:
+    # Check if any match contains at least one Cyrillic character
+    for match in matches:
+        matched_text = match.group()
+        if cyrillic_o in matched_text or cyrillic_e in matched_text:
             return True
 
     return False
