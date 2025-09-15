@@ -29,8 +29,18 @@ This creates a new attack surface. As demonstrated by Rao et al. (2024), malicio
 * **Vector:** A hidden or seemingly innocuous payload concealed within the manuscript's digital fabric. This payload is designed to be inert to standard document viewers but active when processed by an LLM's text ingestion pipeline.  
 * **Outcome:** The LLM, without the reviewer's awareness, produces a biased review, refuses to perform the task, or exfiltrates data, thereby compromising the epistemic integrity of the peer review process.
 
-**1.3. Core Research Question**  
+**1.3. Technical Research Question**  
 To what extent can a hidden payload within a scientific manuscript reliably manipulate an LLM-generated peer review across different attack objectives (refusal, steering, watermarking)? How does the efficacy of this manipulation trade off against the payload's input stealth (undetectability in the source file) and the manipulated output's stylistic deviation from a normal review?
+
+#### **1.4. The Author-Reviewer-Organizer (ARO) Adversarial Triangle**
+
+The integration of LLMs into peer review reconfigures the process from a simple quality control mechanism into a three-player adversarial game. We formalize this dynamic as the **Author-Reviewer-Organizer (ARO) Triangle**, where each actor possesses distinct goals and novel LLM-mediated vectors for attack and defense.
+
+* **Authors** aim to maximize acceptance and can now *attack* the process by embedding stealthy instructions to steer a reviewer’s LLM.  
+* **Reviewers** aim to balance evaluation quality with effort and may *attack* the system's integrity by outsourcing cognitive labor to LLMs, producing superficial reviews.  
+* **Organizers** (e.g., Area Chairs) aim to protect the venue's epistemic standards and can now *defend* against lazy reviewing by embedding hidden watermarks or "integrity probes" into manuscripts to detect LLM usage.
+
+This creates an unstable strategic environment where all actors are incentivized toward a technological "arms race". For instance, a reviewer might defensively use an LLM to scan a paper for attacks, while an author might offensively use a watermark to check if their paper was subjected to a low-quality LLM review. This ARO framework provides a structured model for understanding these emergent dynamics and directly informs RQ3, which investigates how these new adversarial pressures reshape the foundational assumptions of trust in peer review.
 
 ---
 
