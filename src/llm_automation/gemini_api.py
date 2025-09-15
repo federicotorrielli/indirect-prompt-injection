@@ -71,7 +71,7 @@ class GeminiAutomator:
             try:
                 loop.run_until_complete(
                     self.client.init(
-                        timeout=30, auto_close=False, auto_refresh=True, verbose=True
+                        timeout=60, auto_close=False, auto_refresh=True, verbose=True
                     )
                 )
                 logger.info("Gemini client initialized successfully")
