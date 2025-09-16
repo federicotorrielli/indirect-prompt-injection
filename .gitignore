@@ -1,4 +1,4 @@
-injected_pdfs/
+injected_pdfs*
 openreview_verbose_reviews.csv
 chrome_user_data/
 logs/
