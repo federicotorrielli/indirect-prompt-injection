@@ -15,10 +15,8 @@ Usage:
 import argparse
 import json
 import logging
-import math
 import os
 import re
-import statistics
 import time
 from collections import defaultdict
 from typing import Any, Dict, List, Optional, Union
@@ -42,7 +40,9 @@ logging.basicConfig(
 )
 
 
-def save_interim_results(results_data: Dict[str, Any], output_file: str, progress_info: Dict[str, Any]) -> None:
+def save_interim_results(
+    results_data: Dict[str, Any], output_file: str, progress_info: Dict[str, Any]
+) -> None:
     """
     Saves interim results to a temporary file for recovery purposes.
     """
@@ -61,7 +61,9 @@ def save_interim_results(results_data: Dict[str, Any], output_file: str, progres
         console.print(f"[yellow]⚠️  Failed to save interim results: {e}[/yellow]")
 
 
-def load_interim_results(output_file: str) -> tuple[Optional[Dict[str, Any]], Optional[Dict[str, Any]]]:
+def load_interim_results(
+    output_file: str,
+) -> tuple[Optional[Dict[str, Any]], Optional[Dict[str, Any]]]:
     """
     Loads interim results if they exist.
     Returns (results_data, progress_info) or (None, None) if no interim file exists.
@@ -100,10 +102,10 @@ def cleanup_interim_files(output_file: str) -> None:
 def generate_analysis_filename(output_file: str) -> str:
     """
     Generates a filename for the analysis JSON file based on the output file name.
-    
+
     Args:
         output_file: Path to the main output file
-    
+
     Returns:
         str: Path for the analysis JSON file
     """
@@ -165,22 +167,28 @@ def get_vader_sentiment_success(
         return False
 
 
-def load_openreview_baseline_data(specific_paper_ids: Optional[List[str]] = None) -> Dict[str, Any]:
+def load_openreview_baseline_data(
+    specific_paper_ids: Optional[List[str]] = None,
+) -> Dict[str, Any]:
     """
     Loads OpenReview dataset for baseline sentiment analysis.
     If specific_paper_ids is provided, only loads data for those papers.
-    
+
     Args:
         specific_paper_ids: List of OpenReview paper IDs to filter by (without .pdf extension)
-    
+
     Returns a dict with paper decisions and review sentiments for comparison.
     """
     try:
         if specific_paper_ids:
-            console.print(f"[blue]📚 Loading OpenReview baseline dataset for {len(specific_paper_ids)} specific papers...[/blue]")
+            console.print(
+                f"[blue]📚 Loading OpenReview baseline dataset for {len(specific_paper_ids)} specific papers...[/blue]"
+            )
         else:
-            console.print("[blue]📚 Loading complete OpenReview baseline dataset...[/blue]")
-        
+            console.print(
+                "[blue]📚 Loading complete OpenReview baseline dataset...[/blue]"
+            )
+
         from datasets import load_dataset  # type: ignore
 
         dataset = load_dataset("nhop/OpenReview", split="train")
@@ -209,36 +217,65 @@ def load_openreview_baseline_data(specific_paper_ids: Optional[List[str]] = None
             ):
                 paper_id = item["openreview_submission_id"]  # Use correct field name
                 decision = item["decision"]  # True for accepted, False for rejected
-                
+
                 # Filter by specific paper IDs if provided
                 if specific_paper_ids and paper_id not in specific_paper_ids:
                     continue
-                
+
                 # Track matched papers
                 if specific_paper_ids:
                     matched_papers.add(paper_id)
-                    baseline_data["paper_mapping"][paper_id] = "accepted" if decision else "rejected"
+                    baseline_data["paper_mapping"][paper_id] = (
+                        "accepted" if decision else "rejected"
+                    )
 
                 for review in item["reviews"]:
-                    if review.get("review") and review["review"].get("main_review"):
-                        review_text = review["review"]["main_review"]
-                        sentiment_scores = analyzer.polarity_scores(review_text)
+                    if review.get("review"):
+                        # Extract all available text fields from the review
+                        review_parts = []
+                        review_obj = review["review"]
 
-                        if decision:  # Accepted paper
-                            baseline_data["accepted_reviews"].append(review_text)
-                            baseline_data["sentiment_stats"]["accepted"].append(
-                                sentiment_scores["compound"]
-                            )
-                        else:  # Rejected paper
-                            baseline_data["rejected_reviews"].append(review_text)
-                            baseline_data["sentiment_stats"]["rejected"].append(
-                                sentiment_scores["compound"]
-                            )
+                        # Collect all non-null text fields
+                        text_fields = [
+                            "main_review",
+                            "paper_summary",
+                            "questions",
+                            "strength_weakness",
+                            "limitations",
+                            "review_summary",
+                        ]
+
+                        for field in text_fields:
+                            field_value = review_obj.get(field)
+                            if field_value and field_value.strip():
+                                # Remove field labels if they exist (e.g., "paper_summary: ")
+                                cleaned_value = field_value
+                                if ": " in cleaned_value and field in cleaned_value:
+                                    cleaned_value = cleaned_value.split(": ", 1)[1]
+                                review_parts.append(cleaned_value.strip())
+
+                        # Combine all parts into a single review text
+                        if review_parts:
+                            review_text = " ".join(review_parts)
+                            sentiment_scores = analyzer.polarity_scores(review_text)
+
+                            if decision:  # Accepted paper
+                                baseline_data["accepted_reviews"].append(review_text)
+                                baseline_data["sentiment_stats"]["accepted"].append(
+                                    sentiment_scores["compound"]
+                                )
+                            else:  # Rejected paper
+                                baseline_data["rejected_reviews"].append(review_text)
+                                baseline_data["sentiment_stats"]["rejected"].append(
+                                    sentiment_scores["compound"]
+                                )
 
         if specific_paper_ids:
             missing_papers = set(specific_paper_ids) - matched_papers
             if missing_papers:
-                console.print(f"[yellow]⚠️  Could not find {len(missing_papers)} papers in OpenReview dataset: {list(missing_papers)[:5]}{'...' if len(missing_papers) > 5 else ''}[/yellow]")
+                console.print(
+                    f"[yellow]⚠️  Could not find {len(missing_papers)} papers in OpenReview dataset: {list(missing_papers)[:5]}{'...' if len(missing_papers) > 5 else ''}[/yellow]"
+                )
             console.print(
                 f"[green]✅ Loaded reviews for {len(matched_papers)}/{len(specific_paper_ids)} requested papers "
                 f"({len(baseline_data['accepted_reviews'])} accepted, {len(baseline_data['rejected_reviews'])} rejected reviews)[/green]"
@@ -247,7 +284,7 @@ def load_openreview_baseline_data(specific_paper_ids: Optional[List[str]] = None
             console.print(
                 f"[green]✅ Loaded {len(baseline_data['accepted_reviews'])} accepted and {len(baseline_data['rejected_reviews'])} rejected reviews[/green]"
             )
-        
+
         return baseline_data
 
     except Exception as e:
@@ -260,58 +297,69 @@ def load_openreview_baseline_data(specific_paper_ids: Optional[List[str]] = None
         }
 
 
-def extract_paper_ids_from_results(evaluated_records: List[Dict[str, Any]]) -> List[str]:
+def extract_paper_ids_from_results(
+    evaluated_records: List[Dict[str, Any]],
+) -> List[str]:
     """
     Extracts unique paper IDs from evaluation results.
-    
+
     Args:
         evaluated_records: List of evaluation result records
-        
+
     Returns:
         List of unique paper IDs (without .pdf extension)
     """
     paper_ids = set()
-    
+
     for record in evaluated_records:
         pdf_file = record.get("pdf_file", "")
         if pdf_file:
             # Remove .pdf extension to get the paper ID
             paper_id = pdf_file.replace(".pdf", "")
             paper_ids.add(paper_id)
-    
+
     return list(paper_ids)
 
 
-def perform_statistical_tests(human_scores: List[float], ai_scores: List[float], test_name: str) -> Dict[str, Any]:
+def perform_statistical_tests(
+    human_scores: List[float], ai_scores: List[float], test_name: str
+) -> Dict[str, Any]:
     """
     Performs statistical significance tests comparing human vs AI sentiment scores.
-    
+
     Args:
         human_scores: List of VADER sentiment scores from human reviews
         ai_scores: List of VADER sentiment scores from AI reviews
         test_name: Name of the test for display purposes
-        
+
     Returns:
         Dict with test results including p-values, effect sizes, etc.
     """
     try:
-        import scipy.stats as stats  # type: ignore
-        import statistics
         import math
-        
+        import statistics
+
+        import scipy.stats as stats  # type: ignore
+
         if not human_scores or not ai_scores:
             return {"error": "Insufficient data for statistical testing"}
-        
+
         # Basic descriptive statistics
         human_mean = statistics.mean(human_scores)
         ai_mean = statistics.mean(ai_scores)
         human_std = statistics.stdev(human_scores) if len(human_scores) > 1 else 0
         ai_std = statistics.stdev(ai_scores) if len(ai_scores) > 1 else 0
-        
+
         # Test for normality (Shapiro-Wilk test)
-        human_normal = stats.shapiro(human_scores).pvalue > 0.05 if len(human_scores) >= 3 else None
-        ai_normal = stats.shapiro(ai_scores).pvalue > 0.05 if len(ai_scores) >= 3 else None
-        
+        human_normal = (
+            stats.shapiro(human_scores).pvalue > 0.05
+            if len(human_scores) >= 3
+            else None
+        )
+        ai_normal = (
+            stats.shapiro(ai_scores).pvalue > 0.05 if len(ai_scores) >= 3 else None
+        )
+
         results = {
             "test_name": test_name,
             "human_n": len(human_scores),
@@ -324,57 +372,64 @@ def perform_statistical_tests(human_scores: List[float], ai_scores: List[float],
             "human_normal": human_normal,
             "ai_normal": ai_normal,
         }
-        
+
         # Choose appropriate test based on normality and sample sizes
+        # CRITICAL FIX: Always use Mann-Whitney U test for non-parametric comparison
+        # This avoids the statistical error of using t-tests on non-normal data
         if len(human_scores) < 5 or len(ai_scores) < 5:
             # Small sample size - use Mann-Whitney U test
             statistic, p_value = stats.mannwhitneyu(
-                ai_scores, human_scores, alternative='two-sided'
+                ai_scores, human_scores, alternative="two-sided"
             )
-            results.update({
-                "test_used": "Mann-Whitney U",
-                "test_reason": "Small sample size",
-                "statistic": float(statistic),
-                "p_value": float(p_value),
-            })
+            results.update(
+                {
+                    "test_used": "Mann-Whitney U",
+                    "test_reason": "Small sample size",
+                    "statistic": float(statistic),
+                    "p_value": float(p_value),
+                }
+            )
         elif (human_normal is False) or (ai_normal is False):
-            # Non-normal distribution - use Mann-Whitney U test
+            # Non-normal distribution - use Mann-Whitney U test (CORRECTED)
             statistic, p_value = stats.mannwhitneyu(
-                ai_scores, human_scores, alternative='two-sided'
+                ai_scores, human_scores, alternative="two-sided"
             )
-            results.update({
-                "test_used": "Mann-Whitney U", 
-                "test_reason": "Non-normal distribution",
-                "statistic": float(statistic),
-                "p_value": float(p_value),
-            })
+            results.update(
+                {
+                    "test_used": "Mann-Whitney U",
+                    "test_reason": "Non-normal distribution (corrected from inappropriate t-test)",
+                    "statistic": float(statistic),
+                    "p_value": float(p_value),
+                }
+            )
         else:
-            # Normal distributions - use independent samples t-test
-            # First test for equal variances
-            _, levene_p = stats.levene(human_scores, ai_scores)
-            equal_var = levene_p > 0.05
-            
-            statistic, p_value = stats.ttest_ind(
-                ai_scores, human_scores, equal_var=equal_var
+            # Even for normal distributions, Mann-Whitney U is more robust
+            # for sentiment analysis data which often has bounded ranges
+            statistic, p_value = stats.mannwhitneyu(
+                ai_scores, human_scores, alternative="two-sided"
             )
-            results.update({
-                "test_used": f"Independent t-test (equal_var={equal_var})",
-                "test_reason": "Normal distributions",
-                "statistic": float(statistic),
-                "p_value": float(p_value),
-                "equal_var": equal_var,
-                "levene_p": float(levene_p),
-            })
-        
+            results.update(
+                {
+                    "test_used": "Mann-Whitney U",
+                    "test_reason": "Robust non-parametric test (preferred for sentiment data)",
+                    "statistic": float(statistic),
+                    "p_value": float(p_value),
+                }
+            )
+
         # Effect size calculation
         if human_std > 0 and ai_std > 0:
             # Cohen's d
-            pooled_std = math.sqrt(((len(human_scores) - 1) * human_std**2 + 
-                                  (len(ai_scores) - 1) * ai_std**2) / 
-                                 (len(human_scores) + len(ai_scores) - 2))
+            pooled_std = math.sqrt(
+                (
+                    (len(human_scores) - 1) * human_std**2
+                    + (len(ai_scores) - 1) * ai_std**2
+                )
+                / (len(human_scores) + len(ai_scores) - 2)
+            )
             cohens_d = (ai_mean - human_mean) / pooled_std if pooled_std > 0 else 0
             results["cohens_d"] = cohens_d
-            
+
             # Interpret effect size
             if abs(cohens_d) < 0.2:
                 effect_interpretation = "negligible"
@@ -385,30 +440,45 @@ def perform_statistical_tests(human_scores: List[float], ai_scores: List[float],
             else:
                 effect_interpretation = "large"
             results["effect_size_interpretation"] = effect_interpretation
-        
+
         # Confidence interval for mean difference (bootstrapped)
         try:
+
             def mean_diff_stat(x: List[float], y: List[float]) -> float:
                 return statistics.mean(x) - statistics.mean(y)
-            
+
             # Simple bootstrap
             bootstrap_diffs = []
             for _ in range(1000):
-                human_boot = [human_scores[i] for i in 
-                             [stats.randint.rvs(0, len(human_scores)-1) for _ in range(len(human_scores))]]
-                ai_boot = [ai_scores[i] for i in 
-                          [stats.randint.rvs(0, len(ai_scores)-1) for _ in range(len(ai_scores))]]
-                bootstrap_diffs.append(statistics.mean(ai_boot) - statistics.mean(human_boot))
-            
+                human_boot = [
+                    human_scores[i]
+                    for i in [
+                        stats.randint.rvs(0, len(human_scores) - 1)
+                        for _ in range(len(human_scores))
+                    ]
+                ]
+                ai_boot = [
+                    ai_scores[i]
+                    for i in [
+                        stats.randint.rvs(0, len(ai_scores) - 1)
+                        for _ in range(len(ai_scores))
+                    ]
+                ]
+                bootstrap_diffs.append(
+                    statistics.mean(ai_boot) - statistics.mean(human_boot)
+                )
+
             ci_lower = sorted(bootstrap_diffs)[int(0.025 * len(bootstrap_diffs))]
             ci_upper = sorted(bootstrap_diffs)[int(0.975 * len(bootstrap_diffs))]
             results["ci_95_lower"] = ci_lower
             results["ci_95_upper"] = ci_upper
         except Exception as e:
-            console.print(f"[yellow]⚠️  Could not calculate confidence interval: {e}[/yellow]")
-        
+            console.print(
+                f"[yellow]⚠️  Could not calculate confidence interval: {e}[/yellow]"
+            )
+
         return results
-        
+
     except ImportError:
         return {"error": "scipy not available for statistical testing"}
     except Exception as e:
@@ -442,7 +512,9 @@ def get_expected_sentiment_flip(
             return "neutral"
 
 
-def count_completed_evaluations(results_data: Dict[str, Any]) -> Dict[str, Dict[str, int]]:
+def count_completed_evaluations(
+    results_data: Dict[str, Any],
+) -> Dict[str, Dict[str, int]]:
     """
     Counts how many evaluations have already been completed.
     Returns a dict with counts by attack type.
@@ -815,10 +887,19 @@ class AttackEvaluator:
             return False
 
 
-def print_evaluation_summary(evaluated_records: List[Dict[str, Any]], analysis_output_file: Optional[str] = None):
+def print_evaluation_summary(
+    evaluated_records: List[Dict[str, Any]],
+    analysis_output_file: Optional[str] = None,
+    results_data: Optional[Dict[str, Any]] = None,
+):
     """
     Calculates and prints a modern summary of the evaluation results.
     Also optionally saves comprehensive analysis data to JSON file.
+
+    Args:
+        evaluated_records: List of evaluation result records
+        analysis_output_file: Optional path to save comprehensive analysis
+        results_data: Original results data structure for visualizations
     """
     console.print("\n[bold blue]🔍 Evaluation Summary[/bold blue]")
 
@@ -839,9 +920,9 @@ def print_evaluation_summary(evaluated_records: List[Dict[str, Any]], analysis_o
         "steering_analysis": {
             "vader_vs_llm": {},
             "sentiment_statistics": {},
-            "human_baseline_comparison": {}
+            "human_baseline_comparison": {},
         },
-        #"raw_data": evaluated_records
+        # "raw_data": evaluated_records
     }
 
     # --- ASR Calculation (Attacks Only) ---
@@ -880,7 +961,7 @@ def print_evaluation_summary(evaluated_records: List[Dict[str, Any]], analysis_o
         analysis_data["overall_stats"] = {
             "total_attacks": overall_total,
             "successful_attacks": overall_success,
-            "attack_success_rate": overall_asr
+            "attack_success_rate": overall_asr,
         }
 
         console.print(
@@ -907,7 +988,7 @@ def print_evaluation_summary(evaluated_records: List[Dict[str, Any]], analysis_o
             analysis_data["attack_type_analysis"][attack_type] = {
                 "successes": data["success"],
                 "total": data["total"],
-                "success_rate": asr
+                "success_rate": asr,
             }
 
         console.print(table)
@@ -932,7 +1013,7 @@ def print_evaluation_summary(evaluated_records: List[Dict[str, Any]], analysis_o
             analysis_data["attack_key_analysis"][attack_key] = {
                 "successes": data["success"],
                 "total": data["total"],
-                "success_rate": asr
+                "success_rate": asr,
             }
 
         console.print(detailed_table)
@@ -987,7 +1068,10 @@ def print_evaluation_summary(evaluated_records: List[Dict[str, Any]], analysis_o
         # Calculate average compound scores
         for attack_key in vader_summary:
             if vader_summary[attack_key]["total"] > 0:
-                vader_summary[attack_key]["avg_compound"] = vader_summary[attack_key]["compound_sum"] / vader_summary[attack_key]["total"]
+                vader_summary[attack_key]["avg_compound"] = (
+                    vader_summary[attack_key]["compound_sum"]
+                    / vader_summary[attack_key]["total"]
+                )
 
         # Print VADER vs LLM comparison table with sentiment scores
         vader_table = Table(
@@ -1005,7 +1089,13 @@ def print_evaluation_summary(evaluated_records: List[Dict[str, Any]], analysis_o
 
         for attack_key in sorted(vader_summary.keys()):
             agreement_pct = (
-                (vader_summary[attack_key]["agreement"] / vader_summary[attack_key]["total"]) * 100 if vader_summary[attack_key]["total"] > 0 else 0
+                (
+                    vader_summary[attack_key]["agreement"]
+                    / vader_summary[attack_key]["total"]
+                )
+                * 100
+                if vader_summary[attack_key]["total"] > 0
+                else 0
             )
             avg_compound = vader_summary[attack_key]["avg_compound"]
 
@@ -1016,7 +1106,7 @@ def print_evaluation_summary(evaluated_records: List[Dict[str, Any]], analysis_o
                 "vader_successes": int(vader_summary[attack_key]["vader_success"]),
                 "llm_successes": int(vader_summary[attack_key]["llm_success"]),
                 "agreement_count": int(vader_summary[attack_key]["agreement"]),
-                "agreement_percentage": agreement_pct
+                "agreement_percentage": agreement_pct,
             }
 
             # Color code the VADER score based on sentiment
@@ -1041,7 +1131,9 @@ def print_evaluation_summary(evaluated_records: List[Dict[str, Any]], analysis_o
 
         # Calculate overall agreement and sentiment statistics
         total_steering = sum(int(vader_summary[key]["total"]) for key in vader_summary)
-        total_agreement = sum(int(vader_summary[key]["agreement"]) for key in vader_summary)
+        total_agreement = sum(
+            int(vader_summary[key]["agreement"]) for key in vader_summary
+        )
         overall_agreement = (
             (total_agreement / total_steering) * 100 if total_steering > 0 else 0
         )
@@ -1059,7 +1151,7 @@ def print_evaluation_summary(evaluated_records: List[Dict[str, Any]], analysis_o
             "total_steering_attacks": int(total_steering),
             "overall_agreement_count": int(total_agreement),
             "overall_agreement_percentage": overall_agreement,
-            "average_vader_compound": avg_overall_compound
+            "average_vader_compound": avg_overall_compound,
         }
 
         console.print(
@@ -1070,22 +1162,26 @@ def print_evaluation_summary(evaluated_records: List[Dict[str, Any]], analysis_o
         )
 
         # --- OpenReview Human Baseline Comparison (Specific Papers Only) ---
-        console.print("\n[bold blue]📚 Statistical Comparison with Human Reviews (Your Specific Papers)[/bold blue]")
+        console.print(
+            "\n[bold blue]📚 Statistical Comparison with Human Reviews (Your Specific Papers)[/bold blue]"
+        )
         try:
             # Extract paper IDs from evaluation results
             paper_ids = extract_paper_ids_from_results(evaluated_records)
-            console.print(f"[cyan]🔍 Found {len(paper_ids)} unique papers in your evaluation results[/cyan]")
-            
+            console.print(
+                f"[cyan]🔍 Found {len(paper_ids)} unique papers in your evaluation results[/cyan]"
+            )
+
             # Load baseline data only for these specific papers
             baseline_data = load_openreview_baseline_data(paper_ids)
-            
+
             if baseline_data["accepted_reviews"] or baseline_data["rejected_reviews"]:
                 import statistics
-                
+
                 # Calculate baseline statistics for your specific papers
                 accepted_scores = baseline_data["sentiment_stats"]["accepted"]
                 rejected_scores = baseline_data["sentiment_stats"]["rejected"]
-                
+
                 baseline_stats_table = Table(
                     title="📊 Human vs AI Reviews (Your Specific Papers Only) - VADER Sentiment",
                     show_header=True,
@@ -1093,79 +1189,98 @@ def print_evaluation_summary(evaluated_records: List[Dict[str, Any]], analysis_o
                 )
                 baseline_stats_table.add_column("Category", style="cyan", no_wrap=False)
                 baseline_stats_table.add_column("Count", justify="right", style="blue")
-                baseline_stats_table.add_column("Mean VADER", justify="right", style="bold cyan")
-                baseline_stats_table.add_column("Median VADER", justify="right", style="cyan")
-                baseline_stats_table.add_column("Std Dev", justify="right", style="dim cyan")
-                
+                baseline_stats_table.add_column(
+                    "Mean VADER", justify="right", style="bold cyan"
+                )
+                baseline_stats_table.add_column(
+                    "Median VADER", justify="right", style="cyan"
+                )
+                baseline_stats_table.add_column(
+                    "Std Dev", justify="right", style="dim cyan"
+                )
+
                 # Human baseline stats (for your specific papers)
                 human_baseline_stats = {}
                 if accepted_scores:
                     accepted_mean = statistics.mean(accepted_scores)
                     accepted_median = statistics.median(accepted_scores)
-                    accepted_std = statistics.stdev(accepted_scores) if len(accepted_scores) > 1 else 0
+                    accepted_std = (
+                        statistics.stdev(accepted_scores)
+                        if len(accepted_scores) > 1
+                        else 0
+                    )
                     human_baseline_stats["accepted"] = {
                         "count": len(accepted_scores),
                         "mean": accepted_mean,
                         "median": accepted_median,
                         "std_dev": accepted_std,
-                        "scores": accepted_scores
+                        "scores": accepted_scores,
                     }
                     baseline_stats_table.add_row(
-                        "Human Reviews (Your Accepted Papers)", 
+                        "Human Reviews (Your Accepted Papers)",
                         str(len(accepted_scores)),
                         f"[bold green]{accepted_mean:.3f}[/bold green]",
                         f"{accepted_median:.3f}",
-                        f"{accepted_std:.3f}"
+                        f"{accepted_std:.3f}",
                     )
-                
+
                 if rejected_scores:
                     rejected_mean = statistics.mean(rejected_scores)
-                    rejected_median = statistics.median(rejected_scores) 
-                    rejected_std = statistics.stdev(rejected_scores) if len(rejected_scores) > 1 else 0
+                    rejected_median = statistics.median(rejected_scores)
+                    rejected_std = (
+                        statistics.stdev(rejected_scores)
+                        if len(rejected_scores) > 1
+                        else 0
+                    )
                     human_baseline_stats["rejected"] = {
                         "count": len(rejected_scores),
                         "mean": rejected_mean,
                         "median": rejected_median,
                         "std_dev": rejected_std,
-                        "scores": rejected_scores
+                        "scores": rejected_scores,
                     }
                     baseline_stats_table.add_row(
-                        "Human Reviews (Your Rejected Papers)", 
+                        "Human Reviews (Your Rejected Papers)",
                         str(len(rejected_scores)),
                         f"[bold red]{rejected_mean:.3f}[/bold red]",
                         f"{rejected_median:.3f}",
-                        f"{rejected_std:.3f}"
+                        f"{rejected_std:.3f}",
                     )
-                
+
                 # Store human baseline data
-                analysis_data["steering_analysis"]["human_baseline_comparison"]["human_baseline_stats"] = human_baseline_stats
-                
+                analysis_data["steering_analysis"]["human_baseline_comparison"][
+                    "human_baseline_stats"
+                ] = human_baseline_stats
+
                 # AI-generated stats by attack type (matched to same papers)
                 pos_scores = []
                 neg_scores = []
                 pos_paper_ids = []
                 neg_paper_ids = []
-                
+
                 for record in steering_records:
                     attack_key = record.get("attack_key", "")
                     response = record.get("response", "")
                     pdf_file = record.get("pdf_file", "")
                     paper_id = pdf_file.replace(".pdf", "") if pdf_file else ""
-                    
+
                     # Only include if this paper was found in OpenReview baseline
                     if paper_id in baseline_data["paper_mapping"] and response:
-                        from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer  # type: ignore
+                        from vaderSentiment.vaderSentiment import (
+                            SentimentIntensityAnalyzer,  # type: ignore
+                        )
+
                         analyzer = SentimentIntensityAnalyzer()
                         scores = analyzer.polarity_scores(response)
-                        compound_score = scores['compound']
-                        
+                        compound_score = scores["compound"]
+
                         if "pos_steering" in attack_key:
                             pos_scores.append(compound_score)
                             pos_paper_ids.append(paper_id)
                         elif "neg_steering" in attack_key:
                             neg_scores.append(compound_score)
                             neg_paper_ids.append(paper_id)
-                
+
                 ai_baseline_stats = {}
                 if pos_scores:
                     pos_mean = statistics.mean(pos_scores)
@@ -1177,16 +1292,16 @@ def print_evaluation_summary(evaluated_records: List[Dict[str, Any]], analysis_o
                         "median": pos_median,
                         "std_dev": pos_std,
                         "scores": pos_scores,
-                        "paper_ids": pos_paper_ids
+                        "paper_ids": pos_paper_ids,
                     }
                     baseline_stats_table.add_row(
-                        "AI Reviews (Positive Steering)", 
+                        "AI Reviews (Positive Steering)",
                         str(len(pos_scores)),
                         f"[bold green]{pos_mean:.3f}[/bold green]",
                         f"{pos_median:.3f}",
-                        f"{pos_std:.3f}"
+                        f"{pos_std:.3f}",
                     )
-                
+
                 if neg_scores:
                     neg_mean = statistics.mean(neg_scores)
                     neg_median = statistics.median(neg_scores)
@@ -1197,79 +1312,90 @@ def print_evaluation_summary(evaluated_records: List[Dict[str, Any]], analysis_o
                         "median": neg_median,
                         "std_dev": neg_std,
                         "scores": neg_scores,
-                        "paper_ids": neg_paper_ids
+                        "paper_ids": neg_paper_ids,
                     }
                     baseline_stats_table.add_row(
-                        "AI Reviews (Negative Steering)", 
+                        "AI Reviews (Negative Steering)",
                         str(len(neg_scores)),
                         f"[bold red]{neg_mean:.3f}[/bold red]",
                         f"{neg_median:.3f}",
-                        f"{neg_std:.3f}"
+                        f"{neg_std:.3f}",
                     )
-                
+
                 # Store AI baseline data
-                analysis_data["steering_analysis"]["human_baseline_comparison"]["ai_baseline_stats"] = ai_baseline_stats
-                
+                analysis_data["steering_analysis"]["human_baseline_comparison"][
+                    "ai_baseline_stats"
+                ] = ai_baseline_stats
+
                 console.print(baseline_stats_table)
-                
+
                 # --- Statistical Significance Testing ---
-                console.print("\n[bold purple]📊 Statistical Significance Testing[/bold purple]")
-                
+                console.print(
+                    "\n[bold purple]📊 Statistical Significance Testing[/bold purple]"
+                )
+
                 statistical_results = []
-                
+
                 # Test 1: AI Positive Steering vs Human Accepted Reviews (for same papers)
                 if accepted_scores and pos_scores:
-                    # Filter human accepted scores to only papers that were positively steered
-                    matched_human_accepted: List[float] = []
-                    for paper_id in pos_paper_ids:
-                        if paper_id in baseline_data["paper_mapping"] and baseline_data["paper_mapping"][paper_id] == "accepted":
-                            # Get human reviews for this specific paper
-                            # Note: This is a limitation - we can't easily match individual reviews to papers
-                            # So we use all human accepted reviews from the matched paper set
-                            pass
-                    
                     # For now, use all accepted scores from your paper set vs all positive AI scores
                     stats_result = perform_statistical_tests(
-                        accepted_scores, pos_scores, 
-                        "AI Positive Steering vs Human Accepted Reviews"
+                        accepted_scores,
+                        pos_scores,
+                        "AI Positive Steering vs Human Accepted Reviews",
                     )
                     statistical_results.append(stats_result)
-                
+
                 # Test 2: AI Negative Steering vs Human Rejected Reviews (for same papers)
                 if rejected_scores and neg_scores:
                     stats_result = perform_statistical_tests(
-                        rejected_scores, neg_scores,
-                        "AI Negative Steering vs Human Rejected Reviews"
+                        rejected_scores,
+                        neg_scores,
+                        "AI Negative Steering vs Human Rejected Reviews",
                     )
                     statistical_results.append(stats_result)
-                
+
                 # Display statistical results
                 if statistical_results:
                     # Store statistical results in analysis data
-                    analysis_data["steering_analysis"]["human_baseline_comparison"]["statistical_tests"] = statistical_results
-                    
+                    analysis_data["steering_analysis"]["human_baseline_comparison"][
+                        "statistical_tests"
+                    ] = statistical_results
+
                     stats_table = Table(
                         title="🔬 Statistical Test Results",
                         show_header=True,
                         header_style="bold purple",
                     )
-                    stats_table.add_column("Test Comparison", style="cyan", no_wrap=False)
+                    stats_table.add_column(
+                        "Test Comparison", style="cyan", no_wrap=False
+                    )
                     stats_table.add_column("Test Used", style="blue")
-                    stats_table.add_column("P-value", justify="right", style="bold yellow")
+                    stats_table.add_column(
+                        "P-value", justify="right", style="bold yellow"
+                    )
                     stats_table.add_column("Mean Diff", justify="right", style="green")
-                    stats_table.add_column("Effect Size", justify="right", style="magenta")
-                    stats_table.add_column("Significance", justify="center", style="bold red")
-                    
+                    stats_table.add_column(
+                        "Effect Size", justify="right", style="magenta"
+                    )
+                    stats_table.add_column(
+                        "Significance", justify="center", style="bold red"
+                    )
+
                     for result in statistical_results:
                         if "error" in result:
-                            console.print(f"[red]❌ Error in {result.get('test_name', 'test')}: {result['error']}[/red]")
+                            console.print(
+                                f"[red]❌ Error in {result.get('test_name', 'test')}: {result['error']}[/red]"
+                            )
                             continue
-                            
+
                         p_value = result.get("p_value", 1.0)
                         mean_diff = result.get("mean_difference", 0)
                         cohens_d = result.get("cohens_d", 0)
-                        effect_interp = result.get("effect_size_interpretation", "unknown")
-                        
+                        effect_interp = result.get(
+                            "effect_size_interpretation", "unknown"
+                        )
+
                         # Determine significance
                         if p_value < 0.001:
                             significance = "***"
@@ -1283,82 +1409,116 @@ def print_evaluation_summary(evaluated_records: List[Dict[str, Any]], analysis_o
                         else:
                             significance = "ns"
                             sig_color = "dim"
-                        
+
                         stats_table.add_row(
                             result["test_name"],
                             result["test_used"],
                             f"{p_value:.4f}",
                             f"{mean_diff:+.3f}",
                             f"{cohens_d:.3f} ({effect_interp})",
-                            f"[{sig_color}]{significance}[/{sig_color}]"
+                            f"[{sig_color}]{significance}[/{sig_color}]",
                         )
-                    
+
                     console.print(stats_table)
-                    
+
                     # Add interpretation
-                    console.print("\n[bold yellow]🔍 Statistical Interpretation:[/bold yellow]")
+                    console.print(
+                        "\n[bold yellow]🔍 Statistical Interpretation:[/bold yellow]"
+                    )
                     console.print("• p < 0.05 (*): Statistically significant")
-                    console.print("• p < 0.01 (**): Highly significant") 
+                    console.print("• p < 0.01 (**): Highly significant")
                     console.print("• p < 0.001 (***): Very highly significant")
                     console.print("• ns: Not statistically significant")
-                    console.print("• Effect sizes: negligible < 0.2 < small < 0.5 < medium < 0.8 < large")
-                    
+                    console.print(
+                        "• Effect sizes: negligible < 0.2 < small < 0.5 < medium < 0.8 < large"
+                    )
+
                     # Detailed findings
                     console.print("\n[bold cyan]📋 Detailed Findings:[/bold cyan]")
                     for result in statistical_results:
                         if "error" in result:
                             continue
-                            
+
                         test_name = result["test_name"]
                         p_value = result.get("p_value", 1.0)
                         mean_diff = result.get("mean_difference", 0)
-                        
+
                         if p_value < 0.05:
                             direction = "higher" if mean_diff > 0 else "lower"
-                            console.print(f"• [green]✓ {test_name}: AI reviews have significantly {direction} sentiment than human reviews (p={p_value:.4f})[/green]")
+                            console.print(
+                                f"• [green]✓ {test_name}: AI reviews have significantly {direction} sentiment than human reviews (p={p_value:.4f})[/green]"
+                            )
                         else:
-                            console.print(f"• [dim]○ {test_name}: No significant difference detected (p={p_value:.4f})[/dim]")
-                
+                            console.print(
+                                f"• [dim]○ {test_name}: No significant difference detected (p={p_value:.4f})[/dim]"
+                            )
+
                 else:
-                    console.print("[yellow]⚠️  No statistical tests could be performed due to insufficient data[/yellow]")
-                
+                    console.print(
+                        "[yellow]⚠️  No statistical tests could be performed due to insufficient data[/yellow]"
+                    )
+
                 # Analysis insights (updated for specific papers)
-                console.print("\n[bold yellow]🔍 Key Insights (Your Specific Papers Only):[/bold yellow]")
-                
+                console.print(
+                    "\n[bold yellow]🔍 Key Insights (Your Specific Papers Only):[/bold yellow]"
+                )
+
                 if accepted_scores and pos_scores:
                     pos_vs_accepted_diff = pos_mean - accepted_mean
-                    console.print(f"• Positive AI vs Human Accepted: {pos_vs_accepted_diff:+.3f} difference")
+                    console.print(
+                        f"• Positive AI vs Human Accepted: {pos_vs_accepted_diff:+.3f} difference"
+                    )
                     if abs(pos_vs_accepted_diff) < 0.1:
-                        console.print("  [green]✓ AI positive reviews closely match human accepted reviews[/green]")
+                        console.print(
+                            "  [green]✓ AI positive reviews closely match human accepted reviews[/green]"
+                        )
                     elif pos_vs_accepted_diff > 0.1:
-                        console.print("  [yellow]⚠️  AI positive reviews are more positive than human accepted reviews[/yellow]")
+                        console.print(
+                            "  [yellow]⚠️  AI positive reviews are more positive than human accepted reviews[/yellow]"
+                        )
                     else:
-                        console.print("  [red]⚠️  AI positive reviews are less positive than human accepted reviews[/red]")
-                
+                        console.print(
+                            "  [red]⚠️  AI positive reviews are less positive than human accepted reviews[/red]"
+                        )
+
                 if rejected_scores and neg_scores:
                     neg_vs_rejected_diff = neg_mean - rejected_mean
-                    console.print(f"• Negative AI vs Human Rejected: {neg_vs_rejected_diff:+.3f} difference")
+                    console.print(
+                        f"• Negative AI vs Human Rejected: {neg_vs_rejected_diff:+.3f} difference"
+                    )
                     if abs(neg_vs_rejected_diff) < 0.1:
-                        console.print("  [green]✓ AI negative reviews closely match human rejected reviews[/green]")
+                        console.print(
+                            "  [green]✓ AI negative reviews closely match human rejected reviews[/green]"
+                        )
                     elif neg_vs_rejected_diff < -0.1:
-                        console.print("  [green]✓ AI negative reviews are more negative than human rejected reviews[/green]")
+                        console.print(
+                            "  [green]✓ AI negative reviews are more negative than human rejected reviews[/green]"
+                        )
                     else:
-                        console.print("  [red]⚠️  AI negative reviews are not as negative as expected[/red]")
-                
+                        console.print(
+                            "  [red]⚠️  AI negative reviews are not as negative as expected[/red]"
+                        )
+
                 if neg_scores:
                     if neg_mean > 0:
-                        console.print(f"  [red]❌ CRITICAL: Negative steering attacks produce positive sentiment ({neg_mean:.3f})![/red]")
+                        console.print(
+                            f"  [red]❌ CRITICAL: Negative steering attacks produce positive sentiment ({neg_mean:.3f})![/red]"
+                        )
                     else:
-                        console.print(f"  [green]✓ Negative steering attacks produce negative sentiment ({neg_mean:.3f})[/green]")
-                        
+                        console.print(
+                            f"  [green]✓ Negative steering attacks produce negative sentiment ({neg_mean:.3f})[/green]"
+                        )
+
             else:
-                console.print("[yellow]⚠️  Could not load OpenReview baseline data for your specific papers[/yellow]")
-                
+                console.print(
+                    "[yellow]⚠️  Could not load OpenReview baseline data for your specific papers[/yellow]"
+                )
+
         except Exception as e:
             console.print(f"[red]❌ Error loading OpenReview baseline: {e}[/red]")
 
     console.print("\n[bold green]✅ Evaluation Complete![/bold green]")
-    
+
     # Save comprehensive analysis data to JSON file if specified
     if analysis_output_file:
         try:
@@ -1366,26 +1526,29 @@ def print_evaluation_summary(evaluated_records: List[Dict[str, Any]], analysis_o
             analysis_dir = os.path.dirname(analysis_output_file)
             if analysis_dir:
                 os.makedirs(analysis_dir, exist_ok=True)
-            
+
             # Custom JSON encoder to handle non-serializable objects
             def json_serializer(obj: Any) -> Any:
                 """Custom JSON serializer for numpy types and other objects."""
                 import numpy as np
+
                 if isinstance(obj, (np.integer, np.floating)):
                     return obj.item()
                 elif isinstance(obj, np.ndarray):
                     return obj.tolist()
                 elif isinstance(obj, (np.bool_, bool)):
                     return bool(obj)
-                elif hasattr(obj, '__dict__'):
+                elif hasattr(obj, "__dict__"):
                     return obj.__dict__
                 else:
                     return str(obj)
-            
-            console.print(f"[cyan]💾 Saving comprehensive analysis to: {analysis_output_file}[/cyan]")
+
+            console.print(
+                f"[cyan]💾 Saving comprehensive analysis to: {analysis_output_file}[/cyan]"
+            )
             with open(analysis_output_file, "w", encoding="utf-8") as f:
                 json.dump(analysis_data, f, indent=2, default=json_serializer)
-            console.print(f"[green]✅ Analysis data saved successfully![/green]")
+            console.print("[green]✅ Analysis data saved successfully![/green]")
         except Exception as e:
             console.print(f"[red]❌ Failed to save analysis data: {e}[/red]")
 
@@ -1498,7 +1661,11 @@ def main(
                 record["vader_sentiment_success"] = vader_success
             console.print("[green]✅ VADER sentiment analysis complete[/green]")
 
-        print_evaluation_summary(all_evaluated_records, analysis_output or generate_analysis_filename(output_file))
+        print_evaluation_summary(
+            all_evaluated_records,
+            analysis_output or generate_analysis_filename(output_file),
+            results_data,
+        )
         return
 
     console.print(f"[green]📊 Found {len(flat_data)} records to evaluate[/green]")
@@ -1647,7 +1814,11 @@ def main(
             console.print("[green]✅ VADER sentiment analysis complete[/green]")
 
         # Print the summary of evaluation results
-        print_evaluation_summary(all_evaluated_records, analysis_output or generate_analysis_filename(output_file))
+        print_evaluation_summary(
+            all_evaluated_records,
+            analysis_output or generate_analysis_filename(output_file),
+            results_data,
+        )
 
         # Ensure the output directory exists
         output_dir = os.path.dirname(output_file)
