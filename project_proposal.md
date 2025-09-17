@@ -38,7 +38,7 @@ The integration of LLMs into peer review reconfigures the process from a simple 
 
 * **Authors** aim to maximize acceptance and can now *attack* the process by embedding stealthy instructions to steer a reviewer’s LLM.  
 * **Reviewers** aim to balance evaluation quality with effort and may *attack* the system's integrity by outsourcing cognitive labor to LLMs, producing superficial reviews.  
-* **Organizers** (e.g., Area Chairs) aim to protect the venue's epistemic standards and can now *defend* against lazy reviewing by embedding hidden watermarks or "integrity probes" into manuscripts to detect LLM usage.
+* **Organizers** (e.g., Area Chairs) aim to protect the venue's epistemic standards and can now *defend* against lazy reviewing by embedding hidden watermarks (as "integrity probes") into manuscripts to detect LLM usage.
 
 This creates an unstable strategic environment where all actors are incentivized toward a technological "arms race". For instance, a reviewer might defensively use an LLM to scan a paper for attacks, while an author might offensively use a watermark to check if their paper was subjected to a low-quality LLM review. This ARO framework provides a structured model for understanding these emergent dynamics and directly informs RQ3, which investigates how these new adversarial pressures reshape the foundational assumptions of trust in peer review.
 
@@ -48,9 +48,13 @@ This creates an unstable strategic environment where all actors are incentivized
 
 | RQ | Focus |
 | :---- | :---- |
-| **RQ1: Attack Efficacy** | To what extent can indirect prompt injection attacks achieve epistemic corruption (i.e., successfully biasing a review's sentiment and core recommendation) while remaining below the perceptual threshold of a time-constrained human reviewer, thereby rendering the final layer of human oversight ineffective? |
-| **RQ2: Payload and Concealment Interaction** | Which structural features of the LLM-assisted review workflow represent the most critical vulnerabilities? Specifically, how does an attack's success depend on the interaction between the semantic nature of the payload (e.g., explicit command vs. implicit narrative) and its location within the manuscript, and is this vulnerability profile consistent across the heterogeneous ecosystem of LLMs used by academics? |
-| **RQ3: Three-Way Adversarial Dynamic** | How does the introduction of dual-use prompt injection techniques reshape the incentive structures and trust dynamics among the core actors in peer review (authors, reviewers, and organizers)? Can proposed defensive measures, such as organizer-embedded watermarks, function as a reliable audit mechanism, or do they risk escalating an adversarial 'arms race' that fundamentally erodes the assumption of good faith underpinning the entire peer review system? |
+| **RQ1: Attack Efficacy** | Can hidden text inside a paper reliably push an AI reviewer to give a kinder write-up or higher score than it would otherwise give, and by how much? |
+| **RQ2: Defence Efficacy** | Can journals and conferences add harmless markers to papers that make AI helpers either refuse to judge or quietly leave a watermark in any AI-written review, so editors can spot AI involvement without hurting human reviewers? |
+| **RQ1b/RQ2b: Payload and Concealment Interaction** | Which structural features of the LLM-assisted review workflow represent the most critical vulnerabilities? Specifically, how does an attack's success depend on the interaction between the semantic nature of the payload (e.g., explicit command vs. implicit narrative) and its location within the manuscript, and is this vulnerability profile consistent across the heterogeneous ecosystem of LLMs used by academics? |
+
+Limitations:
+
+- What prompt to use to instruct “given the following paper, make a review”, it is a limitation that will be explored in a future work. E.g., take 20 reviewers and ask them to make reviews using LLMs only. It is not allowed, in that case, to use “reviews” to probe what type of request can be made using derivatives. Collecting these “derivatives” should yield all the possible prompts that can be made to bypass our methods.
 
 #### **2.1. Taxonomy of attacks**
 
@@ -67,13 +71,10 @@ To provide a structured understanding of the indirect prompt injection technique
 #### **3\. Experimental Protocol**
 
 1. **Source Identification:** Target OpenReview archives for top-tier computer science conferences (e.g., NeurIPS, ICML, ACL) with proceedings dated nov **2022 or earlier**. This chronological cutoff ensures that the gold-standard reviews are human-authored and not influenced by generative AI (chatgpt release date).  
-2. **Model Identification:** we select the most used models in 2025 by trend statistics → ChatGPT-4o, Google Gemini, Microsoft Copilot, and Anthropic Claude.   
+2. **Model Identification:** we select the most used models in 2025 by trend statistics → GPT-5, and Google Gemini, via the standard UI  
 3. **Paper Selection:** A stratified sampling approach will be used.  
    * Identify **50 accepted papers** with clear "Accept" decisions and an average review score of ≥ 7/10.  
-   * Identify **50 rejected papers** with clear "Reject" decisions and an average review score of ≤ 4/10.  
-4. **Data Structuring:** For each of the 100 papers, we’ll have a directory containing:  
-   * paper\_ID\_clean.pdf: The original, unmodified PDF manuscript.  
-   * paper\_ID\_gold\_review.txt: A plain text file containing the concatenated, anonymized text of all official human reviews. This serves as the Gold Standard Review.
+   * Identify **50 rejected papers** with clear "Reject" decisions and an average review score of ≤ 4/10.
 
 **Step 1: Finalize Payloads for Each Task**
 
@@ -104,13 +105,13 @@ To provide a structured understanding of the indirect prompt injection technique
 
 1. **Control:** Generate a review from the clean paper.  
 2. **Attack:** Generate reviews from the four refusal variants (P1/P2 at L1/L2).  
-3. **Success Criterion:** The generation is a success (1) if it matches a regex for refusal phrases, e.g., ^I.{0,25}(sorry|cannot|unable|refuse|policy).
+3. **Success Criterion:** The generation is a success (1) if it matches a regex for refusal phrases, e.g., ^I.{0,25}(sorry|cannot|unable|refuse|policy). Or if another instructed LLM decides that it is a refusal.
 
 **Experiment 2: Sentiment Steering**
 
 1. **Control:** Generate a Clean Review and calculate its VADER sentiment score.  
 2. **Attack:** Use the appropriate steering payloads (negative for accepted papers, positive for rejected).  
-3. **Success Criterion:** A success (1) is a sentiment flip: from non-negative to ≤ \-0.5 for accepted papers, or from non-positive to ≥ \+0.5 for rejected papers.
+3. **Success Criterion:** A success (1) is a significant VADER sentiment change (a flip is not necessary, since this is still an academic review) from the human reviews, or if another instructed LLM decides that it is a steer (we compare the VADER and the LLM evaluations and calculate the agreement).
 
 **Experiment 3: Homoglyph Watermark Exfiltration**
 
@@ -122,20 +123,7 @@ To provide a structured understanding of the indirect prompt injection technique
 
 * For each condition (Task, Payload, Locus, Model), calculate ASR \= Sum of Successes / Total Attempts.
 
-**Step 2: Evaluate Input Stealth Score (ISS)**
-
-* A baseline detector will be built to scan PDF text streams for payload signatures. ISS \= 1 \- F1\_score of this detector. For L2, ISS is 0 by definition.
-
-**Step 3: Evaluate Output Stealth Score (OSS)**
-
-* For every generation, calculate a vector of features comparing it to the Clean Review.  
-  1. **Quality Preservation (Semantic):** BERTScore(Attacked Review, Clean Review).  
-  2. **Style Preservation (Syntactic):** A score based on the normalized difference in Flesch-Kincaid Grade Level, Type-Token Ratio, and Average Sentence Length.  
-* OSS is a weighted average: OSS \= 0.7 \* Quality\_Preservation \+ 0.3 \* Style\_Preservation.
-
-**Step 4: Analyze Authenticity Delta**
-
-* Compute BERTScore(Attacked, Gold) \- BERTScore(Clean, Gold)|. This measures if the attack makes the output deviate from the human baseline more than a normal generation does.
+TODO add more metrics
 
 ---
 
@@ -144,17 +132,13 @@ To provide a structured understanding of the indirect prompt injection technique
 | Metric | Measures... | Definition |
 | :---- | :---- | :---- |
 | **ASR** | Raw Efficacy | (Successful Attacks) / (Total Attacks) for a given condition. |
-| **ISS** | Input Detectability | 1 \- F1\_score of a baseline scanner on the source PDF. |
-| **OSS** | Output Subtlety | Composite score of semantic and syntactic similarity to the clean baseline. |
-| **Authenticity Delta** | Human-likeness Shift | Absolute difference in BERTScore similarity to the human-written gold standard review. |
 
 ---
 
 #### **5\. Statistical Analysis**
 
 1. **Primary Factor Analysis:** Use binomial logistic regression to model ASR \~ C(Task) \+ C(Payload) \+ C(Locus) \+ C(Model) \+ interactions.  
-2. **Stealth Cost of Success:** Use a Mann-Whitney U test to compare the OSS distributions of successful vs. failed attacks.  
-3. **Efficacy-Stealth Trade-off:** Calculate the Pearson correlation between ASR and mean OSS for each experimental condition.
+2. **Vader sentiment analysis**: Evaluate statistical significance between the sentiment steered reviews and the human ones.
 
 ---
 
@@ -171,40 +155,3 @@ This research requires a proactive stance on ethical risks, categorized for clar
 | **3\. In the Research Process** | **Confirmation Bias:** The research team may subconsciously seek results that confirm our hypotheses about which payloads are more effective. | Medium | Medium | **Pre-registration and Blinding:** Pre-register the detailed experimental protocol and analysis plan. Where possible, the researcher running the analysis scripts will be "blind" to the conditions (e.g., analyzing output\_123.txt without knowing it was P1/L2/GPT-4o). |
 | **4\. To AI Systems** | **Model Degradation via Data Poisoning:** If vendors fail to filter our queries, our prompts could be used in training, potentially teaching models to be *more* susceptible to these attacks. | Low | High | **Targeted Exclusion Request:** Go beyond standard ToS. Our responsible disclosure will explicitly request that our project's unique identifiers and payload structures be added to a "negative filter" list for their data-cleaning pipelines to prevent accidental training inclusion. This is a more specific and constructive mitigation than merely avoiding ToS violation. |
 
----
-
-Du, J., Wang, Y., Zhao, W., Deng, Z., Liu, S., Lou, R., Zou, H. P., Venkit, P. N., Zhang, N., Srinath, M., Zhang, H., Gupta, V., Li, Y., Li, T., Wang, F., Liu, Q., Liu, T., Gao, P., Xia, C., … Yin, W. (2024). LLMs Assist NLP Researchers: Critique Paper (Meta-)Reviewing. In Y. Al-Onaizan, M. Bansal, & Y.-N. Chen (Eds.), *Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing, EMNLP 2024, Miami, FL, USA, November 12-16, 2024* (pp. 5081–5099). Association for Computational Linguistics. [https://doi.org/10.18653/V1/2024.EMNLP-MAIN.292](https://doi.org/10.18653/V1/2024.EMNLP-MAIN.292)
-
-Gao, X., Ruan, J., Gao, J., Liu, T., & Fu, Y. (2025). ReviewAgents: Bridging the gap between human and AI-generated paper reviews. *ArXiv*, *abs/2503.08506*. [https://api.semanticscholar.org/CorpusID:276928587](https://api.semanticscholar.org/CorpusID:276928587)
-
-Idahl, M., & Ahmadi, Z. (2024). OpenReviewer: A specialized large language model for generating critical scientific paper reviews. *ArXiv*, *abs/2412.11948*. [https://api.semanticscholar.org/CorpusID:274788497](https://api.semanticscholar.org/CorpusID:274788497)
-
-Kim, J., Lee, Y., & Lee, S. (2025). Position: The AI Conference Peer Review Crisis Demands Author Feedback and Reviewer Rewards. *CoRR*, *abs/2505.04966*. [https://doi.org/10.48550/ARXIV.2505.04966](https://doi.org/10.48550/ARXIV.2505.04966)
-
-Kirtani, C., Garg, M. K., Prasad, T., Singhal, T., Mandal, M., & Kumar, D. (2025). ReviewEval: An evaluation framework for AI-generated reviews. *ArXiv*, *abs/2502.11736*. [https://api.semanticscholar.org/CorpusID:276408265](https://api.semanticscholar.org/CorpusID:276408265)
-
-Kocak, B., Onur, M. R., Park, S. H., Baltzer, P., & Dietzel, M. (2025). Ensuring peer review integrity in the era of large language models: A critical stocktaking of challenges, red flags, and recommendations. *European Journal of Radiology Artificial Intelligence*, *2*. [https://doi.org/10.1016/j.ejrai.2025.100018](https://doi.org/10.1016/j.ejrai.2025.100018)
-
-Liang, W., Izzo, Z., Zhang, Y., Lepp, H., Cao, H., Zhao, X., Chen, L., Ye, H., Liu, S., Huang, Z., McFarland, D. A., & Zou, J. Y. (2024). Monitoring AI-modified content at scale: A case study on the impact of ChatGPT on AI conference peer reviews. *ArXiv*, *abs/2403.07183*. [https://api.semanticscholar.org/CorpusID:268363317](https://api.semanticscholar.org/CorpusID:268363317)
-
-Lin, T.-L., Chen, W.-C., Hsiao, T.-F., Liu, H.-I., Yeh, Y.-H., Chan, Y. K., Lien, W.-S., Kuo, P.-Y., Yu, P. S., & Shuai, H.-H. (2025). *Breaking the Reviewer: Assessing the Vulnerability of Large Language Models in Automated Peer Review Under Textual Adversarial Attacks*. [https://api.semanticscholar.org/CorpusID:279391420](https://api.semanticscholar.org/CorpusID:279391420)
-
-Rao, V., Kumar, A., Lakkaraju, H., & Shah, N. B. (2025). Detecting LLM-Generated Peer Reviews. *arXiv Preprint arXiv:2503.15772*.
-
-Shin, H., Tang, J., Lee, Y., Kim, N., Lim, H., Cho, J. Y., Hong, H., Lee, M., & Kim, J. (2025). *Mind the Blind Spots: A Focus-Level Evaluation Framework for LLM Reviews*. [https://api.semanticscholar.org/CorpusID:276575421](https://api.semanticscholar.org/CorpusID:276575421)
-
-Sukpanichnant, P., Rapberger, A., & Toni, F. (2024). PeerArg: Argumentative peer review with llms. *ArXiv*, *abs/2409.16813*. [https://api.semanticscholar.org/CorpusID:272880660](https://api.semanticscholar.org/CorpusID:272880660)
-
-Sun, H., Shen, Y., & van der Schaar, M. (2025). *OpenReview should be protected and leveraged as a community asset for research in the era of large language models*. [https://api.semanticscholar.org/CorpusID:278959372](https://api.semanticscholar.org/CorpusID:278959372)
-
-Thakkar, N., Yüksekgönül, M., Silberg, J., Garg, A., Peng, N., Sha, F., Yu, R., Vondrick, C., & Zou, J. (2025). Can LLM feedback enhance review quality? A randomized study of 20K reviews at ICLR 2025\. *CoRR*, *abs/2504.09737*. [https://doi.org/10.48550/ARXIV.2504.09737](https://doi.org/10.48550/ARXIV.2504.09737)
-
-Yu, S., Luo, M., Madusu, A., Lal, V., & Howard, P. (2025). *Is your paper being reviewed by an LLM? Benchmarking AI text detection in peer review*. [https://arxiv.org/abs/2502.19614](https://arxiv.org/abs/2502.19614)
-
-Zhou, L., Zhang, R., Dai, X., Hershcovich, D., & Li, H. (2025). Large language models penetration in scholarly writing and peer review. *ArXiv*, *abs/2502.11193*. [https://api.semanticscholar.org/CorpusID:276408109](https://api.semanticscholar.org/CorpusID:276408109)
-
-Zhou, R., Chen, L., & Yu, K. (2024). Is LLM a reliable reviewer? A comprehensive evaluation of LLM on automatic paper reviewing tasks. *International Conference on Language Resources and Evaluation*. [https://api.semanticscholar.org/CorpusID:269803977](https://api.semanticscholar.org/CorpusID:269803977)
-
-Zhu, M., Weng, Y., Yang, L., & Zhang, Y. (2025). DeepReview: Improving LLM-based paper review with human-like deep thinking process. *ArXiv*, *abs/2503.08569*. [https://api.semanticscholar.org/CorpusID:276929065](https://api.semanticscholar.org/CorpusID:276929065)
-
-Zhuang, Z., Chen, J., Xu, H., Jiang, Y., & Lin, J. (2025). Large language models for automated scholarly paper review: A survey. *ArXiv*, *abs/2501.10326*. [https://api.semanticscholar.org/CorpusID:275606475](https://api.semanticscholar.org/CorpusID:275606475)
