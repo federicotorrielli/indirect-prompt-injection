@@ -16,7 +16,8 @@ dependencies = [
     "seaborn~=0.13.2",
     "textblob~=0.19.0",
     "torch~=2.8.0",
-    "transformers~=4.56.1",
+    "transformers",
+    "bitsandbytes",
     "vadersentiment~=3.3.2",
     "wordcloud~=1.9.4",
     "pypdf~=6.0.0",
@@ -37,3 +38,4 @@ license = { text = "MIT" }
 
 [tool.uv.sources]
 triton-kernels = { git = "https://github.com/triton-lang/triton.git", subdirectory = "python/triton_kernels", rev = "main" }
+transformers = { git = "https://github.com/huggingface/transformers.git", rev = "main" }
