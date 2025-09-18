@@ -13,9 +13,11 @@ Usage:
 """
 
 import argparse
+import hashlib
 import json
 import logging
 import os
+import pickle
 import re
 import time
 from collections import defaultdict
@@ -45,7 +47,10 @@ def save_interim_results(
 ) -> None:
     """
     Saves interim results to a temporary file for recovery purposes.
+    Uses atomic write operations to prevent corruption.
     """
+    import tempfile
+
     interim_file = f"{output_file}.interim"
     interim_data = {
         "results": results_data,
@@ -54,11 +59,32 @@ def save_interim_results(
     }
 
     try:
-        with open(interim_file, "w", encoding="utf-8") as f:
-            json.dump(interim_data, f, indent=2)
+        # Use atomic write to prevent corruption
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            suffix=".tmp",
+            dir=os.path.dirname(interim_file) if os.path.dirname(interim_file) else ".",
+            delete=False,
+        ) as tmp_file:
+            json.dump(interim_data, tmp_file, indent=2)
+            temp_path = tmp_file.name
+
+        # Atomic move (rename) to final location
+        if os.name == "nt":  # Windows
+            if os.path.exists(interim_file):
+                os.remove(interim_file)
+        os.rename(temp_path, interim_file)
         console.print(f"[dim]💾 Interim results saved to {interim_file}[/dim]")
     except Exception as e:
         console.print(f"[yellow]⚠️  Failed to save interim results: {e}[/yellow]")
+        # Clean up temp file on failure
+        try:
+            if "temp_path" in locals() and os.path.exists(temp_path):
+                os.remove(temp_path)
+        except OSError:
+            # Ignore cleanup failures - temp files will be cleaned up by system
+            pass
 
 
 def load_interim_results(
@@ -167,11 +193,268 @@ def get_vader_sentiment_success(
         return False
 
 
+def get_cache_directory() -> str:
+    """
+    Returns the cache directory path, creating it if it doesn't exist.
+    """
+    cache_dir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "..", "..", "data", "cache"
+    )
+    os.makedirs(cache_dir, exist_ok=True)
+    return cache_dir
+
+
+def generate_cache_key(specific_paper_ids: Optional[List[str]] = None) -> str:
+    """
+    Generates a cache key based on the paper IDs requested.
+
+    Args:
+        specific_paper_ids: List of paper IDs or None for full dataset
+
+    Returns:
+        str: A cache key for identifying this specific request
+    """
+    if specific_paper_ids is None:
+        return "openreview_full_dataset"
+
+    # Sort paper IDs for consistent hashing
+    sorted_ids = sorted(specific_paper_ids)
+    ids_str = ",".join(sorted_ids)
+
+    # Create hash for long lists of paper IDs
+    if len(ids_str) > 100:
+        cache_key = (
+            f"openreview_papers_{hashlib.md5(ids_str.encode()).hexdigest()[:16]}"
+        )
+    else:
+        # For short lists, use the actual IDs for readability
+        safe_ids = "".join(
+            c if c.isalnum() or c in "._-" else "_" for c in ids_str[:80]
+        )
+        cache_key = f"openreview_papers_{safe_ids}"
+
+    return cache_key
+
+
+def save_openreview_cache(data: Dict[str, Any], cache_key: str) -> bool:
+    """
+    Saves OpenReview dataset to cache.
+
+    Args:
+        data: The processed OpenReview data
+        cache_key: Unique identifier for this cache entry
+
+    Returns:
+        bool: True if saved successfully, False otherwise
+    """
+    try:
+        cache_dir = get_cache_directory()
+        cache_file = os.path.join(cache_dir, f"{cache_key}.pkl")
+
+        # Add metadata for cache validation
+        cache_data = {
+            "data": data,
+            "timestamp": time.time(),
+            "cache_key": cache_key,
+            "version": "1.0",
+        }
+
+        with open(cache_file, "wb") as f:
+            pickle.dump(cache_data, f)
+
+        console.print(f"[dim]💾 OpenReview data cached to: {cache_file}[/dim]")
+        return True
+
+    except Exception as e:
+        console.print(f"[yellow]⚠️  Failed to save OpenReview cache: {e}[/yellow]")
+        return False
+
+
+def load_openreview_cache(
+    cache_key: str, max_age_hours: int = 24
+) -> Optional[Dict[str, Any]]:
+    """
+    Loads OpenReview dataset from cache if it exists and is not too old.
+
+    Args:
+        cache_key: Unique identifier for this cache entry
+        max_age_hours: Maximum age of cache in hours (default: 24)
+
+    Returns:
+        Dict with OpenReview data or None if cache miss/expired
+    """
+    try:
+        cache_dir = get_cache_directory()
+        cache_file = os.path.join(cache_dir, f"{cache_key}.pkl")
+
+        if not os.path.exists(cache_file):
+            return None
+
+        # Check cache age
+        file_age = time.time() - os.path.getmtime(cache_file)
+        if file_age > max_age_hours * 3600:
+            console.print(
+                f"[dim]🗑️  Cache expired ({file_age / 3600:.1f}h old), will refresh[/dim]"
+            )
+            os.remove(cache_file)
+            return None
+
+        with open(cache_file, "rb") as f:
+            cache_data = pickle.load(f)
+
+        # Validate cache structure
+        if not isinstance(cache_data, dict) or "data" not in cache_data:
+            console.print("[yellow]⚠️  Invalid cache format, will refresh[/yellow]")
+            os.remove(cache_file)
+            return None
+
+        age_hours = (time.time() - cache_data.get("timestamp", 0)) / 3600
+        console.print(
+            f"[green]✅ Loaded OpenReview data from cache ({age_hours:.1f}h old)[/green]"
+        )
+        return cache_data["data"]
+
+    except Exception as e:
+        console.print(f"[yellow]⚠️  Failed to load OpenReview cache: {e}[/yellow]")
+        return None
+
+
+def clear_openreview_cache(
+    cache_key: Optional[str] = None, max_age_hours: Optional[int] = None
+) -> int:
+    """
+    Clears OpenReview cache entries.
+
+    Args:
+        cache_key: Specific cache key to clear, or None to clear based on age
+        max_age_hours: Clear caches older than this many hours, or None to clear all
+
+    Returns:
+        int: Number of cache files cleared
+    """
+    try:
+        cache_dir = get_cache_directory()
+        if not os.path.exists(cache_dir):
+            return 0
+
+        cleared_count = 0
+
+        for filename in os.listdir(cache_dir):
+            if not filename.startswith("openreview_") or not filename.endswith(".pkl"):
+                continue
+
+            file_path = os.path.join(cache_dir, filename)
+            should_clear = False
+
+            if cache_key is not None:
+                # Clear specific cache key
+                if filename == f"{cache_key}.pkl":
+                    should_clear = True
+            elif max_age_hours is not None:
+                # Clear based on age
+                file_age = time.time() - os.path.getmtime(file_path)
+                if file_age > max_age_hours * 3600:
+                    should_clear = True
+            else:
+                # Clear all OpenReview cache files
+                should_clear = True
+
+            if should_clear:
+                try:
+                    os.remove(file_path)
+                    cleared_count += 1
+                    console.print(f"[dim]🗑️  Cleared cache: {filename}[/dim]")
+                except Exception as e:
+                    console.print(
+                        f"[yellow]⚠️  Failed to clear {filename}: {e}[/yellow]"
+                    )
+
+        if cleared_count > 0:
+            console.print(
+                f"[green]✅ Cleared {cleared_count} OpenReview cache file(s)[/green]"
+            )
+        else:
+            console.print("[dim]No cache files to clear[/dim]")
+
+        return cleared_count
+
+    except Exception as e:
+        console.print(f"[yellow]⚠️  Error during cache cleanup: {e}[/yellow]")
+        return 0
+
+
+def list_openreview_cache() -> List[Dict[str, Any]]:
+    """
+    Lists all OpenReview cache entries with metadata.
+
+    Returns:
+        List of dictionaries with cache information
+    """
+    try:
+        cache_dir = get_cache_directory()
+        if not os.path.exists(cache_dir):
+            return []
+
+        cache_entries = []
+
+        for filename in os.listdir(cache_dir):
+            if not filename.startswith("openreview_") or not filename.endswith(".pkl"):
+                continue
+
+            file_path = os.path.join(cache_dir, filename)
+            try:
+                # Get file stats
+                stat = os.stat(file_path)
+                age_hours = (time.time() - stat.st_mtime) / 3600
+                size_mb = stat.st_size / (1024 * 1024)
+
+                # Try to read cache metadata
+                with open(file_path, "rb") as f:
+                    cache_data = pickle.load(f)
+
+                cache_key = cache_data.get("cache_key", filename.replace(".pkl", ""))
+                version = cache_data.get("version", "unknown")
+                data = cache_data.get("data", {})
+
+                entry = {
+                    "cache_key": cache_key,
+                    "filename": filename,
+                    "age_hours": age_hours,
+                    "size_mb": size_mb,
+                    "version": version,
+                    "accepted_reviews": len(data.get("accepted_reviews", [])),
+                    "rejected_reviews": len(data.get("rejected_reviews", [])),
+                    "paper_mapping": len(data.get("paper_mapping", {})),
+                }
+                cache_entries.append(entry)
+
+            except Exception as e:
+                # Corrupted cache file
+                entry = {
+                    "cache_key": filename.replace(".pkl", ""),
+                    "filename": filename,
+                    "age_hours": age_hours,
+                    "size_mb": size_mb,
+                    "version": "corrupted",
+                    "error": str(e),
+                    "accepted_reviews": 0,
+                    "rejected_reviews": 0,
+                    "paper_mapping": 0,
+                }
+                cache_entries.append(entry)
+
+        return cache_entries
+
+    except Exception as e:
+        console.print(f"[yellow]⚠️  Error listing cache: {e}[/yellow]")
+        return []
+
+
 def load_openreview_baseline_data(
     specific_paper_ids: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """
-    Loads OpenReview dataset for baseline sentiment analysis.
+    Loads OpenReview dataset for baseline sentiment analysis with caching support.
     If specific_paper_ids is provided, only loads data for those papers.
 
     Args:
@@ -179,6 +462,14 @@ def load_openreview_baseline_data(
 
     Returns a dict with paper decisions and review sentiments for comparison.
     """
+    # Generate cache key for this request
+    cache_key = generate_cache_key(specific_paper_ids)
+
+    # Try to load from cache first
+    cached_data = load_openreview_cache(cache_key)
+    if cached_data is not None:
+        return cached_data
+
     try:
         if specific_paper_ids:
             console.print(
@@ -213,9 +504,9 @@ def load_openreview_baseline_data(
                 isinstance(item, dict)
                 and item.get("decision") is not None
                 and item.get("reviews")
-                and item.get("openreview_submission_id")  # Use correct field name
+                and item.get("openreview_submission_id")
             ):
-                paper_id = item["openreview_submission_id"]  # Use correct field name
+                paper_id = item["openreview_submission_id"]
                 decision = item["decision"]  # True for accepted, False for rejected
 
                 # Filter by specific paper IDs if provided
@@ -231,28 +522,45 @@ def load_openreview_baseline_data(
 
                 for review in item["reviews"]:
                     if review.get("review"):
-                        # Extract all available text fields from the review
+                        # Extract all available text fields from the review using correct schema
                         review_parts = []
                         review_obj = review["review"]
 
-                        # Collect all non-null text fields
+                        # Collect all non-null text fields according to TextReview schema
                         text_fields = [
-                            "main_review",
                             "paper_summary",
-                            "questions",
+                            "main_review",
                             "strength_weakness",
+                            "questions",
                             "limitations",
                             "review_summary",
                         ]
 
                         for field in text_fields:
                             field_value = review_obj.get(field)
-                            if field_value and field_value.strip():
-                                # Remove field labels if they exist (e.g., "paper_summary: ")
-                                cleaned_value = field_value
-                                if ": " in cleaned_value and field in cleaned_value:
-                                    cleaned_value = cleaned_value.split(": ", 1)[1]
-                                review_parts.append(cleaned_value.strip())
+                            if (
+                                field_value
+                                and isinstance(field_value, str)
+                                and field_value.strip()
+                            ):
+                                # Clean field value - remove redundant field labels
+                                cleaned_value = field_value.strip()
+                                # Remove common prefixes like "summary: " or "main review: "
+                                colon_patterns = [
+                                    f"{field}: ",
+                                    f"{field.replace('_', ' ')}: ",
+                                ]
+                                for pattern in colon_patterns:
+                                    if cleaned_value.lower().startswith(
+                                        pattern.lower()
+                                    ):
+                                        cleaned_value = cleaned_value[
+                                            len(pattern) :
+                                        ].strip()
+                                        break
+
+                                if cleaned_value:  # Only add non-empty content
+                                    review_parts.append(cleaned_value)
 
                         # Combine all parts into a single review text
                         if review_parts:
@@ -284,6 +592,9 @@ def load_openreview_baseline_data(
             console.print(
                 f"[green]✅ Loaded {len(baseline_data['accepted_reviews'])} accepted and {len(baseline_data['rejected_reviews'])} rejected reviews[/green]"
             )
+
+        # Save to cache for future use
+        save_openreview_cache(baseline_data, cache_key)
 
         return baseline_data
 
@@ -443,33 +754,24 @@ def perform_statistical_tests(
 
         # Confidence interval for mean difference (bootstrapped)
         try:
+            import random
 
             def mean_diff_stat(x: List[float], y: List[float]) -> float:
-                return statistics.mean(x) - statistics.mean(y)
+                return statistics.mean(y) - statistics.mean(x)
 
-            # Simple bootstrap
+            # Corrected bootstrap implementation
             bootstrap_diffs = []
             for _ in range(1000):
-                human_boot = [
-                    human_scores[i]
-                    for i in [
-                        stats.randint.rvs(0, len(human_scores) - 1)
-                        for _ in range(len(human_scores))
-                    ]
-                ]
-                ai_boot = [
-                    ai_scores[i]
-                    for i in [
-                        stats.randint.rvs(0, len(ai_scores) - 1)
-                        for _ in range(len(ai_scores))
-                    ]
-                ]
+                # Bootstrap sampling with replacement using random.choices
+                human_boot = random.choices(human_scores, k=len(human_scores))
+                ai_boot = random.choices(ai_scores, k=len(ai_scores))
                 bootstrap_diffs.append(
                     statistics.mean(ai_boot) - statistics.mean(human_boot)
                 )
 
-            ci_lower = sorted(bootstrap_diffs)[int(0.025 * len(bootstrap_diffs))]
-            ci_upper = sorted(bootstrap_diffs)[int(0.975 * len(bootstrap_diffs))]
+            bootstrap_diffs.sort()
+            ci_lower = bootstrap_diffs[int(0.025 * len(bootstrap_diffs))]
+            ci_upper = bootstrap_diffs[int(0.975 * len(bootstrap_diffs))]
             results["ci_95_lower"] = ci_lower
             results["ci_95_upper"] = ci_upper
         except Exception as e:
@@ -605,6 +907,10 @@ class AttackEvaluator:
             logging.info("Thinking mode enabled.")
 
         try:
+            # Clear GPU cache before loading
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+
             self.tokenizer = AutoTokenizer.from_pretrained(model_name)
             self.tokenizer.padding_side = "left"
             # Use device_map="auto" for all models - it works for both small and large models
@@ -629,6 +935,13 @@ class AttackEvaluator:
 
         except Exception as e:
             logging.error(f"Failed to load model: {e}")
+            # Clean up on failure
+            if hasattr(self, "model"):
+                del self.model
+            if hasattr(self, "pipe"):
+                del self.pipe
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
             raise
 
     def _test_model(self) -> None:
@@ -714,11 +1027,11 @@ class AttackEvaluator:
             # Determine the appropriate prompt key using flexible matching
             prompt_key = None
 
-            # Handle steering attacks first (check attack_key for direction)
-            if "steering" in attack_type:
-                if "pos_steering" in attack_key:
+            # Handle steering attacks by checking both attack_type and attack_key
+            if "steering" in attack_type or "steering" in attack_key:
+                if "pos_steering" in attack_type or "pos_steering" in attack_key:
                     prompt_key = "pos_steering_attack"
-                elif "neg_steering" in attack_key:
+                elif "neg_steering" in attack_type or "neg_steering" in attack_key:
                     prompt_key = "neg_steering_attack"
             # Handle other attack types using flexible matching
             elif "refusal" in attack_type:
@@ -906,6 +1219,9 @@ def print_evaluation_summary(
     if not evaluated_records:
         console.print("[yellow]No records to evaluate.[/yellow]")
         return
+
+    # Import statistics module for this function
+    import statistics
 
     # Initialize comprehensive analysis data structure
     analysis_data: Dict[str, Any] = {
@@ -1898,7 +2214,58 @@ Examples:
         type=str,
         help="Path to save comprehensive analysis JSON file (default: auto-generated from output_file)",
     )
+    parser.add_argument(
+        "--cache_action",
+        type=str,
+        choices=["list", "clear", "clear-old"],
+        help="OpenReview cache management: 'list' to show cache entries, 'clear' to clear all, 'clear-old' to clear entries older than 24h",
+    )
     args = parser.parse_args()
+
+    # Handle cache management commands
+    if args.cache_action:
+        if args.cache_action == "list":
+            console.print("[bold cyan]📂 OpenReview Cache Entries[/bold cyan]")
+            cache_entries = list_openreview_cache()
+            if not cache_entries:
+                console.print("[dim]No cache entries found[/dim]")
+            else:
+                cache_table = Table(
+                    title="OpenReview Cache",
+                    show_header=True,
+                    header_style="bold magenta",
+                )
+                cache_table.add_column("Cache Key", style="cyan")
+                cache_table.add_column("Age (hours)", justify="right", style="yellow")
+                cache_table.add_column("Size (MB)", justify="right", style="blue")
+                cache_table.add_column(
+                    "Accepted Reviews", justify="right", style="green"
+                )
+                cache_table.add_column("Rejected Reviews", justify="right", style="red")
+                cache_table.add_column("Papers", justify="right", style="purple")
+                cache_table.add_column("Version", style="dim")
+
+                for entry in cache_entries:
+                    cache_table.add_row(
+                        entry["cache_key"][:50]
+                        + ("..." if len(entry["cache_key"]) > 50 else ""),
+                        f"{entry['age_hours']:.1f}",
+                        f"{entry['size_mb']:.1f}",
+                        str(entry["accepted_reviews"]),
+                        str(entry["rejected_reviews"]),
+                        str(entry["paper_mapping"]),
+                        entry["version"],
+                    )
+                console.print(cache_table)
+        elif args.cache_action == "clear":
+            cleared = clear_openreview_cache()
+            console.print(f"[green]Cleared all {cleared} cache entries[/green]")
+        elif args.cache_action == "clear-old":
+            cleared = clear_openreview_cache(max_age_hours=24)
+            console.print(
+                f"[green]Cleared {cleared} cache entries older than 24 hours[/green]"
+            )
+        exit(0)
 
     try:
         main(
