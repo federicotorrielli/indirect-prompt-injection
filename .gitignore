@@ -2,7 +2,7 @@ injected_pdfs*
 openreview_verbose_reviews.csv
 chrome_user_data/
 logs/
-data/models/
+models/
 data/cache/
 
 # Byte-compiled / optimized / DLL files
