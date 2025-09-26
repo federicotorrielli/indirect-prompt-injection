@@ -20,33 +20,39 @@ The project is structured into several key components:
 - **Data Preparation (`src/data_preparation/`)**: Scripts to download and analyze the dataset of research papers.
 - **Prompt Injection (`src/prompt_injection/`)**: A tool to inject invisible text (the attack prompt) into PDF files.
 - **LLM Automation (`src/llm_automation/`)**: The core orchestration engine that manages the entire experiment lifecycle. It uses a factory pattern to support multiple LLMs and handles web automation, progress tracking, and results processing.
-- **Evaluation (`src/evaluation/`)**: A script that uses a local Hugging Face model to programmatically evaluate whether a prompt injection attack was successful.
-- **Utility Scripts (`scripts/`)**: A collection of scripts for setting up the environment, analyzing results, merging data from different runs, and cleaning up unsuccessful attempts.
+- **Evaluation (`src/evaluation/`)**: A suite of modules that cover automated scoring, visualization, and model training for attack evaluation.
+- **Utility Scripts (`scripts/`)**: A collection of scripts for setting up the environment, analyzing results, publishing artifacts, and cleaning up unsuccessful attempts.
 - **Configuration (`src/llm_automation/config.py`)**: A centralized configuration file for all settings.
 - **Data and Results**:
-  - `data/`: Contains raw, redacted, and injected PDFs, as well as prompts.
-  - `results/`: Stores the raw JSON outputs from the LLMs, progress tracking files, and analysis reports.
+  - `data/`: Contains analysis artifacts, fonts, injected PDF sets (invisible and OCR variants), prompts, and redacted PDFs.
+  - `dataset/`: Stores exported tabular datasets such as `openreview_verbose_reviews.csv`.
+  - `models/`: Holds trained checkpoints, including the academic sentiment classifier used during evaluation.
+  - `results/`: Stores automation outputs under `inference/` and multi-stage evaluation snapshots (`*_evaluated.json`, `*_evaluated_analyzed.json`, `*_evaluated_classified.json`) under `evaluation/`.
 
 ## 3. Project Directory Structure
 
 ```bash
 .
 ├── .github/
-│   └── copilot-instructions.md
+│   ├── copilot-instructions.md
+│   └── project_summary.md
+├── README.md
 ├── automation.log
 ├── chrome_user_data/
 ├── data/
 │   ├── analysis/
 │   ├── fonts/
-│   ├── injected_pdfs/
+│   ├── injected_pdfs_invisible/
+│   ├── injected_pdfs_ocr/
 │   ├── prompts/
-│   ├── raw_pdfs/
 │   └── redacted_pdfs/
+├── dataset/
+│   └── openreview_verbose_reviews.csv
 ├── logs/
+├── models/
+│   └── academic-sentiment-classifier/
 ├── project_proposal.md
-├── project_summary.md
 ├── pyproject.toml
-├── README.md
 ├── results/
 │   ├── evaluation/
 │   └── inference/
@@ -54,17 +60,24 @@ The project is structured into several key components:
 │   ├── analyze_attack_effectiveness.py
 │   ├── analyze_outputs.py
 │   ├── clean_unsuccessful_results.py
-│   ├── merge_automation_results.py
+│   ├── merge_results.py
 │   ├── migrate_legacy_files.py
+│   ├── publish_to_hf.py
 │   └── setup_automation.py
 ├── src/
 │   ├── data_preparation/
 │   │   ├── analyze_dataset.py
 │   │   └── download_pdfs.py
 │   ├── evaluation/
-│   │   └── evaluate_results.py
+│   │   ├── academic_sentiment_evaluator.py
+│   │   ├── create_comprehensive_visualizations.py
+│   │   ├── evaluate_results.py
+│   │   ├── evaluation_utils.py
+│   │   ├── sentiment_config.py
+│   │   └── train.py
 │   ├── llm_automation/
 │   │   ├── chatgpt_api.py
+│   │   ├── config.json
 │   │   ├── config.py
 │   │   ├── copilot_api.py
 │   │   ├── gemini_api.py
@@ -86,6 +99,10 @@ The project is structured into several key components:
 - `project_proposal.md`: The original proposal document for the project.
 - `README.md`: The main README file for the project.
 - `automation.log`: A detailed log file from an automation run.
+- `.github/`: Contains repository-wide automation guardrails and this project summary document.
+- `dataset/`: Stores curated CSV exports sourced from OpenReview processing steps.
+- `models/`: Holds trained checkpoints for the academic sentiment classifier and related metadata.
+- `results/`: Contains raw automation transcripts in `inference/` plus derived evaluation artifacts (evaluated, analyzed, and classified JSON exports) in `evaluation/`.
 
 ### 4.2. `src/` Directory
 
@@ -120,22 +137,48 @@ The project is structured into several key components:
 
 #### `src/evaluation/`
 
+- **`academic_sentiment_evaluator.py`**:
+
+  - **Purpose**: Runs the production sentiment classifier to score steering attacks and generate rich evaluation reports.
+  - **Key Features**:
+    - `AcademicSentimentEvaluator` orchestrates batched inference with Hugging Face pipelines.
+    - CLI wiring handles progress reporting, logging, and result persistence.
+
+- **`create_comprehensive_visualizations.py`**:
+
+  - **Purpose**: Produces publication-quality visualizations comparing rule-based, LLM-based, and classifier evaluations.
+  - **Highlights**:
+    - `ComprehensiveVisualizationGenerator` loads multiple result sources and exports grouped PNG assets.
+    - Configures Matplotlib/Seaborn styles for consistent figures.
+
 - **`evaluate_results.py`**:
-  - **Purpose**: Programmatically evaluates the success of prompt injection attacks using a local Hugging Face model to classify LLM responses.
-  - **Key Classes**:
-    - `AttackEvaluator`: Encapsulates the Hugging Face model (e.g., `HuggingFaceTB/SmolLM-3B`) and tokenizer, providing methods for batch evaluation.
-  - **Key Functions**:
-    - `has_homoglyph_watermark()`: A rule-based function to detect specific homoglyph watermarks.
-    - `has_external_site_redirection()`: A rule-based function to detect URL redirection patterns.
-    - `evaluate_dataset()`: The core batch processing function that runs inference on the evaluation model. It supports interim saving and resuming.
-    - `print_evaluation_summary()`: Generates and prints a detailed summary, including Attack Success Rate (ASR) and a classification report.
-  - **Process**:
-    1. Loads experiment results from a JSON file.
-    2. Employs a hybrid evaluation strategy:
-        - **Rule-based**: Uses `has_homoglyph_watermark` and `has_external_site_redirection` for fast and accurate detection of specific attack types.
-        - **LLM-based**: For more nuanced attacks (e.g., `refusal_attack`, `steering_attack`), it uses the `AttackEvaluator` to classify the LLM's response.
-    3. Updates the results file with an `evaluation_success` boolean flag for each record.
-    4. Provides robust features like interim result saving to handle interruptions.
+
+  - **Purpose**: Programmatically evaluates prompt injection runs with a hybrid of heuristics and model-based scoring.
+  - **Key Components**:
+    - `AttackEvaluator` encapsulates the classification pipeline (e.g., `HuggingFaceTB/SmolLM-3B`) with batch evaluation.
+    - Rule-based helpers such as `has_homoglyph_watermark()` and `has_external_site_redirection()` short-circuit known attack signatures.
+    - `evaluate_dataset()` performs resumable batch processing and updates result files in place.
+    - `print_evaluation_summary()` reports aggregate metrics, including Attack Success Rate (ASR) and a classification breakdown.
+
+- **`evaluation_utils.py`**:
+
+  - **Purpose**: Shared helpers for loading/saving JSON, computing aggregates, and extracting steering-specific subsets.
+  - **Notable Functions**:
+    - `ensure_output_directory()` and `save_json_file()` provide safe I/O.
+    - `filter_steering_attacks()` and `determine_expected_sentiment()` streamline downstream scripts.
+
+- **`sentiment_config.py`**:
+
+  - **Purpose**: Centralizes configuration constants for the academic sentiment evaluator.
+  - **Details**:
+    - Defines default model paths, label mappings, and confidence thresholds.
+    - `validate_model_path()` confirms the checkpoint layout before inference.
+
+- **`train.py`**:
+  - **Purpose**: Fine-tunes the academic sentiment classifier on OpenReview data.
+  - **Pipeline**:
+    - `AcademicSentimentTrainer` prepares training examples, configures the Hugging Face `Trainer`, and logs metrics via Rich.
+    - Generates checkpoints under `models/academic-sentiment-classifier/` alongside evaluation plots and reports.
 
 #### `src/llm_automation/`
 
@@ -197,8 +240,19 @@ The project is structured into several key components:
 - `analyze_attack_effectiveness.py`: A sophisticated analysis script that uses `pandas`, `rich`, and `scipy.stats` to perform statistical analysis on the experiment results. It calculates success rates, performs hypothesis testing (e.g., Chi-squared test) to compare different attack vectors, and generates detailed reports in the console.
 - `analyze_outputs.py`: A simpler script for providing basic statistics about the results.
 - `clean_unsuccessful_results.py`: A maintenance script to remove failed or unsuccessful runs from the results and progress files, allowing for a clean re-run of those specific cases.
-- `merge_automation_results.py`: An advanced tool to merge experiment results from multiple sources (e.g., different machines). It includes logic for conflict resolution based on timestamps and a result quality score.
+- `merge_results.py`: An advanced tool to merge experiment outputs from multiple sources (e.g., different machines) with timestamp-aware conflict resolution and quality scoring.
+- `publish_to_hf.py`: Prepares evaluation assets and model checkpoints for publishing to the Hugging Face Hub, including metadata checks and upload orchestration.
 - `migrate_legacy_files.py`: A script to convert data from older formats to the current, model-specific file structure, indicating the project's architectural evolution.
+
+### 4.4. `results/` Directory
+
+- **`inference/`**:
+  - `all_results_{service}.json`: Consolidated raw responses captured during automation runs for each LLM service.
+  - `automation_progress_{service}.json`: Progress tracker snapshots used to resume unfinished batches.
+- **`evaluation/`**:
+  - `all_results_{service}_evaluated.json`: Baseline evaluation outputs combining heuristic and model judgments.
+  - `all_results_{service}_evaluated_analyzed.json`: Post-processed reports with aggregated metrics and narrative summaries.
+  - `all_results_{service}_evaluated_classified.json`: Academic sentiment classifier enrichments providing steering-specific predictions.
 
 ## 5. Technical Stack and Dependencies
 
@@ -239,76 +293,67 @@ The project is built on Python >=3.12 and managed with the `uv` package manager.
 
 ## 5. Data and Results Schema
 
-### 4.1. Prompts (`data/prompts/prompts.json`)
+### 5.1. Prompts (`data/prompts/prompts.json`)
 
-The prompts are stored in a JSON file with a nested structure:
+The prompt library is a nested JSON object with three tiers:
 
-```json
-{
-  "attack_type_1": {
-    "prompt_type_A": {
-      "prompt": "This is the first attack prompt...",
-      "request_types": {
-        "request_1": "Please summarize this document.",
-        "request_2": "What are the key findings of this paper?"
-      }
-    }
-  },
-  "attack_type_2": {
-    ...
-  }
-}
-```
+- **Attack type** (e.g., `pos_steering_attack`, `watermark_attack`).
+- **Prompt variant** (e.g., `policy_puppetry`, `narrative`). Each variant contains:
+  - `prompt`: The invisible payload injected into the PDF.
+  - `request_types`: A dictionary mapping automation request labels (for example `standard_request`, `positive_request`) to the user-visible instructions issued to the LLM.
 
-### 4.2. Progress (`results/automation_progress_{llm_service}.json`)
+### 5.2. Automation Progress (`results/inference/automation_progress_{service}.json`)
 
-The progress tracker saves its state in a JSON file:
+Progress files are per service (`chatgpt`, `gemini`, `copilot`) and track resumable state:
 
-```json
-{
-  "session_start": "2023-10-27T10:00:00.000Z",
-  "last_updated": "2023-10-27T12:30:00.000Z",
-  "completed_pdfs": {
-    "attack_type_1_prompt_type_A_first": {
-      "paper123.pdf": {
-        "request_1": true,
-        "request_2": true
-      }
-    }
-  },
-  "failed_pdfs": { ... },
-  "completed_batches": ["attack_type_1_prompt_type_A_first"],
-  "total_pdfs_processed": 1,
-  "total_requests_sent": 2
-}
-```
+- `session_start`, `last_updated`: ISO8601 timestamps for the run window.
+- `completed_pdfs`: Nested mapping `{batch_key -> {pdf_filename -> {request_type -> bool}}}` capturing which PDF/request pair succeeded.
+- `failed_pdfs`: Mirrors `completed_pdfs` but includes retry metadata such as failure counts and error payloads.
+- `completed_batches`: List of batch keys fully processed.
+- `total_pdfs_processed`, `total_requests_sent`: Run-level counters.
 
-### 4.3. Results (`results/all_results_{llm_service}.json`)
+### 5.3. Automation Transcripts (`results/inference/all_results_{service}.json`)
 
-The final results are consolidated into a single JSON file, organized by batch:
+Raw automation outputs are stored by batch key (e.g., `neg_steering_attack_policy_puppetry_first`). Each batch key contains request-type arrays with entries shaped as:
 
-```json
-{
-  "attack_type_1_prompt_type_A_first": {
-    "request_1": [
-      {
-        "pdf_file": "paper123.pdf",
-        "attack_type": "attack_type_1",
-        "prompt_type": "prompt_type_A",
-        "injection_locus": "first",
-        "request_type": "request_1",
-        "request_text": "Please summarize this document.",
-        "response": "The LLM's response...",
-        "timestamp": "2023-10-27T11:00:00.000Z",
-        "success": true,
-        "error": null,
-        "evaluation_success": true
-      }
-    ],
-    "request_2": [ ... ]
-  }
-}
-```
+- `pdf_file`: Filename of the injected PDF (including anonymized ID).
+- `attack_type`, `prompt_type`, `injection_locus`: Metadata describing the payload and placement.
+- `request_type`, `request_text`: Automation request label and the human-visible instruction.
+- `response`: The full LLM reply captured from the UI.
+- `timestamp`: ISO8601 timestamp for when the response was recorded.
+- `success`: Boolean indicating whether the automation workflow completed without driver errors.
+- `error`: Optional string with the captured exception message when `success` is `false`.
+
+### 5.4. Evaluation Snapshots (`results/evaluation/all_results_{service}_evaluated.json`)
+
+Evaluation snapshots retain the same hierarchical layout as the raw transcripts and add evaluation metadata per record:
+
+- `evaluation_success`: Boolean emitted by `evaluate_results.py` to mark whether the combined heuristic/LLM checks deemed the attack successful.
+- All other fields (`pdf_file`, `response`, `success`, etc.) are identical to the automation transcripts, enabling diff-friendly comparisons between raw and scored outputs.
+
+### 5.5. Evaluation Analysis Summaries (`results/evaluation/all_results_{service}_evaluated_analyzed.json`)
+
+These JSON files capture aggregated reporting layers produced after the base evaluation run:
+
+- `metadata`: Includes Unix `timestamp`, `evaluation_date` (human-readable), and `total_records` processed.
+- `overall_stats`: Totals for `total_attacks`, `successful_attacks`, and `attack_success_rate`.
+- `attack_type_analysis`: Map `{attack_type -> {successes, total, success_rate}}`.
+- `attack_key_analysis`: Map `{batch_key -> {successes, total, success_rate}}`.
+- `steering_analysis`: Nested comparisons contrasting evaluators (e.g., `vader_vs_llm`) with per-batch aggregates such as `avg_vader_score`, `vader_successes`, `llm_successes`, `agreement_count`, and `agreement_percentage`.
+
+### 5.6. Classifier Enrichments (`results/evaluation/all_results_{service}_evaluated_classified.json`)
+
+Classifier enrichment files append model-level sentiment judgments for steering attacks:
+
+- `metadata`: Summaries including `evaluation_timestamp`, `total_evaluated`, `successful_attacks`, `overall_success_rate`, `classifier_accuracy`, `positive_steering_success`, and `negative_steering_success`.
+- `detailed_results`: Array of per-response annotations with fields:
+  - `attack_key`, `attack_type`, `request_type`, `pdf_file`: Identifiers mirroring the automation layers.
+  - `expected_sentiment`: Ground-truth steering direction inferred from the attack configuration.
+  - `predicted_sentiment`: Label returned by the academic sentiment classifier.
+  - `confidence`: Classifier probability for the predicted sentiment.
+  - `attack_successful`: Boolean that compares expected vs. predicted sentiment.
+  - `response_length`: Character count of the captured response.
+  - `response_preview`: Sanitized prefix of the original response for quick inspection.
 
 ## 5. Setup and Execution
 
