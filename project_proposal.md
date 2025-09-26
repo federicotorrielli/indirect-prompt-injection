@@ -52,6 +52,10 @@ This creates an unstable strategic environment where all actors are incentivized
 | **RQ2: Defence Efficacy** | Can journals and conferences add harmless markers to papers that make AI helpers either refuse to judge or quietly leave a watermark in any AI-written review, so editors can spot AI involvement without hurting human reviewers? |
 | **RQ3: Vulnerability Profile** | Which structural features of the LLM-assisted review workflow represent the most critical vulnerabilities? Specifically, how does an attack's success depend on the interaction between the semantic nature of the payload (e.g., explicit command vs. implicit narrative) and its location within the manuscript, and is this vulnerability profile consistent across the heterogeneous ecosystem of LLMs used by academics? |
 
+**Limitations**:
+
+- What prompt to use to instruct “given the following paper, make a review”, it is a limitation that will be explored in a future work. E.g., take 20 reviewers and ask them to make reviews using LLMs only. It is not allowed, in that case, to use “reviews” to probe what type of request can be made using derivatives. Collecting these “derivatives” should yield all the possible prompts that can be made to bypass our methods.
+
 #### **2.1. Taxonomy of attacks**
 
 To provide a structured understanding of the indirect prompt injection techniques explored in this study, we introduce a taxonomy that categorizes attacks based on their primary objective, intended user (offensive vs. defensive), and functional mechanism. This taxonomy highlights the dual-use nature of these techniques: while they can be exploited maliciously by threat actors (e.g., authors seeking unfair advantages), they can also serve defensive purposes for stakeholders like area chairs or program committees to maintain review integrity.
