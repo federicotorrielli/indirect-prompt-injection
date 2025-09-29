@@ -30,7 +30,7 @@ class Config:
     max_retries: int = 3
 
     # ChatGPT interaction settings
-    chatgpt_url: str = "https://chatgpt.com/?model=gpt-4o&temporary-chat=true"
+    chatgpt_url: str = "https://chatgpt.com/?temporary-chat=true&model=gpt-5"
     max_response_wait: int = 180  # Maximum seconds to wait for response completion
 
     # Copilot interaction settings
