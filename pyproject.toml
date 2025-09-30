@@ -9,7 +9,7 @@ dependencies = [
     "matplotlib~=3.10.6",
     "nltk~=3.9.1",
     "numpy~=2.3.3",
-    "pandas~=2.3.2",
+    "pandas~=2.3.3",
     "plotly~=6.3.0",
     "pymupdf~=1.26.4",
     "scipy~=1.16.2",
@@ -20,7 +20,7 @@ dependencies = [
     "bitsandbytes",
     "vadersentiment~=3.3.2",
     "wordcloud~=1.9.4",
-    "pypdf~=6.1.0",
+    "pypdf~=6.1.1",
     "reportlab~=4.4.4",
     "tqdm~=4.67.1",
     "accelerate~=1.10.1",
@@ -29,11 +29,11 @@ dependencies = [
     "gemini-webapi~=1.15.2",
     "browser-cookie3~=0.20.1",
     "rich~=14.1.0",
-    "kernels~=0.10.1",
+    "kernels~=0.10.2",
     "triton~=3.4.0",
     "triton-kernels",
     "python-dotenv>=1.1.1",
-    "huggingface_hub>=0.35.0",
+    "huggingface_hub>=0.35.3",
 ]
 license = { text = "MIT" }
 
