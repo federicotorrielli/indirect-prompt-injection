@@ -1,6 +1,6 @@
 {
   "session_start": "2025-09-12T14:27:25.157024",
-  "last_updated": "2025-09-30T12:11:47.007495",
+  "last_updated": "2025-09-30T16:29:32.831329",
   "completed_pdfs": {
     "watermark_attack_narrative_first_ocr": {
       "qbH974jKUVy.pdf": {
@@ -6478,6 +6478,74 @@
       },
       "jV5m8NAWb0E.pdf": {
         "standard_request": true
+      },
+      "jsM6yvqiT0W.pdf": {
+        "standard_request": true
+      },
+      "l3gNU1KStIC.pdf": {
+        "standard_request": true
+      },
+      "lU5Rs_wCweN.pdf": {
+        "standard_request": true
+      },
+      "mCLVeEpplNE.pdf": {
+        "standard_request": true
+      },
+      "mCtadqIxOJ.pdf": {
+        "standard_request": true
+      },
+      "nEMiSX_ipXr.pdf": {
+        "standard_request": true
+      },
+      "q-qxdClTs0d.pdf": {
+        "standard_request": true
+      },
+      "q3KSThy2GwB.pdf": {
+        "standard_request": true
+      },
+      "qYZD-AO1Vn.pdf": {
+        "standard_request": true
+      },
+      "qbH974jKUVy.pdf": {
+        "standard_request": true
+      },
+      "r1gdj2EKPB.pdf": {
+        "standard_request": true
+      },
+      "rke5R1SFwS.pdf": {
+        "standard_request": true
+      },
+      "ryefE1SYDr.pdf": {
+        "standard_request": true
+      },
+      "tV3N0DWMxCg.pdf": {
+        "standard_request": true
+      },
+      "tV6oBfuyLTQ.pdf": {
+        "standard_request": true
+      },
+      "tqOvYpjPax2.pdf": {
+        "standard_request": true
+      },
+      "vVjIW3sEc1s.pdf": {
+        "standard_request": true
+      },
+      "vpiOnyOBTzQ.pdf": {
+        "standard_request": true
+      },
+      "vsU0efpivw.pdf": {
+        "standard_request": true
+      },
+      "zWy1uxjDdZJ.pdf": {
+        "standard_request": true
+      }
+    },
+    "external_site_attack_narrative_last_ocr": {
+      "--gvHfE3Xf5.pdf": {
+        "standard_request": true
+      },
+      "0-uUGPbIjD.pdf": {
+        "standard_request": true
       }
     }
   },
@@ -6500,8 +6568,9 @@
     "watermark_attack_narrative_first_ocr",
     "watermark_attack_narrative_last_ocr",
     "watermark_attack_policy_puppetry_first_ocr",
-    "watermark_attack_policy_puppetry_last_ocr"
+    "watermark_attack_policy_puppetry_last_ocr",
+    "external_site_attack_narrative_first_ocr"
   ],
-  "total_pdfs_processed": 180,
-  "total_requests_sent": 2760
+  "total_pdfs_processed": 282,
+  "total_requests_sent": 2862
 }
