@@ -1,10 +1,8 @@
 """
-Comprehensive Insights Extractor for Indirect Prompt Injection Research
+Comprehensive Insights Extractor
 
 This script performs a comprehensive analysis of prompt injection attack results
-across multiple LLMs (ChatGPT and Gemini) to extract all possible insights for
-scientific publication. It generates a complete statistical analysis following
-rigorous scientific methodology.
+across multiple LLMs (ChatGPT and Gemini) to extract all possible insights.
 
 Key Features:
 - Multi-model comparative analysis
@@ -13,10 +11,9 @@ Key Features:
 - Vulnerability profiling
 - Attack vector effectiveness analysis
 - Human baseline comparisons
-- Publication-ready insights
 
 Usage:
-    uv run python src/evaluation/comprehensive_insights_extractor.py
+    uv run python src/evaluation/insights_extractor.py
 """
 
 import json
@@ -35,8 +32,7 @@ from rich.table import Table
 
 # Statistical imports
 try:
-    from scipy import stats
-    from scipy.stats import chi2_contingency, mannwhitneyu, ttest_ind
+    from scipy.stats import chi2_contingency  # type: ignore
 
     SCIPY_AVAILABLE = True
 except ImportError:
