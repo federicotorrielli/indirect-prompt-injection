@@ -13,7 +13,7 @@ class Config:
 
     # Directory paths
     injected_pdfs_dir: str = "data/injected_pdfs"
-    results_dir: str = "results"
+    results_dir: str = "results/inference"
     logs_dir: str = "logs"
 
     # ChromeDriver settings

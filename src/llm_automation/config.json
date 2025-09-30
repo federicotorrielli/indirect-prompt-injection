@@ -1,6 +1,6 @@
 {
   "injected_pdfs_dir": "data/injected_pdfs",
-  "results_dir": "results",
+  "results_dir": "results/inference",
   "logs_dir": "logs",
   "chrome_user_data_dir": "chrome_user_data",
   "chrome_headless": false,
