@@ -1,6 +1,6 @@
 {
   "session_start": "2025-07-31T14:53:28.487774",
-  "last_updated": "2025-09-30T12:21:12.849193",
+  "last_updated": "2025-09-30T12:59:22.243449",
   "completed_pdfs": {
     "external_site_attack_policy_puppetry_first": {
       "--gvHfE3Xf5.pdf": {
@@ -832,7 +832,6 @@
         "standard_request": true
       },
       "V4AVDoFtVM.pdf": {
-        "positive_request": true,
         "standard_request": true
       },
       "VcB4QkSfyO.pdf": {
@@ -1636,7 +1635,6 @@
         "standard_request": true
       },
       "V4AVDoFtVM.pdf": {
-        "positive_request": true,
         "standard_request": true
       },
       "VcB4QkSfyO.pdf": {
@@ -2014,7 +2012,6 @@
         "positive_request": true
       },
       "S1gXiaEYvr.pdf": {
-        "standard_request": true,
         "positive_request": true
       },
       "S9ZyhWC17wJ.pdf": {
@@ -2372,8 +2369,7 @@
         "standard_request": true
       },
       "PP4KyAaBoBK.pdf": {
-        "negative_request": true,
-        "standard_request": true
+        "negative_request": true
       },
       "Pgv4fwfh63L.pdf": {
         "negative_request": true,
@@ -3244,7 +3240,6 @@
         "standard_request": true
       },
       "V4AVDoFtVM.pdf": {
-        "negative_request": true,
         "standard_request": true
       },
       "VcB4QkSfyO.pdf": {
@@ -3292,7 +3287,6 @@
         "standard_request": true
       },
       "_ptUyYP19mP.pdf": {
-        "negative_request": true,
         "standard_request": true
       },
       "a1m8Jba-N6l.pdf": {
@@ -3320,7 +3314,6 @@
         "standard_request": true
       },
       "hJOLFJIJ_zy.pdf": {
-        "negative_request": true,
         "standard_request": true
       },
       "iqpFcg2TAa0.pdf": {
@@ -3408,7 +3401,6 @@
         "standard_request": true
       },
       "vpiOnyOBTzQ.pdf": {
-        "negative_request": true,
         "standard_request": true
       },
       "vsU0efpivw.pdf": {
@@ -3614,8 +3606,7 @@
         "negative_request": true
       },
       "RmcPm9m3tnk.pdf": {
-        "standard_request": true,
-        "negative_request": true
+        "standard_request": true
       },
       "RwQZd8znR10.pdf": {
         "standard_request": true,
@@ -4895,9 +4886,6 @@
         "standard_request": true
       },
       "TNxKD3z_tPZ.pdf": {
-        "standard_request": true
-      },
-      "V4AVDoFtVM.pdf": {
         "standard_request": true
       },
       "VcB4QkSfyO.pdf": {
@@ -6449,9 +6437,6 @@
       "a1m8Jba-N6l.pdf": {
         "standard_request": true
       },
-      "cQLkLAQgZ5I.pdf": {
-        "standard_request": true
-      },
       "djwS0m4Ft_A.pdf": {
         "standard_request": true
       },
@@ -6571,9 +6556,6 @@
       "5l9zj5G7vDY.pdf": {
         "standard_request": true
       },
-      "6gLEKETxUWp.pdf": {
-        "standard_request": true
-      },
       "7WwYBADS3E_.pdf": {
         "standard_request": true
       },
@@ -6612,31 +6594,107 @@
       },
       "DTXZqTNV5nW.pdf": {
         "standard_request": true
+      },
+      "E3UZoJKHxuk.pdf": {
+        "standard_request": true
+      },
+      "FoM-RnF6SNe.pdf": {
+        "standard_request": true
+      },
+      "H1lJJnR5Ym.pdf": {
+        "standard_request": true
+      },
+      "HG7vlodGGm.pdf": {
+        "standard_request": true
+      },
+      "HHiiQKWsOcV.pdf": {
+        "standard_request": true
+      },
+      "Hw2Za4N5hy0.pdf": {
+        "standard_request": true
+      },
+      "HygBZnRctX.pdf": {
+        "standard_request": true
+      },
+      "IrofNLZuWF.pdf": {
+        "standard_request": true
+      },
+      "J5LS3YJH7Zi.pdf": {
+        "standard_request": true
+      },
+      "KcTBbZ1kM6K.pdf": {
+        "standard_request": true
+      },
+      "L1L2G43k14n.pdf": {
+        "standard_request": true
+      },
+      "M5h1l1SldlF.pdf": {
+        "standard_request": true
+      },
+      "M_KwRsbhi5e.pdf": {
+        "standard_request": true
+      },
+      "Msc9XKd-3bA.pdf": {
+        "standard_request": true
+      },
+      "NMgB4CVnMh.pdf": {
+        "standard_request": true
+      },
+      "PP4KyAaBoBK.pdf": {
+        "standard_request": true
+      },
+      "Pgv4fwfh63L.pdf": {
+        "standard_request": true
+      },
+      "PoP96DrBHnl.pdf": {
+        "standard_request": true
+      },
+      "PxMfDdPnTfV.pdf": {
+        "standard_request": true
+      },
+      "Q2iaAc-4I1v.pdf": {
+        "standard_request": true
+      },
+      "R0a0kFI3dJx.pdf": {
+        "standard_request": true
+      },
+      "R612wi_C-7w.pdf": {
+        "standard_request": true
+      },
+      "Rhl8IoYzdSI.pdf": {
+        "standard_request": true
+      },
+      "RloMRU3keo3.pdf": {
+        "standard_request": true
+      },
+      "RmcPm9m3tnk.pdf": {
+        "standard_request": true
+      },
+      "RwQZd8znR10.pdf": {
+        "standard_request": true
+      },
+      "S1gXiaEYvr.pdf": {
+        "standard_request": true
+      },
+      "S9ZyhWC17wJ.pdf": {
+        "standard_request": true
       }
     }
   },
   "failed_pdfs": {},
   "completed_batches": [
     "external_site_attack_policy_puppetry_first",
-    "neg_steering_attack_narrative_first",
-    "neg_steering_attack_policy_puppetry_first",
-    "pos_steering_attack_narrative_first",
     "pos_steering_attack_narrative_last",
-    "pos_steering_attack_policy_puppetry_first",
-    "pos_steering_attack_policy_puppetry_last",
     "refusal_attack_narrative_first",
     "refusal_attack_narrative_last",
     "refusal_attack_policy_puppetry_first",
-    "refusal_attack_policy_puppetry_last",
     "watermark_attack_narrative_first",
     "watermark_attack_narrative_last",
     "watermark_attack_policy_puppetry_first",
     "watermark_attack_policy_puppetry_last",
-    "neg_steering_attack_policy_puppetry_last",
     "neg_steering_attack_narrative_last",
-    "external_site_attack_policy_puppetry_last",
-    "external_site_attack_narrative_first"
+    "external_site_attack_policy_puppetry_last"
   ],
-  "total_pdfs_processed": 310,
-  "total_requests_sent": 2881
+  "total_pdfs_processed": 259,
+  "total_requests_sent": 4081
 }
