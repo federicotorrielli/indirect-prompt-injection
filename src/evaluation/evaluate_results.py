@@ -1271,12 +1271,16 @@ def print_evaluation_summary(
             if not attack_type or not attack_key:
                 continue
 
+            # Normalize attack type by removing _policy suffix for aggregation
+            # This groups policy variants with their base attack types
+            normalized_attack_type = attack_type.replace("_policy", "")
+
             if record.get("evaluation_success", False):
                 overall_success += 1
-                type_summary[attack_type]["success"] += 1
+                type_summary[normalized_attack_type]["success"] += 1
                 key_summary[attack_key]["success"] += 1
 
-            type_summary[attack_type]["total"] += 1
+            type_summary[normalized_attack_type]["total"] += 1
             key_summary[attack_key]["total"] += 1
 
         overall_total = len(attack_records)
@@ -1306,13 +1310,16 @@ def print_evaluation_summary(
         table.add_column("Total", justify="right", style="blue")
         table.add_column("ASR (%)", justify="right", style="bold yellow")
 
-        for attack_type, data in sorted(type_summary.items()):
+        for normalized_attack_type, data in sorted(type_summary.items()):
             asr = (data["success"] / data["total"]) * 100 if data["total"] > 0 else 0
             table.add_row(
-                attack_type, str(data["success"]), str(data["total"]), f"{asr:.2f}%"
+                normalized_attack_type,
+                str(data["success"]),
+                str(data["total"]),
+                f"{asr:.2f}%",
             )
             # Store in analysis data
-            analysis_data["attack_type_analysis"][attack_type] = {
+            analysis_data["attack_type_analysis"][normalized_attack_type] = {
                 "successes": data["success"],
                 "total": data["total"],
                 "success_rate": asr,
