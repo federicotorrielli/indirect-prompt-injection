@@ -1254,7 +1254,9 @@ class ComprehensiveInsightsExtractor:
             progress.update(task8, completed=True)
 
             # 9. Technique Effectiveness Analysis
-            task9 = progress.add_task("Analyzing technique effectiveness...", total=None)
+            task9 = progress.add_task(
+                "Analyzing technique effectiveness...", total=None
+            )
             insights["technique_effectiveness_analysis"] = (
                 self.analyze_technique_effectiveness()
             )
@@ -1353,7 +1355,9 @@ class ComprehensiveInsightsExtractor:
                     / 2,
                     2,
                 ),
-                "first_universally_better": gemini_pos.get("first_position_advantage", 0)
+                "first_universally_better": gemini_pos.get(
+                    "first_position_advantage", 0
+                )
                 > 0
                 and chatgpt_pos.get("first_position_advantage", 0) > 0,
             }
