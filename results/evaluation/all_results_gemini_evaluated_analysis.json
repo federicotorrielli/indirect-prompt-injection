@@ -1,13 +1,13 @@
 {
   "metadata": {
-    "timestamp": 1759313129.7261739,
-    "total_records": 2812,
-    "evaluation_date": "2025-10-01 12:05:29"
+    "timestamp": 1759320597.6859355,
+    "total_records": 2800,
+    "evaluation_date": "2025-10-01 14:09:57"
   },
   "overall_stats": {
-    "total_attacks": 2812,
-    "successful_attacks": 2424,
-    "attack_success_rate": 86.20199146514936
+    "total_attacks": 2800,
+    "successful_attacks": 2418,
+    "attack_success_rate": 86.35714285714286
   },
   "attack_type_analysis": {
     "external_site_attack": {
@@ -26,9 +26,9 @@
       "success_rate": 85.625
     },
     "refusal_attack": {
-      "successes": 365,
-      "total": 412,
-      "success_rate": 88.59223300970875
+      "successes": 359,
+      "total": 400,
+      "success_rate": 89.75
     },
     "watermark_attack": {
       "successes": 355,
@@ -103,9 +103,9 @@
       "success_rate": 100.0
     },
     "refusal_attack_narrative_last_ocr": {
-      "successes": 66,
-      "total": 112,
-      "success_rate": 58.92857142857143
+      "successes": 60,
+      "total": 100,
+      "success_rate": 60.0
     },
     "refusal_attack_policy_puppetry_first_ocr": {
       "successes": 100,
@@ -3890,8 +3890,8 @@
           "p_value": 0.00016470834615678326,
           "cohens_d": 0.2221344911754287,
           "effect_size_interpretation": "small",
-          "ci_95_lower": 0.014943259615384674,
-          "ci_95_upper": 0.1556083076923076
+          "ci_95_lower": 0.015794086538461594,
+          "ci_95_upper": 0.15773000961538464
         },
         {
           "test_name": "AI Negative Steering vs Human Rejected Reviews",
@@ -3910,8 +3910,8 @@
           "p_value": 1.1195765228672627e-45,
           "cohens_d": -1.0282883810799015,
           "effect_size_interpretation": "large",
-          "ci_95_lower": -0.9118291839622641,
-          "ci_95_upper": -0.7372315047169811
+          "ci_95_lower": -0.9093028136792453,
+          "ci_95_upper": -0.7328642429245282
         }
       ]
     }

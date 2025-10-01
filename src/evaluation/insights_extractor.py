@@ -129,8 +129,8 @@ class ComprehensiveInsightsExtractor:
         console.print("[blue]📊 Loading comprehensive evaluation data...[/blue]")
 
         evaluation_files = {
-            "chatgpt_analyzed": "all_results_chatgpt_evaluated_analyzed.json",
-            "gemini_analyzed": "all_results_gemini_evaluated_analyzed.json",
+            "chatgpt_analyzed": "all_results_chatgpt_evaluated_analysis.json",
+            "gemini_analyzed": "all_results_gemini_evaluated_analysis.json",
             "chatgpt_classified": "all_results_chatgpt_evaluated_classified.json",
             "gemini_classified": "all_results_gemini_evaluated_classified.json",
         }

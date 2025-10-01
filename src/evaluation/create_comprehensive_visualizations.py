@@ -798,7 +798,7 @@ def main():
 
     # Construct file paths based on model name
     base_path = Path("results/evaluation")
-    analyzed_path = base_path / f"all_results_{args.model_name}_evaluated_analyzed.json"
+    analyzed_path = base_path / f"all_results_{args.model_name}_evaluated_analysis.json"
     classified_path = (
         base_path / f"all_results_{args.model_name}_evaluated_classified.json"
     )
