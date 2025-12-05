@@ -1,12 +1,5 @@
 """
 Create composite visualizations for the paper, combining ChatGPT and Gemini results.
-
-This script generates publication-ready figures that present side-by-side comparisons
-of both models, designed for strategic placement in Section 4 of the paper:
-- Subsection 4.5: Granular Vulnerability Profile Analysis
-- Subsection 4.6: Quantifying the Impact of Sentiment Steering
-- Subsection 4.7: Linguistic Footprints of Successful Attacks
-- Subsection 4.8: Robustness of Evaluation Methodology
 """
 
 import argparse

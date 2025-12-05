@@ -2,16 +2,7 @@
 Academic Sentiment Classifier Evaluation Script
 
 This script evaluates prompt injection attack results using a trained academic
-sentiment classifier model. It's designed as a production-ready, focused
-evaluation tool that complements the existing evaluate_results.py script.
-
-Key Features:
-- Loads and uses a trained academic sentiment classifier
-- Focuses specifically on sentiment steering attacks
-- Production-ready with proper error handling and logging
-- Batch processing for efficiency
-- Comprehensive evaluation metrics and reporting
-- Clean, modular architecture following SOLID principles
+sentiment classifier model.
 
 Usage:
     uv run python src/evaluation/academic_sentiment_evaluator.py <input_file> <output_file>
