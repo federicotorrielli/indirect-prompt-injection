@@ -9,7 +9,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-import undetected_chromedriver as uc
+import undetected as uc
 from config import Config
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
