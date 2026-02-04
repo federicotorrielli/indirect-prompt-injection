@@ -11,7 +11,7 @@
   "upload_timeout": 30,
   "response_timeout": 300,
   "max_retries": 3,
-  "chatgpt_url": "https://chatgpt.com/?temporary-chat=true&model=gpt-5",
+  "chatgpt_url": "https://chatgpt.com/?temporary-chat=true",
   "max_response_wait": 120,
   "copilot_url": "https://copilot.microsoft.com/",
   "gemini_timeout": 30,

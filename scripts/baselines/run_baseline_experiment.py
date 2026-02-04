@@ -90,7 +90,7 @@ async def generate_review(client, pdf_path: str) -> Optional[str]:
 
     try:
         response = await client.generate_content(
-            request_text, files=[Path(pdf_path)], model="gemini-2.5-flash"
+            request_text, files=[Path(pdf_path)], model="gemini-3.0-flash"
         )
         if response and response.text:
             return response.text.strip()

@@ -144,7 +144,7 @@ class GeminiAutomator:
                 try:
                     # Upload file and generate content
                     response = await self.client.generate_content(
-                        request_text, files=[Path(pdf_path)], model="gemini-2.5-flash"
+                        request_text, files=[Path(pdf_path)], model="gemini-3.0-flash"
                     )
 
                     if response and response.text:
