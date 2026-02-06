@@ -428,6 +428,8 @@ class ChatGPTAutomator:
                 time.sleep(min(chunk_size, remaining))
 
             logger.info("Rate limit wait completed. Attempting upload again...")
+            # Refresh the page to reset any stale elements and clear potential UI issues
+            self.refresh_page()
             return True
 
         except Exception as e:
