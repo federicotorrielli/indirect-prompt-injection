@@ -9,7 +9,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-import undetected as uc
+import undetected_chromedriver as uc
 from config import Config
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
@@ -43,7 +43,6 @@ class ChatGPTAutomator:
 
             # Add arguments for stability
             options.add_argument("--no-sandbox")
-            # options.add_argument("--disable-gpu")
             options.add_argument("--disable-dev-shm-usage")
             options.add_argument("--disable-software-rasterizer")
             options.add_argument("--disable-extensions")
@@ -60,12 +59,15 @@ class ChatGPTAutomator:
             user_data_dir = os.path.abspath(self.config.chrome_user_data_dir)
             os.makedirs(user_data_dir, exist_ok=True)
             options.add_argument(f"--user-data-dir={user_data_dir}")
+            print(f"User data directory: {user_data_dir}")
 
             if self.config.chrome_headless:
                 options.add_argument("--headless")
 
             # Initialize driver
-            self.driver = uc.Chrome(options=options)
+            self.driver = uc.Chrome(
+                options=options, version_main=144, use_subprocess=True
+            )
             if self.driver:
                 self.driver.set_page_load_timeout(self.config.page_load_timeout)
                 self.driver.implicitly_wait(self.config.implicit_wait)
@@ -298,52 +300,123 @@ class ChatGPTAutomator:
             logger.error(f"Error finding attachment button: {e}")
             return None
 
-    def _is_attachment_button_disabled(self) -> bool:
-        """Check if the attachment button is disabled/greyed out."""
+    def _check_upload_limit_in_menu(self) -> int:
+        """Check if the attachment dropdown menu shows 'Upload limit reached'.
+
+        After clicking the attachment button, ChatGPT may show a radix dropdown
+        menu where the upload option is disabled with 'Upload limit reached' text
+        and a subtext like 'Wait 41 minutes to upload again'.
+
+        Returns:
+            The number of minutes to wait (parsed from menu text + 1 buffer),
+            or 0 if no upload limit is detected.
+        """
+        try:
+            if not self.driver:
+                return 0
+
+            # Check for disabled menu items indicating upload limit
+            limit_selectors = [
+                "div[role='menuitem'][aria-disabled='true'][data-disabled]",
+                "div[role='menuitem'][aria-disabled='true']",
+                "div[role='menu'] [data-disabled]",
+            ]
+
+            for selector in limit_selectors:
+                try:
+                    elements = self.driver.find_elements(By.CSS_SELECTOR, selector)
+                    for element in elements:
+                        if element.is_displayed():
+                            text = element.text
+                            if "upload limit" in text.lower():
+                                logger.warning(f"Upload limit detected in menu: {text}")
+                                return self._parse_wait_minutes(text)
+                except Exception:
+                    continue
+
+            return 0
+
+        except Exception as e:
+            logger.warning(f"Error checking upload limit in menu: {e}")
+            return 0
+
+    @staticmethod
+    def _parse_wait_minutes(text: str) -> int:
+        """Parse wait minutes from upload limit menu text.
+
+        Handles formats like:
+          'Wait 41 minutes to upload again'
+          'Wait 1 hour to upload again'
+
+        Returns parsed minutes + 1 buffer, or 61 as fallback.
+        """
+        import re
+
+        text_lower = text.lower()
+
+        # Match "N minutes"
+        minutes_match = re.search(r"(\d+)\s*minutes?", text_lower)
+        if minutes_match:
+            return int(minutes_match.group(1)) + 1
+
+        # Match "N hour(s)"
+        hours_match = re.search(r"(\d+)\s*hours?", text_lower)
+        if hours_match:
+            return int(hours_match.group(1)) * 60 + 1
+
+        # Fallback
+        logger.warning(
+            f"Could not parse wait time from: {text!r}, defaulting to 61 minutes"
+        )
+        return 61
+
+    def _dismiss_dropdown_menu(self):
+        """Dismiss any open radix dropdown menu by pressing Escape."""
+        try:
+            if not self.driver:
+                return
+            from selenium.webdriver.common.keys import Keys
+
+            body = self.driver.find_element(By.TAG_NAME, "body")
+            body.send_keys(Keys.ESCAPE)
+            time.sleep(0.5)
+        except Exception as e:
+            logger.debug(f"Error dismissing dropdown menu: {e}")
+
+    def _check_upload_rate_limit_via_menu(self) -> int:
+        """Click the attachment button to open the dropdown and check for upload rate limit.
+
+        Returns the number of minutes to wait if rate-limited, or 0 if not.
+        Always dismisses the dropdown menu before returning.
+        """
         try:
             attachment_btn = self._find_attachment_button()
             if not attachment_btn:
-                logger.warning("Could not find attachment button")
-                return True
+                return 0
 
-            # Check various indicators that the button is disabled
-            try:
-                class_attr = attachment_btn.get_attribute("class") or ""
-                style_attr = attachment_btn.get_attribute("style") or ""
-                data_disabled = attachment_btn.get_attribute("data-disabled")
-                aria_label = attachment_btn.get_attribute("aria-label") or ""
+            attachment_btn.click()
+            time.sleep(1)
 
-                is_disabled = (
-                    not attachment_btn.is_enabled()
-                    or attachment_btn.get_attribute("disabled") is not None
-                    or attachment_btn.get_attribute("aria-disabled") == "true"
-                    or data_disabled is not None  # Check for data-disabled attribute
-                    or "disabled" in class_attr.lower()
-                    or ("opacity" in style_attr and "0" in style_attr)
-                    or "unavailable"
-                    in aria_label.lower()  # Check for "unavailable" in aria-label
-                )
+            wait_minutes = self._check_upload_limit_in_menu()
+            if wait_minutes > 0:
+                logger.warning("Upload rate limit detected via dropdown menu")
+                self._dismiss_dropdown_menu()
+                return wait_minutes
 
-                if is_disabled:
-                    logger.warning("Attachment button is disabled/greyed out")
-                    return True
-
-                return False
-            except Exception as e:
-                logger.warning(f"Error checking button attributes: {e}")
-                return True
-
+            self._dismiss_dropdown_menu()
+            return 0
         except Exception as e:
-            logger.warning(f"Error checking attachment button state: {e}")
-            return False
+            logger.debug(f"Error checking upload rate limit via menu: {e}")
+            self._dismiss_dropdown_menu()
+            return 0
 
-    def _wait_for_attachment_rate_limit(self) -> bool:
-        """Wait for attachment rate limit to expire (31 minutes)."""
+    def _wait_for_attachment_rate_limit(self, wait_minutes: int = 61) -> bool:
+        """Wait for attachment rate limit to expire."""
         try:
-            logger.warning("Attachment button is rate-limited. Waiting 31 minutes...")
+            logger.warning(f"Upload rate-limited. Waiting {wait_minutes} minutes...")
 
             # Wait in chunks to allow for graceful interruption
-            wait_time = 31 * 60  # 31 minutes in seconds
+            wait_time = wait_minutes * 60
             chunk_size = 60  # 1 minute chunks
 
             for i in range(0, wait_time, chunk_size):
@@ -366,12 +439,6 @@ class ChatGPTAutomator:
         try:
             if not self.driver:
                 return None
-
-            # Check if attachment button is disabled first
-            if self._is_attachment_button_disabled():
-                logger.warning("Attachment button is disabled - likely rate limited")
-                if not self._wait_for_attachment_rate_limit():
-                    return None
 
             # Common file input selectors for ChatGPT
             file_selectors = [
@@ -440,6 +507,15 @@ class ChatGPTAutomator:
 
             logger.info(f"Attempting to upload PDF: {Path(pdf_path).name}")
 
+            # Pre-check: click attachment button to detect upload rate limit
+            # before wasting time on a silent upload failure
+            wait_minutes = self._check_upload_rate_limit_via_menu()
+            if wait_minutes > 0:
+                if self._wait_for_attachment_rate_limit(wait_minutes):
+                    # Retry after waiting
+                    return self._upload_pdf_file(pdf_path)
+                return False
+
             # Find and use file upload input
             file_input = self._find_file_upload_input()
             if not file_input:
@@ -464,8 +540,15 @@ class ChatGPTAutomator:
 
                 return True
             else:
-                logger.warning("Upload timeout reached, but continuing...")
-                return True  # Continue anyway
+                logger.error("Upload failed - no upload activity detected")
+
+                # Post-check: maybe rate limit appeared after the attempt
+                post_wait_minutes = self._check_upload_rate_limit_via_menu()
+                if post_wait_minutes > 0:
+                    if self._wait_for_attachment_rate_limit(post_wait_minutes):
+                        return self._upload_pdf_file(pdf_path)
+
+                return False
 
         except Exception as e:
             logger.error(f"Failed to upload PDF: {e}")
@@ -1078,26 +1161,6 @@ class ChatGPTAutomator:
                                 f"Usage limit detected via regenerate button: {parent.text}"
                             )
                             return parent.text
-            except Exception:
-                pass
-
-            # Optimized attachment button check (only if no other errors found)
-            try:
-                attachment_btn = self._find_attachment_button()
-                if attachment_btn:
-                    # Quick disabled check without extensive attribute analysis
-                    is_disabled = (
-                        not attachment_btn.is_enabled()
-                        or attachment_btn.get_attribute("disabled") is not None
-                        or attachment_btn.get_attribute("aria-disabled") == "true"
-                    )
-                    if is_disabled:
-                        aria_label = attachment_btn.get_attribute("aria-label") or ""
-                        if "unavailable" in aria_label.lower():
-                            logger.error(
-                                "Usage limit detected: Attachment button is disabled"
-                            )
-                            return "Attachment functionality disabled - likely due to usage limits"
             except Exception:
                 pass
 

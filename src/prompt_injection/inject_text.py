@@ -338,6 +338,128 @@ def read_prompts_json(json_path):
         return None
 
 
+def _inject_text_both_loci(
+    input_path,
+    output_path,
+    invisible_text,
+    font_size,
+    font_path=None,
+    ocr_model_mode=False,
+):
+    """
+    Inject text at BOTH first page (top) AND last page (bottom) for L1+L2 combined injection.
+    """
+    if not os.path.exists(input_path):
+        raise FileNotFoundError(f"Input PDF file not found at '{input_path}'")
+
+    if font_path is None:
+        font_path = os.path.join("data", "fonts", "dejavusans.ttf")
+
+    if not os.path.exists(font_path):
+        raise FileNotFoundError(f"Font not found at '{font_path}'")
+
+    font_name_to_use = "DejaVuSans"
+    try:
+        pdfmetrics.registerFont(TTFont(font_name_to_use, font_path))
+    except Exception as e:
+        raise Exception(f"Failed to register font: {e}")
+
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=PdfReadWarning)
+        warnings.filterwarnings("ignore", message=".*wrong pointing object.*")
+        warnings.filterwarnings("ignore", message=".*not defined.*")
+
+        try:
+            existing_pdf = PdfReader(input_path, strict=False)
+        except (PdfReadError, Exception) as e:
+            raise Exception(f"Failed to read PDF (possibly corrupted): {e}")
+
+    output_writer = PdfWriter()
+
+    if not existing_pdf.pages or len(existing_pdf.pages) == 0:
+        raise Exception("The input PDF appears to be empty or corrupted")
+
+    first_page = existing_pdf.pages[0]
+    last_page_index = len(existing_pdf.pages) - 1
+    last_page = existing_pdf.pages[last_page_index]
+
+    # Get page dimensions from first page (assume consistent sizing)
+    page_width = float(first_page.mediabox.width)
+    page_height = float(first_page.mediabox.height)
+
+    if page_width <= 0 or page_height <= 0:
+        raise Exception("Invalid page dimensions")
+
+    # Create overlay for first page (top position)
+    first_overlay_pdf = create_invisible_text_overlay(
+        invisible_text,
+        page_width,
+        page_height,
+        font_size,
+        font_name_to_use,
+        position="top",
+        ocr_model_mode=ocr_model_mode,
+    )
+    first_overlay_page = first_overlay_pdf.pages[0]
+
+    # Create overlay for last page (bottom position)
+    last_page_width = float(last_page.mediabox.width)
+    last_page_height = float(last_page.mediabox.height)
+
+    last_overlay_pdf = create_invisible_text_overlay(
+        invisible_text,
+        last_page_width,
+        last_page_height,
+        font_size,
+        font_name_to_use,
+        position="bottom",
+        ocr_model_mode=ocr_model_mode,
+    )
+    last_overlay_page = last_overlay_pdf.pages[0]
+
+    # Handle single-page PDF (inject at both top and bottom of same page)
+    if len(existing_pdf.pages) == 1:
+        new_page = PageObject.create_blank_page(width=page_width, height=page_height)
+        new_page.merge_page(first_overlay_page)  # Top text first (behind)
+        new_page.merge_page(first_page)  # Original content
+        new_page.merge_page(
+            last_overlay_page
+        )  # Bottom text (on top, but at bottom position)
+        output_writer.add_page(new_page)
+    else:
+        # Multi-page PDF: inject on first and last pages separately
+        # First page with top overlay
+        new_first_page = PageObject.create_blank_page(
+            width=page_width, height=page_height
+        )
+        new_first_page.merge_page(first_overlay_page)
+        new_first_page.merge_page(first_page)
+        output_writer.add_page(new_first_page)
+
+        # Copy middle pages unchanged
+        for i in range(1, last_page_index):
+            try:
+                page = existing_pdf.pages[i]
+                if hasattr(page, "mediabox") and page.mediabox:
+                    output_writer.add_page(page)
+            except Exception:
+                continue
+
+        # Last page with bottom overlay
+        new_last_page = PageObject.create_blank_page(
+            width=last_page_width, height=last_page_height
+        )
+        new_last_page.merge_page(last_page)
+        new_last_page.merge_page(last_overlay_page)
+        output_writer.add_page(new_last_page)
+
+    try:
+        with open(output_path, "wb") as output_file:
+            output_writer.write(output_file)
+    except Exception as e:
+        raise Exception(f"Failed to write output PDF: {e}")
+
+
 def inject_text_into_pdf_silent(
     input_path,
     output_path,
@@ -353,9 +475,21 @@ def inject_text_into_pdf_silent(
     Uses DejaVuSans.ttf from fonts directory exclusively.
 
     Args:
-        injection_locus: "first" for first page top, "last" for last page bottom
+        injection_locus: "first" for first page top, "last" for last page bottom,
+                        "both" for first page top AND last page bottom (L1+L2)
         ocr_model_mode: If True, makes text visible for OCR model testing
     """
+    if injection_locus == "both":
+        _inject_text_both_loci(
+            input_path,
+            output_path,
+            invisible_text,
+            font_size,
+            font_path,
+            ocr_model_mode,
+        )
+        return
+
     if not os.path.exists(input_path):
         raise FileNotFoundError(f"Input PDF file not found at '{input_path}'")
 
@@ -520,8 +654,8 @@ def debug_prompt_text(prompt_text):
     print(f"Debug: Prompt length: {len(prompt_text)} characters")
     print(f"Debug: First 100 characters: {repr(prompt_text[:100])}")
     print(f"Debug: Last 100 characters: {repr(prompt_text[-100:])}")
-    print(f"Debug: Contains newlines: {'\\n' in prompt_text}")
-    print(f"Debug: Contains quotes: {'"' in prompt_text}")
+    print("Debug: Contains newlines: {}".format("\n" in prompt_text))
+    print("Debug: Contains quotes: {}".format('"' in prompt_text))
     return prompt_text
 
 
@@ -731,9 +865,9 @@ def main():
     parser.add_argument(
         "--injection-locus",
         type=str,
-        choices=["first", "last"],
+        choices=["first", "last", "both"],
         default="first",
-        help="Injection locus: 'first' for first page top, 'last' for last page bottom.",
+        help="Injection locus: 'first' for first page top, 'last' for last page bottom, 'both' for L1+L2 combined.",
     )
     parser.add_argument(
         "--mode",

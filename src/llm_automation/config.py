@@ -43,6 +43,9 @@ class Config:
     # LLM service selection ('chatgpt', 'copilot', or 'gemini')
     llm_service: str = "chatgpt"
 
+    # OCR mode: use data/injected_pdfs_ocr directory (auto-enabled for Gemini)
+    ocr_mode: bool = False
+
     # Output settings
     save_intermediate_results: bool = True
     results_format: str = "json"  # json, csv, both

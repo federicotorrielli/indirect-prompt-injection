@@ -544,7 +544,7 @@ http = [
 
 [[package]]
 name = "gemini-webapi"
-version = "1.18.0"
+version = "1.18.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx", extra = ["http2"] },
@@ -552,9 +552,9 @@ dependencies = [
     { name = "orjson" },
     { name = "pydantic" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c6/03/eb06536f287a8b7fb4808b00a60d9a9a3694f8a4079b77730325c639fbbe/gemini_webapi-1.18.0.tar.gz", hash = "sha256:0688a080fc3c95be55e723a66b2b69ec3ffcd58b07c50cf627d85d59d1181a86", size = 264630, upload-time = "2026-02-03T01:18:39.794Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/64/ae/925abc25d0b5c62170c528511bb8a1ec7bd77a0b7a19aacb9a7885a0afa8/gemini_webapi-1.18.1.tar.gz", hash = "sha256:34c91141e5953e898333e9c6ca01349566d28dbea9ddd8094f8c85e74d72ce47", size = 265100, upload-time = "2026-02-04T22:19:05.724Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/40/33/85f520f56faddd68442c7efe7086ff5593b213bd8fc3768835dbe610fd9b/gemini_webapi-1.18.0-py3-none-any.whl", hash = "sha256:2fe25b5f8185aba1ca109e1280ef3eb79e5bd8a81fba16e01fbc4a177b72362c", size = 61523, upload-time = "2026-02-03T01:18:38.322Z" },
+    { url = "https://files.pythonhosted.org/packages/4f/e5/7ae98d48bfb7283facec804f13c6719b6fa523a6aa240b4acdea736bf60b/gemini_webapi-1.18.1-py3-none-any.whl", hash = "sha256:110f3d191ffdda9d040aab6b1b2f1d8513d1e77dc33d40fac5024de9344ea3ec", size = 61836, upload-time = "2026-02-04T22:19:04.08Z" },
 ]
 
 [[package]]
@@ -715,7 +715,7 @@ dependencies = [
     { name = "transformers" },
     { name = "triton" },
     { name = "triton-kernels" },
-    { name = "undetected" },
+    { name = "undetected-chromedriver" },
     { name = "vadersentiment" },
     { name = "wordcloud" },
 ]
@@ -726,7 +726,7 @@ requires-dist = [
     { name = "bitsandbytes" },
     { name = "browser-cookie3", specifier = "~=0.20.1" },
     { name = "datasets", specifier = "~=4.5.0" },
-    { name = "gemini-webapi", specifier = "~=1.18.0" },
+    { name = "gemini-webapi", specifier = "~=1.18.1" },
     { name = "huggingface-hub" },
     { name = "kernels", specifier = "~=0.12.1" },
     { name = "matplotlib", specifier = "~=3.10.8" },
@@ -747,7 +747,7 @@ requires-dist = [
     { name = "transformers", git = "https://github.com/huggingface/transformers.git?rev=main" },
     { name = "triton", specifier = "~=3.6.0" },
     { name = "triton-kernels", git = "https://github.com/triton-lang/triton.git?subdirectory=python%2Ftriton_kernels&rev=main" },
-    { name = "undetected" },
+    { name = "undetected-chromedriver" },
     { name = "vadersentiment", specifier = "~=3.3.2" },
     { name = "wordcloud", specifier = "~=1.9.6" },
 ]
@@ -2697,19 +2697,15 @@ wheels = [
 ]
 
 [[package]]
-name = "undetected"
-version = "0.0.11"
+name = "undetected-chromedriver"
+version = "3.5.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "packaging" },
     { name = "requests" },
     { name = "selenium" },
     { name = "websockets" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/62/dc/53f98f18884ba6b552f4b5c38a8f8161bb4e26eab0d9a9a86b347e9d636d/undetected-0.0.11.tar.gz", hash = "sha256:35742628ab97b0de180ce27e800b04ae9dfa8ce7257da70a6be93e8641449986", size = 32077, upload-time = "2026-01-31T21:58:09.175Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/c9/6f/00d7772d36bcfd7fa11c3c393d577536246859c898b6369bfefba124f9de/undetected-0.0.11-py3-none-any.whl", hash = "sha256:e4a2ad8a4efe905301d3de938174dc418ff16f036b0054bc7c72d1793cfa589e", size = 35897, upload-time = "2026-01-31T21:58:06.744Z" },
-]
+sdist = { url = "https://files.pythonhosted.org/packages/1f/98/7ab46625ce2317756e4e857fe6ac24b6378c3e8f477da26c95226ed8ccb7/undetected-chromedriver-3.5.5.tar.gz", hash = "sha256:9f945e1435005247abe17de316bcfda85b284a4177fd5f25167c78ced33b65ec", size = 65409, upload-time = "2024-02-17T17:18:36.855Z" }
 
 [[package]]
 name = "urllib3"

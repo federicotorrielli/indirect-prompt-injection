@@ -87,12 +87,14 @@ class PDFReviewAutomator:
         self,
         attack_type_filter: Optional[str] = None,
         attack_mode_filter: Optional[str] = None,
+        injection_locus_filter: Optional[str] = None,
     ) -> List[Tuple[str, str, str, str]]:
         """Get all PDF directories to process.
 
         Args:
             attack_type_filter: If specified, only include directories with this attack type
             attack_mode_filter: If specified, only include directories with this attack mode (narrative/policy)
+            injection_locus_filter: If specified, only include directories with this injection locus (first/last/both)
 
         Returns:
             List of (attack_type, prompt_type, injection_locus, directory_path) tuples
@@ -174,6 +176,10 @@ class PDFReviewAutomator:
                     "policy"
                 ):
                     continue
+
+            # Apply injection locus filter if specified
+            if injection_locus_filter and injection_locus != injection_locus_filter:
+                continue
 
             directories.append((attack_type, prompt_type, injection_locus, str(subdir)))
 
@@ -408,12 +414,14 @@ class PDFReviewAutomator:
         self,
         attack_type_filter: Optional[str] = None,
         attack_mode_filter: Optional[str] = None,
+        injection_locus_filter: Optional[str] = None,
     ) -> bool:
         """Run the complete automation process.
 
         Args:
             attack_type_filter: If specified, only process batches with this attack type
             attack_mode_filter: If specified, only process batches with this attack mode
+            injection_locus_filter: If specified, only process batches with this injection locus
         """
         try:
             if not self.initialize(attack_type_filter, attack_mode_filter):
@@ -433,7 +441,7 @@ class PDFReviewAutomator:
             logger.info(f"Progress stats: {progress_stats}")
 
             directories = self.get_pdf_directories(
-                attack_type_filter, attack_mode_filter
+                attack_type_filter, attack_mode_filter, injection_locus_filter
             )
             if not directories:
                 if attack_type_filter or attack_mode_filter:
@@ -784,6 +792,11 @@ def main():
         action="store_true",
         help="Show current progress and exit",
     )
+    parser.add_argument(
+        "--ocr-mode",
+        action="store_true",
+        help="Use OCR PDF directory (auto-enabled for Gemini)",
+    )
 
     args = parser.parse_args()
 
@@ -792,6 +805,12 @@ def main():
 
     # Override LLM service from command line argument
     config.llm_service = args.llm_service
+
+    # Handle OCR mode: auto-enable for Gemini, or use CLI flag
+    if args.llm_service == "gemini" or args.ocr_mode:
+        config.ocr_mode = True
+        config.injected_pdfs_dir = "data/injected_pdfs_ocr"
+        logger.info("OCR mode enabled - using data/injected_pdfs_ocr")
 
     logger.info(f"Using LLM service: {config.llm_service}")
 
@@ -927,6 +946,10 @@ def main():
             attack_mode_filter = args.attack_mode
             logger.info(f"Filtering by attack mode: {args.attack_mode}")
 
+        injection_locus_filter = args.injection_locus if args.injection_locus else None
+        if injection_locus_filter:
+            logger.info(f"Filtering by injection locus: {injection_locus_filter}")
+
         # Process based on arguments
         if args.attack_type and args.prompt_type and args.injection_locus:
             # Run single batch
@@ -934,9 +957,9 @@ def main():
                 args.attack_type, args.prompt_type, args.injection_locus
             )
         else:
-            # Run full automation (possibly filtered by attack type and/or attack mode)
+            # Run full automation (possibly filtered by attack type, attack mode, and/or injection locus)
             success = automator.run_full_automation(
-                attack_type_filter, attack_mode_filter
+                attack_type_filter, attack_mode_filter, injection_locus_filter
             )
 
         sys.exit(0 if success else 1)

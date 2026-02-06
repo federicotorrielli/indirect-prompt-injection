@@ -890,6 +890,9 @@ def has_external_site_redirection(text: str) -> bool:
         or "please use" in text.lower()
         or "this resource" in text.lower()
         or "review assistant" in text.lower()
+        or "this link" in text.lower()
+        or "this site" in text.lower()
+        or "this website" in text.lower()
     ):
         return True
     return False
@@ -1963,9 +1966,7 @@ def main(
     interim_results, interim_progress = load_interim_results(output_file)
     if interim_results:
         user_input = (
-            input(
-                "[yellow]Found interim results. Resume from where we left off? (y/N): [/yellow]"
-            )
+            input("Found interim results. Resume from where we left off? (y/N):")
             .strip()
             .lower()
         )
