@@ -31,8 +31,9 @@ logger = logging.getLogger(__name__)
 class PDFReviewAutomator:
     """Main automation orchestrator for PDF review generation."""
 
-    def __init__(self, config: Config):
+    def __init__(self, config: Config, custom_prompt: Optional[str] = None):
         self.config = config
+        self.custom_prompt = custom_prompt
         self.llm_automator = create_llm_automator(config)
         self.processor = ResultsProcessor(config, config.llm_service)
         self.session_start = datetime.now()
@@ -254,7 +255,10 @@ class PDFReviewAutomator:
             logger.warning(f"No PDF files found in {pdf_directory}")
             return {"processed": 0, "skipped": 0, "failed": 0}
 
-        review_requests = self.generate_review_requests(attack_type, prompt_type)
+        if self.custom_prompt:
+            review_requests = [self.custom_prompt]
+        else:
+            review_requests = self.generate_review_requests(attack_type, prompt_type)
         batch_key = f"{attack_type}_{prompt_type}_{injection_locus}"
 
         # Get request types for progress tracking
@@ -403,7 +407,9 @@ class PDFReviewAutomator:
 
     def _get_request_type(self, request_text: str) -> str:
         """Determine request type from request text."""
-        if "negative review" in request_text.lower():
+        if self.custom_prompt and request_text == self.custom_prompt:
+            return "custom_request"
+        elif "negative review" in request_text.lower():
             return "negative_request"
         elif "positive review" in request_text.lower():
             return "positive_request"
@@ -708,7 +714,12 @@ class PDFReviewAutomator:
 
             # Count expected items
             pdf_files = self.get_pdfs_in_directory(pdf_dir)
-            review_requests = self.generate_review_requests(attack_type, prompt_type)
+            if self.custom_prompt:
+                review_requests = [self.custom_prompt]
+            else:
+                review_requests = self.generate_review_requests(
+                    attack_type, prompt_type
+                )
             request_types = [self._get_request_type(req) for req in review_requests]
             total_expected = len(pdf_files) * len(request_types)
 
@@ -793,6 +804,12 @@ def main():
         help="Show current progress and exit",
     )
     parser.add_argument(
+        "--prompt",
+        type=str,
+        default=None,
+        help="Custom prompt to use instead of the default review requests",
+    )
+    parser.add_argument(
         "--ocr-mode",
         action="store_true",
         help="Use OCR PDF directory (auto-enabled for Gemini)",
@@ -815,7 +832,9 @@ def main():
     logger.info(f"Using LLM service: {config.llm_service}")
 
     # Create automator
-    automator = PDFReviewAutomator(config)
+    automator = PDFReviewAutomator(config, custom_prompt=args.prompt)
+    if args.prompt:
+        logger.info(f"Using custom prompt: {args.prompt}")
 
     # Set up signal handlers for graceful termination
     def signal_handler(sig, frame):
