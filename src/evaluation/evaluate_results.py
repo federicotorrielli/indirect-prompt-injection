@@ -1357,6 +1357,159 @@ def print_evaluation_summary(
     else:
         console.print("[yellow]No attack records found to calculate ASR.[/yellow]")
 
+    # --- ASR by Request Type ---
+    if attack_records:
+        request_type_summary: Dict[str, Dict[str, int]] = defaultdict(
+            lambda: {"success": 0, "total": 0}
+        )
+
+        for record in attack_records:
+            attack_type = record.get("attack_type")
+            request_type = record.get("request_type", "unknown")
+            if not attack_type:
+                continue
+
+            # Normalize attack type
+            normalized_attack_type = attack_type.replace("_policy", "")
+
+            # Create a combined key for grouping
+            group_key = f"{normalized_attack_type} | {request_type}"
+
+            if record.get("evaluation_success", False):
+                request_type_summary[group_key]["success"] += 1
+            request_type_summary[group_key]["total"] += 1
+
+        # Print ASR by Request Type
+        req_table = Table(
+            title="📊 Attack Success Rate by Request Type",
+            show_header=True,
+            header_style="bold magenta",
+        )
+        req_table.add_column("Attack Type", style="cyan", no_wrap=True)
+        req_table.add_column("Request Type", style="yellow", no_wrap=True)
+        req_table.add_column("Successes", justify="right", style="green")
+        req_table.add_column("Total", justify="right", style="blue")
+        req_table.add_column("ASR (%)", justify="right", style="bold yellow")
+
+        for group_key, data in sorted(request_type_summary.items()):
+            attack_part, request_part = group_key.split(" | ")
+            asr = (data["success"] / data["total"]) * 100 if data["total"] > 0 else 0
+            req_table.add_row(
+                attack_part,
+                request_part,
+                str(data["success"]),
+                str(data["total"]),
+                f"{asr:.2f}%",
+            )
+
+            # Store in analysis data
+            if "request_type_analysis" not in analysis_data:
+                analysis_data["request_type_analysis"] = {}
+
+            analysis_data["request_type_analysis"][group_key] = {
+                "attack_type": attack_part,
+                "request_type": request_part,
+                "successes": data["success"],
+                "total": data["total"],
+                "success_rate": asr,
+            }
+
+        console.print(req_table)
+
+        console.print(req_table)
+
+    # --- Detailed Steering Breakdown (Type + Locus + Request) ---
+    if attack_records:
+        detailed_steering_summary: Dict[str, Dict[str, int]] = defaultdict(
+            lambda: {"success": 0, "total": 0}
+        )
+
+        for record in attack_records:
+            attack_type = record.get("attack_type")
+            if not attack_type or "steering" not in attack_type:
+                continue
+
+            request_type = record.get("request_type", "unknown")
+            injection_locus = record.get("injection_locus")
+
+            # Fallback if injection_locus is not in record, try to parse from attack_key
+            if not injection_locus:
+                attack_key = record.get("attack_key", "")
+                parts = attack_key.split("_")
+                if parts:
+                    # Heuristic: usually the last part is locus (first, last, both)
+                    possible_locus = parts[-1]
+                    if possible_locus in ["first", "last", "both", "l1", "l2", "l1l2"]:
+                        injection_locus = possible_locus
+                    else:
+                        injection_locus = "unknown"
+                else:
+                    injection_locus = "unknown"
+
+            # Normalize locus names for display
+            if injection_locus == "first":
+                display_locus = "L1 (First)"
+            elif injection_locus == "last":
+                display_locus = "L2 (Last)"
+            elif injection_locus == "both":
+                display_locus = "L1+L2 (Both)"
+            else:
+                display_locus = injection_locus
+
+            # Normalize attack type
+            normalized_attack_type = attack_type.replace("_policy", "")
+
+            # Create a combined key for grouping
+            # sort key structure: attack_type|locus|request_type
+            group_key = f"{normalized_attack_type}|{display_locus}|{request_type}"
+
+            if record.get("evaluation_success", False):
+                detailed_steering_summary[group_key]["success"] += 1
+            detailed_steering_summary[group_key]["total"] += 1
+
+        if detailed_steering_summary:
+            # Print Detailed Steering Breakdown Table
+            steering_table = Table(
+                title="📊 Detailed Steering Breakdown (Type + Locus + Request)",
+                show_header=True,
+                header_style="bold magenta",
+            )
+            steering_table.add_column("Steering Type", style="cyan", no_wrap=True)
+            steering_table.add_column("Locus", style="purple", no_wrap=True)
+            steering_table.add_column("Request Type", style="yellow", no_wrap=True)
+            steering_table.add_column("Successes", justify="right", style="green")
+            steering_table.add_column("Total", justify="right", style="blue")
+            steering_table.add_column("ASR (%)", justify="right", style="bold yellow")
+
+            for group_key, data in sorted(detailed_steering_summary.items()):
+                attack_part, locus_part, request_part = group_key.split("|")
+                asr = (
+                    (data["success"] / data["total"]) * 100 if data["total"] > 0 else 0
+                )
+                steering_table.add_row(
+                    attack_part,
+                    locus_part,
+                    request_part,
+                    str(data["success"]),
+                    str(data["total"]),
+                    f"{asr:.2f}%",
+                )
+
+                # Store in analysis data
+                if "detailed_steering_analysis" not in analysis_data:
+                    analysis_data["detailed_steering_analysis"] = {}
+
+                analysis_data["detailed_steering_analysis"][group_key] = {
+                    "attack_type": attack_part,
+                    "locus": locus_part,
+                    "request_type": request_part,
+                    "successes": data["success"],
+                    "total": data["total"],
+                    "success_rate": asr,
+                }
+
+            console.print(steering_table)
+
     # --- VADER Sentiment Analysis for Steering Attacks ---
     steering_records = [
         r for r in evaluated_records if "steering" in r.get("attack_type", "")
