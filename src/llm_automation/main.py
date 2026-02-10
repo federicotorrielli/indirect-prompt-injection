@@ -31,9 +31,15 @@ logger = logging.getLogger(__name__)
 class PDFReviewAutomator:
     """Main automation orchestrator for PDF review generation."""
 
-    def __init__(self, config: Config, custom_prompt: Optional[str] = None):
+    def __init__(
+        self,
+        config: Config,
+        custom_prompt: Optional[str] = None,
+        pdf_limit: Optional[int] = None,
+    ):
         self.config = config
         self.custom_prompt = custom_prompt
+        self.pdf_limit = pdf_limit
         self.llm_automator = create_llm_automator(config)
         self.processor = ResultsProcessor(config, config.llm_service)
         self.session_start = datetime.now()
@@ -200,14 +206,32 @@ class PDFReviewAutomator:
         return directories
 
     def get_pdfs_in_directory(self, directory: str) -> List[str]:
-        """Get all PDF files in a directory."""
+        """Get PDF files in a directory, respecting the limit.
+
+        Args:
+            directory: Directory path to search for PDFs
+
+        Returns:
+            Sorted list of PDF file paths, limited by pdf_limit if specified
+        """
         pdf_files = []
         dir_path = Path(directory)
 
         for pdf_file in dir_path.glob("*.pdf"):
             pdf_files.append(str(pdf_file))
 
-        return sorted(pdf_files)
+        sorted_pdfs = sorted(pdf_files)
+
+        # Apply limit if specified (None or 0 means unlimited)
+        if self.pdf_limit and self.pdf_limit > 0:
+            limited_pdfs = sorted_pdfs[: self.pdf_limit]
+            if len(limited_pdfs) < len(sorted_pdfs):
+                logger.info(
+                    f"Limiting PDFs to {self.pdf_limit} (found {len(sorted_pdfs)} total)"
+                )
+            return limited_pdfs
+
+        return sorted_pdfs
 
     def generate_review_requests(self, attack_type: str, prompt_type: str) -> List[str]:
         """Generate review request variations based on attack type and prompt type."""
@@ -814,6 +838,12 @@ def main():
         action="store_true",
         help="Use OCR PDF directory (auto-enabled for Gemini)",
     )
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=None,
+        help="Limit the number of PDFs to process per directory (default: all)",
+    )
 
     args = parser.parse_args()
 
@@ -832,9 +862,13 @@ def main():
     logger.info(f"Using LLM service: {config.llm_service}")
 
     # Create automator
-    automator = PDFReviewAutomator(config, custom_prompt=args.prompt)
+    automator = PDFReviewAutomator(
+        config, custom_prompt=args.prompt, pdf_limit=args.limit
+    )
     if args.prompt:
         logger.info(f"Using custom prompt: {args.prompt}")
+    if args.limit:
+        logger.info(f"Limiting PDFs to {args.limit} per directory")
 
     # Set up signal handlers for graceful termination
     def signal_handler(sig, frame):
