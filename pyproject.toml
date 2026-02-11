@@ -33,12 +33,7 @@ dependencies = [
     "triton-kernels",
     "python-dotenv>=1.2.1",
     "huggingface_hub",
-    "llama-cpp-python",
 ]
-optional-dependencies = { "flash-attn" = ["flash-attn"] }
 
 [tool.uv.sources]
 triton-kernels = { git = "https://github.com/triton-lang/triton.git", subdirectory = "python/triton_kernels", rev = "main" }
-
-[tool.uv.extra-build-dependencies]
-flash-attn = ["torch"]
