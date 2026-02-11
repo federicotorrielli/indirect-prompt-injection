@@ -1145,7 +1145,7 @@ class AttackEvaluator:
                         ),  # Process all prompts in this chunk at once
                         max_new_tokens=2000,
                         do_sample=True,
-                        temperature=0.6,
+                        temperature=1.0,
                         top_p=0.95,
                     )
 
