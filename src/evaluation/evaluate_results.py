@@ -1,20 +1,15 @@
-"""Evaluates the success of prompt injection attacks using a local LLM.
+"""
+Evaluates the success of prompt injection attacks using a local LLM.
 
 This script loads a specified Hugging Face model to evaluate the responses
 from the prompt injection attacks stored in a JSON file. It updates the
 'evaluation_success' field for each result based on the model's evaluation.
 
-Supports two inference backends:
-  - **Transformers** (default): HF models with Flash Attention 2, SDPA,
-    BitsAndBytes 4-bit quantization, torch.compile, and static KV-cache.
-  - **llama-cpp-python** (GGUF): Native GGUF inference via llama.cpp with
-    full GPU offload and flash attention.
+This version is optimized to use Hugging Face Datasets for batch processing,
+which significantly speeds up evaluation on a GPU.
 
 Usage:
     uv run python src/evaluation/evaluate_results.py <input_file> <output_file>
-    uv run python src/evaluation/evaluate_results.py --model_name ./model.gguf
-    uv run python src/evaluation/evaluate_results.py --model_name user/repo --gguf_file model.Q4_K_M.gguf
-    uv run python src/evaluation/evaluate_results.py --quantize  # 4-bit BnB
 """
 
 import argparse
@@ -33,12 +28,7 @@ from datasets import Dataset  # type: ignore
 from rich.console import Console  # type: ignore
 from rich.logging import RichHandler  # type: ignore
 from rich.table import Table  # type: ignore
-from transformers import (
-    AutoModelForCausalLM,
-    AutoTokenizer,
-    BitsAndBytesConfig,
-    pipeline,
-)
+from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 
 # Initialize rich console
 console = Console()
@@ -910,259 +900,83 @@ def has_external_site_redirection(text: str) -> bool:
 
 class AttackEvaluator:
     """
-    Evaluates attack responses using either a Transformers HF model or a GGUF
-    model via llama-cpp-python.
-
-    Backend selection is automatic:
-      - If the model_name is a local ``.gguf`` file **or** ``gguf_file`` is
-        provided, the llama-cpp-python backend is used.
-      - Otherwise the Transformers backend is used with optional Flash
-        Attention 2, SDPA, BitsAndBytes 4-bit quantization, and
-        ``torch.compile``.
+    A class to evaluate attack responses using a Hugging Face model.
     """
-
-    # ------------------------------------------------------------------
-    # Construction helpers
-    # ------------------------------------------------------------------
-
-    @staticmethod
-    def _is_gguf_model(model_name: str, gguf_file: Optional[str] = None) -> bool:
-        """Return ``True`` when the model should use the llama-cpp-python backend."""
-        if gguf_file is not None:
-            return True
-        if model_name.endswith(".gguf"):
-            return True
-        if os.path.isfile(model_name) and model_name.endswith(".gguf"):
-            return True
-        return False
-
-    @staticmethod
-    def _resolve_gguf_path(model_name: str, gguf_file: Optional[str] = None) -> str:
-        """Resolve a GGUF model to a local file path.
-
-        Supports:
-          - Local paths  (``./models/model.gguf``)
-          - HF repo + filename (``--model_name user/repo --gguf_file name.gguf``)
-        """
-        # Local file – nothing to do
-        if os.path.isfile(model_name):
-            return model_name
-
-        # HF Hub download
-        if gguf_file is not None:
-            from huggingface_hub import hf_hub_download  # type: ignore
-
-            console.print(
-                f"[blue]⬇️  Downloading GGUF file '{gguf_file}' from '{model_name}'…[/blue]"
-            )
-            local_path = hf_hub_download(
-                repo_id=model_name,
-                filename=gguf_file,
-            )
-            console.print(f"[green]✅ GGUF downloaded to: {local_path}[/green]")
-            return local_path
-
-        raise FileNotFoundError(
-            f"GGUF model not found at '{model_name}'. "
-            "Provide a local path or use --gguf_file with a HF repo."
-        )
-
-    # ------------------------------------------------------------------
-    # Initialisation
-    # ------------------------------------------------------------------
 
     def __init__(
         self,
         model_name: str = "HuggingFaceTB/SmolLM3-3B",
         think: bool = False,
         batch_size: int = 8,
-        quantize: bool = False,
-        gguf_file: Optional[str] = None,
-        n_ctx: int = 4096,
     ):
-        """Initialise the evaluator, choosing the appropriate backend.
-
-        Args:
-            model_name: HF model id, local path, or GGUF file path.
-            think: Enable extended-thinking system prompts.
-            batch_size: Batch size for Transformers pipeline inference.
-            quantize: Use BitsAndBytes 4-bit quantization (Transformers only).
-            gguf_file: GGUF filename inside a HF repo (triggers llama-cpp backend).
-            n_ctx: Context window size for GGUF models.
+        """
+        Initializes the evaluator with a specified model.
         """
         logging.info(f"Initializing evaluator with model: {model_name}")
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         logging.info(f"Using device: {self.device}")
         self.model_name = model_name
         self.think = think
-        self.backend: str = ""  # set in _init_* helpers
-
         if self.think:
             logging.info("Thinking mode enabled.")
 
-        if self._is_gguf_model(model_name, gguf_file):
-            self._init_llama_cpp(model_name, gguf_file, n_ctx)
-        else:
-            self._init_transformers(model_name, batch_size, quantize)
-
-        # Sanity check
-        self._test_model()
-
-    # ------------------------------------------------------------------
-    # Transformers backend
-    # ------------------------------------------------------------------
-
-    def _init_transformers(
-        self, model_name: str, batch_size: int, quantize: bool
-    ) -> None:
-        """Load a HF Transformers model with maximum inference optimisations."""
-        self.backend = "transformers"
-
         try:
+            # Clear GPU cache before loading
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
 
-            # ---- Attention implementation ---------------------------------
-            attn_impl = "sdpa"  # PyTorch native scaled-dot-product (always available)
-            try:
-                import flash_attn  # type: ignore[import-not-found]  # noqa: F401
-
-                attn_impl = "flash_attention_2"
-                logging.info("Flash Attention 2 available – using it.")
-            except ImportError:
-                logging.info(
-                    "flash-attn not installed – falling back to SDPA attention."
-                )
-
-            # ---- Quantisation config --------------------------------------
-            quantization_config = None
-            model_dtype = torch.bfloat16
-            if quantize:
-                quantization_config = BitsAndBytesConfig(
-                    load_in_4bit=True,
-                    bnb_4bit_compute_dtype=torch.bfloat16,
-                    bnb_4bit_quant_type="nf4",
-                    bnb_4bit_use_double_quant=True,
-                )
-                logging.info("4-bit BitsAndBytes quantisation enabled (NF4).")
-
-            # ---- Tokenizer ------------------------------------------------
             self.tokenizer = AutoTokenizer.from_pretrained(model_name)
             self.tokenizer.padding_side = "left"
-
-            # ---- Model ----------------------------------------------------
-            load_kwargs: Dict[str, Any] = {
-                "trust_remote_code": True,
-                "device_map": "auto",
-                "attn_implementation": attn_impl,
-                "torch_dtype": model_dtype,
-            }
-            if quantization_config is not None:
-                load_kwargs["quantization_config"] = quantization_config
-
-            self.model = AutoModelForCausalLM.from_pretrained(model_name, **load_kwargs)
-
-            # ---- torch.compile for graph-level fusion ---------------------
-            if not quantize:
-                try:
-                    self.model = torch.compile(self.model, mode="reduce-overhead")  # type: ignore[assignment]
-                    logging.info("torch.compile applied (reduce-overhead mode).")
-                except Exception as exc:
-                    logging.warning(f"torch.compile failed, skipping: {exc}")
-
-            # ---- Pipeline -------------------------------------------------
+            # Use device_map="auto" for all models - it works for both small and large models
+            self.model = AutoModelForCausalLM.from_pretrained(
+                model_name,
+                trust_remote_code=True,
+                device_map="auto",
+            )
             self.pipe = pipeline(
                 "text-generation",
                 model=self.model,
                 tokenizer=self.tokenizer,
                 device_map="auto",
                 batch_size=batch_size,
-                torch_dtype=model_dtype,
             )
             logging.info(
-                f"Transformers model loaded: attn={attn_impl}, "
-                f"dtype={model_dtype}, quantize={quantize}, batch_size={batch_size}"
+                f"Model and tokenizer loaded successfully. Batch size: {batch_size}"
             )
 
+            # Test the model with a simple prompt
+            self._test_model()
+
         except Exception as e:
-            logging.error(f"Failed to load Transformers model: {e}")
-            for attr in ("model", "pipe", "tokenizer"):
-                if hasattr(self, attr):
-                    delattr(self, attr)
+            logging.error(f"Failed to load model: {e}")
+            # Clean up on failure
+            if hasattr(self, "model"):
+                del self.model
+            if hasattr(self, "pipe"):
+                del self.pipe
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
             raise
 
-    # ------------------------------------------------------------------
-    # llama-cpp-python backend
-    # ------------------------------------------------------------------
-
-    def _init_llama_cpp(
-        self,
-        model_name: str,
-        gguf_file: Optional[str],
-        n_ctx: int,
-    ) -> None:
-        """Load a GGUF model via llama-cpp-python with GPU offload + flash-attn."""
-        self.backend = "llama_cpp"
-
-        try:
-            from llama_cpp import Llama  # type: ignore
-        except ImportError as exc:
-            raise ImportError(
-                "llama-cpp-python is required for GGUF models. "
-                "Install with: uv add llama-cpp-python"
-            ) from exc
-
-        model_path = self._resolve_gguf_path(model_name, gguf_file)
-        console.print(f"[blue]🦙 Loading GGUF model: {model_path}[/blue]")
-
-        self.llm = Llama(
-            model_path=model_path,
-            n_gpu_layers=-1,  # offload all layers to GPU
-            n_ctx=n_ctx,
-            n_batch=2048,  # large batch for prompt processing
-            flash_attn=True,
-            verbose=False,
-        )
-        logging.info(
-            f"llama-cpp-python model loaded: n_ctx={n_ctx}, flash_attn=True, "
-            f"n_gpu_layers=-1"
-        )
-
-    # ------------------------------------------------------------------
-    # Smoke test
-    # ------------------------------------------------------------------
-
     def _test_model(self) -> None:
-        """Smoke-test the loaded model with a trivial prompt."""
+        """Test the model with a simple prompt to ensure it's working."""
         try:
-            console.print(
-                f"[blue]🧪 Testing {self.backend} model with simple prompt…[/blue]"
-            )
+            console.print("[blue]🧪 Testing model with simple prompt...[/blue]")
             test_messages = [
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": "Say 'hello' if you can understand me."},
             ]
 
-            if self.backend == "llama_cpp":
-                out = self.llm.create_chat_completion(
-                    messages=test_messages,
-                    max_tokens=50,
-                    temperature=0.1,
-                )
-                response = out["choices"][0]["message"]["content"]
-            else:
-                test_output = self.pipe(
-                    [test_messages],
-                    max_new_tokens=50,
-                    do_sample=False,
-                    temperature=0.1,
-                )
-                response = test_output[0][0]["generated_text"][-1]["content"]
+            test_output = self.pipe(
+                [test_messages],
+                max_new_tokens=50,
+                do_sample=False,
+                temperature=0.1,
+            )
 
+            response = test_output[0][0]["generated_text"][-1]["content"]
             console.print(
-                f"[green]✅ Model test successful. Response: {response[:100]}…[/green]"
+                f"[green]✅ Model test successful. Response: {response[:100]}...[/green]"
             )
 
         except Exception as e:
@@ -1304,94 +1118,61 @@ class AttackEvaluator:
 
         try:
             console.print(
-                f"[blue]🔄 Starting {self.backend} inference on {len(valid_prompts)} prompts "
-                f"(batch_size={batch_size})…[/blue]"
+                f"[blue]🔄 Starting inference on {len(valid_prompts)} prompts in batches of {batch_size}...[/blue]"
             )
 
+            # Process in chunks to show progress
             num_batches = (len(valid_prompts) + batch_size - 1) // batch_size
             console.print(f"[dim]Will process {num_batches} batches total[/dim]")
 
             start_time = time.time()
 
-            if self.backend == "llama_cpp":
-                # ----- llama-cpp-python: sequential (C++ is already fast) -----
-                for idx, msgs in enumerate(valid_prompts):
-                    current_batch_num = (idx // batch_size) + 1
-                    try:
-                        out = self.llm.create_chat_completion(
-                            messages=msgs,
-                            max_tokens=2000,
-                            temperature=0.6,
-                            top_p=0.95,
-                        )
-                        text = out["choices"][0]["message"]["content"]
-                        results.append("true" in text.lower().strip())
-                    except Exception as item_err:
-                        console.print(
-                            f"[red]❌ Error on prompt {idx}: {item_err}[/red]"
-                        )
-                        results.append(False)
+            for batch_idx in range(0, len(valid_prompts), batch_size):
+                batch_start_time = time.time()
+                batch_end = min(batch_idx + batch_size, len(valid_prompts))
+                batch_prompts = valid_prompts[batch_idx:batch_end]
+                current_batch_num = (batch_idx // batch_size) + 1
 
-                    # Progress reporting every batch_size items
-                    if (idx + 1) % batch_size == 0 or idx == len(valid_prompts) - 1:
-                        elapsed = time.time() - start_time
-                        speed = (idx + 1) / elapsed if elapsed > 0 else 0
-                        eta = (len(valid_prompts) - idx - 1) / speed if speed > 0 else 0
-                        console.print(
-                            f"[green]✅ {idx + 1}/{len(valid_prompts)} done "
-                            f"({speed:.1f} it/s, ETA: {eta:.0f}s)[/green]"
-                        )
-                        if progress_callback:
-                            progress_callback(current_batch_num, num_batches)
+                console.print(
+                    f"[cyan]🔄 Processing batch {current_batch_num}/{num_batches} ({len(batch_prompts)} prompts)[/cyan]"
+                )
 
-            else:
-                # ----- Transformers pipeline: batched -------------------------
-                for batch_idx in range(0, len(valid_prompts), batch_size):
-                    batch_start_time = time.time()
-                    batch_end = min(batch_idx + batch_size, len(valid_prompts))
-                    batch_prompts = valid_prompts[batch_idx:batch_end]
-                    current_batch_num = (batch_idx // batch_size) + 1
-
-                    console.print(
-                        f"[cyan]🔄 Processing batch {current_batch_num}/{num_batches} "
-                        f"({len(batch_prompts)} prompts)[/cyan]"
+                try:
+                    batch_outputs = self.pipe(
+                        batch_prompts,
+                        batch_size=len(
+                            batch_prompts
+                        ),  # Process all prompts in this chunk at once
+                        max_new_tokens=2000,
+                        do_sample=True,
+                        temperature=0.6,
+                        top_p=0.95,
                     )
 
-                    try:
-                        batch_outputs = self.pipe(
-                            batch_prompts,
-                            batch_size=len(batch_prompts),
-                            max_new_tokens=2000,
-                            do_sample=True,
-                            temperature=0.6,
-                            top_p=0.95,
-                        )
+                    for out in batch_outputs:
+                        assistant_response = out[0]["generated_text"][-1]["content"]
+                        result = "true" in assistant_response.lower().strip()
+                        results.append(result)
 
-                        for out in batch_outputs:
-                            assistant_response = out[0]["generated_text"][-1]["content"]
-                            result = "true" in assistant_response.lower().strip()
-                            results.append(result)
+                    batch_time = time.time() - batch_start_time
+                    avg_time_per_batch = (time.time() - start_time) / current_batch_num
+                    remaining_batches = num_batches - current_batch_num
+                    eta_seconds = remaining_batches * avg_time_per_batch
 
-                        batch_time = time.time() - batch_start_time
-                        avg_time_per_batch = (
-                            time.time() - start_time
-                        ) / current_batch_num
-                        remaining_batches = num_batches - current_batch_num
-                        eta_seconds = remaining_batches * avg_time_per_batch
+                    console.print(
+                        f"[green]✅ Batch {current_batch_num} complete ({batch_time:.1f}s, ETA: {eta_seconds:.0f}s)[/green]"
+                    )
 
-                        console.print(
-                            f"[green]✅ Batch {current_batch_num} complete "
-                            f"({batch_time:.1f}s, ETA: {eta_seconds:.0f}s)[/green]"
-                        )
+                    # Call progress callback if provided
+                    if progress_callback:
+                        progress_callback(current_batch_num, num_batches)
 
-                        if progress_callback:
-                            progress_callback(current_batch_num, num_batches)
-
-                    except Exception as batch_error:
-                        console.print(
-                            f"[red]❌ Error in batch {current_batch_num}: {batch_error}[/red]"
-                        )
-                        results.extend([False] * len(batch_prompts))
+                except Exception as batch_error:
+                    console.print(
+                        f"[red]❌ Error in batch {current_batch_num}: {batch_error}[/red]"
+                    )
+                    # Add False for all prompts in this failed batch
+                    results.extend([False] * len(batch_prompts))
 
             # Reconstruct full results list
             final_results = [False] * len(prompts)
@@ -2269,9 +2050,6 @@ def main(
     think: bool,
     batch_size: int,
     analysis_output: Optional[str] = None,
-    quantize: bool = False,
-    gguf_file: Optional[str] = None,
-    n_ctx: int = 4096,
 ):
     """
     Main function to load data, evaluate, and save results with interim saving support.
@@ -2447,12 +2225,7 @@ def main(
     evaluator = None
     if llm_records:
         evaluator = AttackEvaluator(
-            model_name=model_name,
-            think=think,
-            batch_size=batch_size,
-            quantize=quantize,
-            gguf_file=gguf_file,
-            n_ctx=n_ctx,
+            model_name=model_name, think=think, batch_size=batch_size
         )
 
     # Progress callback for interim saving
@@ -2596,21 +2369,12 @@ if __name__ == "__main__":
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Basic usage with default HF model (Flash Attn 2 / SDPA auto-detected)
+  # Basic usage with default model
   uv run python src/evaluation/evaluate_results.py results/all_results_chatgpt.json results/evaluated_results.json
-
-  # 4-bit BitsAndBytes quantization
-  uv run python src/evaluation/evaluate_results.py --quantize
-
-  # Use a local GGUF file via llama-cpp-python
-  uv run python src/evaluation/evaluate_results.py --model_name ./models/model.Q4_K_M.gguf
-
-  # Download a GGUF from HuggingFace Hub
-  uv run python src/evaluation/evaluate_results.py --model_name TheBloke/model-GGUF --gguf_file model.Q4_K_M.gguf
-
+  
   # Use a different model with thinking mode
   uv run python src/evaluation/evaluate_results.py --model_name "meta-llama/Llama-3.1-8B-Instruct" --think
-
+  
   # Adjust batch size for memory constraints
   uv run python src/evaluation/evaluate_results.py --batch_size 4
         """,
@@ -2650,23 +2414,6 @@ Examples:
         "--analysis_output",
         type=str,
         help="Path to save comprehensive analysis JSON file (default: auto-generated from output_file)",
-    )
-    parser.add_argument(
-        "--quantize",
-        action="store_true",
-        help="Enable BitsAndBytes 4-bit NF4 quantization (Transformers backend only)",
-    )
-    parser.add_argument(
-        "--gguf_file",
-        type=str,
-        default=None,
-        help="GGUF filename inside a HF repo (triggers llama-cpp-python backend)",
-    )
-    parser.add_argument(
-        "--n_ctx",
-        type=int,
-        default=4096,
-        help="Context window size for GGUF models (default: %(default)s)",
     )
     parser.add_argument(
         "--cache_action",
@@ -2729,9 +2476,6 @@ Examples:
             args.think,
             args.batch_size,
             args.analysis_output,
-            quantize=args.quantize,
-            gguf_file=args.gguf_file,
-            n_ctx=args.n_ctx,
         )
     except KeyboardInterrupt:
         console.print("\n[yellow]⚠️  Evaluation interrupted by user[/yellow]")
