@@ -1,0 +1,263 @@
+{
+  "session_start": "2026-02-10T15:16:04.116499",
+  "last_updated": "2026-02-10T15:56:14.481588",
+  "completed_pdfs": {
+    "pos_steering_attack_narrative_first_ocr": {
+      "--gvHfE3Xf5.pdf": {
+        "custom_request": true
+      },
+      "0-uUGPbIjD.pdf": {
+        "custom_request": true
+      },
+      "026hEw26i3-.pdf": {
+        "custom_request": true
+      },
+      "0qbEq5UBfGD.pdf": {
+        "custom_request": true
+      },
+      "3q5IqUrkcF.pdf": {
+        "custom_request": true
+      },
+      "49A1Y6tRhaq.pdf": {
+        "custom_request": true
+      },
+      "4hBXGTdS6Lc.pdf": {
+        "custom_request": true
+      },
+      "4pfqv2FCo0R.pdf": {
+        "custom_request": true
+      },
+      "5USOVm2HkfG.pdf": {
+        "custom_request": true
+      },
+      "5l9zj5G7vDY.pdf": {
+        "custom_request": true
+      },
+      "6gLEKETxUWp.pdf": {
+        "custom_request": true
+      },
+      "7WwYBADS3E_.pdf": {
+        "custom_request": true
+      },
+      "8nXkyH2_s6.pdf": {
+        "custom_request": true
+      },
+      "AADxnPG-PR.pdf": {
+        "custom_request": true
+      },
+      "AT7jak63NNK.pdf": {
+        "custom_request": true
+      },
+      "Al7Wpsy49g.pdf": {
+        "custom_request": true
+      },
+      "B1g30j0qF7.pdf": {
+        "custom_request": true
+      },
+      "BIIwfP55pp.pdf": {
+        "custom_request": true
+      },
+      "BJe4oxHYPB.pdf": {
+        "custom_request": true
+      },
+      "BJlPOlBKDB.pdf": {
+        "custom_request": true
+      }
+    },
+    "pos_steering_attack_policy_puppetry_first_ocr": {
+      "--gvHfE3Xf5.pdf": {
+        "custom_request": true
+      },
+      "0-uUGPbIjD.pdf": {
+        "custom_request": true
+      },
+      "026hEw26i3-.pdf": {
+        "custom_request": true
+      },
+      "0qbEq5UBfGD.pdf": {
+        "custom_request": true
+      },
+      "3q5IqUrkcF.pdf": {
+        "custom_request": true
+      },
+      "49A1Y6tRhaq.pdf": {
+        "custom_request": true
+      },
+      "4hBXGTdS6Lc.pdf": {
+        "custom_request": true
+      },
+      "4pfqv2FCo0R.pdf": {
+        "custom_request": true
+      },
+      "5USOVm2HkfG.pdf": {
+        "custom_request": true
+      },
+      "5l9zj5G7vDY.pdf": {
+        "custom_request": true
+      },
+      "6gLEKETxUWp.pdf": {
+        "custom_request": true
+      },
+      "7WwYBADS3E_.pdf": {
+        "custom_request": true
+      },
+      "8nXkyH2_s6.pdf": {
+        "custom_request": true
+      },
+      "AADxnPG-PR.pdf": {
+        "custom_request": true
+      },
+      "AT7jak63NNK.pdf": {
+        "custom_request": true
+      },
+      "Al7Wpsy49g.pdf": {
+        "custom_request": true
+      },
+      "B1g30j0qF7.pdf": {
+        "custom_request": true
+      },
+      "BIIwfP55pp.pdf": {
+        "custom_request": true
+      },
+      "BJe4oxHYPB.pdf": {
+        "custom_request": true
+      },
+      "BJlPOlBKDB.pdf": {
+        "custom_request": true
+      }
+    },
+    "refusal_attack_narrative_first_ocr": {
+      "--gvHfE3Xf5.pdf": {
+        "custom_request": true
+      },
+      "0-uUGPbIjD.pdf": {
+        "custom_request": true
+      },
+      "026hEw26i3-.pdf": {
+        "custom_request": true
+      },
+      "0qbEq5UBfGD.pdf": {
+        "custom_request": true
+      },
+      "3q5IqUrkcF.pdf": {
+        "custom_request": true
+      },
+      "49A1Y6tRhaq.pdf": {
+        "custom_request": true
+      },
+      "4hBXGTdS6Lc.pdf": {
+        "custom_request": true
+      },
+      "4pfqv2FCo0R.pdf": {
+        "custom_request": true
+      },
+      "5USOVm2HkfG.pdf": {
+        "custom_request": true
+      },
+      "5l9zj5G7vDY.pdf": {
+        "custom_request": true
+      },
+      "6gLEKETxUWp.pdf": {
+        "custom_request": true
+      },
+      "7WwYBADS3E_.pdf": {
+        "custom_request": true
+      },
+      "8nXkyH2_s6.pdf": {
+        "custom_request": true
+      },
+      "AADxnPG-PR.pdf": {
+        "custom_request": true
+      },
+      "AT7jak63NNK.pdf": {
+        "custom_request": true
+      },
+      "Al7Wpsy49g.pdf": {
+        "custom_request": true
+      },
+      "B1g30j0qF7.pdf": {
+        "custom_request": true
+      },
+      "BIIwfP55pp.pdf": {
+        "custom_request": true
+      },
+      "BJe4oxHYPB.pdf": {
+        "custom_request": true
+      },
+      "BJlPOlBKDB.pdf": {
+        "custom_request": true
+      }
+    },
+    "refusal_attack_policy_puppetry_first_ocr": {
+      "--gvHfE3Xf5.pdf": {
+        "custom_request": true
+      },
+      "0-uUGPbIjD.pdf": {
+        "custom_request": true
+      },
+      "026hEw26i3-.pdf": {
+        "custom_request": true
+      },
+      "0qbEq5UBfGD.pdf": {
+        "custom_request": true
+      },
+      "3q5IqUrkcF.pdf": {
+        "custom_request": true
+      },
+      "49A1Y6tRhaq.pdf": {
+        "custom_request": true
+      },
+      "4hBXGTdS6Lc.pdf": {
+        "custom_request": true
+      },
+      "4pfqv2FCo0R.pdf": {
+        "custom_request": true
+      },
+      "5USOVm2HkfG.pdf": {
+        "custom_request": true
+      },
+      "5l9zj5G7vDY.pdf": {
+        "custom_request": true
+      },
+      "6gLEKETxUWp.pdf": {
+        "custom_request": true
+      },
+      "7WwYBADS3E_.pdf": {
+        "custom_request": true
+      },
+      "8nXkyH2_s6.pdf": {
+        "custom_request": true
+      },
+      "AADxnPG-PR.pdf": {
+        "custom_request": true
+      },
+      "AT7jak63NNK.pdf": {
+        "custom_request": true
+      },
+      "Al7Wpsy49g.pdf": {
+        "custom_request": true
+      },
+      "B1g30j0qF7.pdf": {
+        "custom_request": true
+      },
+      "BIIwfP55pp.pdf": {
+        "custom_request": true
+      },
+      "BJe4oxHYPB.pdf": {
+        "custom_request": true
+      },
+      "BJlPOlBKDB.pdf": {
+        "custom_request": true
+      }
+    }
+  },
+  "failed_pdfs": {},
+  "completed_batches": [
+    "pos_steering_attack_narrative_first_ocr",
+    "pos_steering_attack_policy_puppetry_first_ocr",
+    "refusal_attack_narrative_first_ocr",
+    "refusal_attack_policy_puppetry_first_ocr"
+  ],
+  "total_pdfs_processed": 80,
+  "total_requests_sent": 80
+}
