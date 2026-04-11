@@ -11,7 +11,10 @@ from typing import Any, Dict, Optional
 
 import undetected_chromedriver as uc
 from config import Config
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import (
+    ElementNotInteractableException,
+    TimeoutException,
+)
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -55,6 +58,13 @@ class ChatGPTAutomator:
             options.add_argument("--log-level=3")
             options.add_argument("--silent")
 
+            options.add_argument("--disable-background-timer-throttling")
+            options.add_argument("--disable-renderer-backgrounding")
+            options.add_argument("--disable-backgrounding-occluded-windows")
+            options.add_argument(
+                "--disable-features=CalculateNativeWinOcclusion,IntensiveWakeUpThrottling"
+            )
+
             # User data directory
             user_data_dir = os.path.abspath(self.config.chrome_user_data_dir)
             os.makedirs(user_data_dir, exist_ok=True)
@@ -69,6 +79,19 @@ class ChatGPTAutomator:
             if self.driver:
                 self.driver.set_page_load_timeout(self.config.page_load_timeout)
                 self.driver.implicitly_wait(self.config.implicit_wait)
+
+                try:
+                    self.driver.execute_cdp_cmd(
+                        "Emulation.setFocusEmulationEnabled", {"enabled": True}
+                    )
+                except Exception as e:
+                    logger.debug(f"Could not enable focus emulation: {e}")
+                try:
+                    self.driver.execute_cdp_cmd(
+                        "Page.setWebLifecycleState", {"state": "active"}
+                    )
+                except Exception as e:
+                    logger.debug(f"Could not pin page lifecycle state: {e}")
 
                 self.wait = WebDriverWait(self.driver, self.config.implicit_wait)
 
@@ -671,6 +694,15 @@ class ChatGPTAutomator:
                                 logger.error("Could not re-find text input for retry")
                                 return False
 
+                except ElementNotInteractableException as e:
+                    logger.warning(
+                        f"Element not interactable (attempt {attempt + 1}): {e.msg if hasattr(e, 'msg') else e}. Trying JS fallback."
+                    )
+                    text_input = self._find_text_input_with_retry()
+                    if text_input and self._type_message_js(text_input, message):
+                        logger.info("Message typed via JS fallback")
+                        message_sent_successfully = True
+                        break
                 except Exception as e:
                     if "stale element reference" in str(e).lower():
                         logger.debug(
@@ -688,6 +720,15 @@ class ChatGPTAutomator:
                         )
                         if attempt == max_attempts - 1:
                             raise
+
+            if not message_sent_successfully:
+                logger.warning(
+                    "send_keys retries exhausted; attempting JS typing fallback"
+                )
+                text_input = self._find_text_input_with_retry()
+                if text_input and self._type_message_js(text_input, message):
+                    logger.info("Message typed via JS fallback after send_keys failed")
+                    message_sent_successfully = True
 
             if not message_sent_successfully:
                 logger.error(
@@ -714,14 +755,10 @@ class ChatGPTAutomator:
                             return True
                         else:
                             logger.warning(
-                                f"Message may not have been sent - text input still contains: '{remaining_value[:50]}...'"
+                                f"Message may not have been sent - text input still contains: '{remaining_value[:50]}...'. Trying JS click fallback."
                             )
-                            # Try clicking send again
-                            send_button_retry = self._find_send_button_with_retry()
-                            if send_button_retry and send_button_retry.is_enabled():
-                                send_button_retry.click()
+                            if self._click_send_button_js():
                                 time.sleep(1)
-                                # Check again
                                 final_text_input = self._find_text_input_with_retry()
                                 if final_text_input:
                                     final_value = self._get_text_input_value(
@@ -729,9 +766,13 @@ class ChatGPTAutomator:
                                     )
                                     if not final_value or final_value.strip() == "":
                                         logger.info(
-                                            "Message sent successfully on retry"
+                                            "Message sent successfully via JS click fallback"
                                         )
                                         return True
+                            logger.error(
+                                "Send button click did not submit message (input not cleared)"
+                            )
+                            return False
 
                     logger.info("Message sent successfully")
                     return True
@@ -770,6 +811,104 @@ class ChatGPTAutomator:
 
         except Exception as e:
             logger.error(f"Failed to send message: {e}")
+            return False
+
+    def _type_message_js(self, element, message: str) -> bool:
+        """Write text into the editor via JS, bypassing native focus.
+
+        Why: when Chrome is occluded (e.g. a fullscreen film is in front),
+        send_keys silently no-ops on ProseMirror. Dispatching a synthetic
+        paste event with a DataTransfer payload is the path ProseMirror's
+        own clipboard handler takes, so its internal state stays in sync
+        with the DOM — unlike textContent assignment, which leaves the
+        send button thinking the editor is empty.
+        """
+        if not self.driver:
+            return False
+        script = """
+            const el = arguments[0];
+            const text = arguments[1];
+            try { el.scrollIntoView({block: 'center'}); } catch (e) {}
+            el.focus();
+            try {
+                const sel = window.getSelection();
+                const range = document.createRange();
+                range.selectNodeContents(el);
+                sel.removeAllRanges();
+                sel.addRange(range);
+                document.execCommand('delete', false);
+            } catch (e) {}
+            const dt = new DataTransfer();
+            dt.setData('text/plain', text);
+            const pasteEvent = new ClipboardEvent('paste', {
+                clipboardData: dt,
+                bubbles: true,
+                cancelable: true,
+            });
+            el.dispatchEvent(pasteEvent);
+            if (!(el.textContent || '').includes(text) && !(el.value || '').includes(text)) {
+                const ok = document.execCommand('insertText', false, text);
+                if (!ok) {
+                    if (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT') {
+                        el.value = text;
+                    } else {
+                        el.textContent = text;
+                    }
+                    el.dispatchEvent(new InputEvent('input', {
+                        inputType: 'insertText', data: text, bubbles: true
+                    }));
+                }
+            }
+            return el.textContent || el.value || '';
+        """
+        try:
+            self.driver.execute_script(script, element, message)
+        except Exception as e:
+            logger.warning(f"JS typing fallback raised: {e}")
+            return False
+
+        time.sleep(0.5)
+        current = self._get_text_input_value(element)
+        if current and message.strip() in current.strip():
+            return True
+        logger.warning(
+            f"JS typing fallback did not populate input (got '{current[:50] if current else 'empty'}...')"
+        )
+        return False
+
+    def _click_send_button_js(self) -> bool:
+        """Click the send button via JS, bypassing native event dispatch.
+
+        Why: when Chrome is occluded the Selenium-driven native click can
+        be dropped. A JS .click() runs synchronously in page context and
+        triggers the React onClick handler regardless of window focus.
+        """
+        if not self.driver:
+            return False
+        send_button_selectors = [
+            "#composer-submit-button",
+            "[data-testid='send-button']",
+            "button[aria-label*='Send']",
+            "button[aria-label*='send']",
+            "button[type='submit']",
+        ]
+        script = """
+            const selectors = arguments[0];
+            for (const sel of selectors) {
+                const btn = document.querySelector(sel);
+                if (btn && !btn.disabled) {
+                    btn.click();
+                    return true;
+                }
+            }
+            return false;
+        """
+        try:
+            return bool(
+                self.driver.execute_script(script, send_button_selectors)
+            )
+        except Exception as e:
+            logger.warning(f"JS send click raised: {e}")
             return False
 
     def _find_text_input_with_retry(self):
