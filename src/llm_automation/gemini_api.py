@@ -19,6 +19,14 @@ except ImportError as e:
         "gemini-webapi package not found. Please install it with: pip install gemini-webapi"
     ) from e
 
+from tenacity import (
+    before_sleep_log,
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_random_exponential,
+)
+
 sys.path.insert(0, str(Path(__file__).parent))  # Ensure src/ is in sys.path
 from config import Config
 
@@ -140,25 +148,33 @@ class GeminiAutomator:
             # Run the async operation
             loop = asyncio.get_event_loop()
 
+            # Tenacity-wrapped inner call: exponential backoff with jitter on
+            # any transient exception from the Gemini web API. Max wait is
+            # capped by config.max_retry_wait so we never hang indefinitely.
+            max_wait = getattr(self.config, "max_retry_wait", 120)
+
+            @retry(
+                retry=retry_if_exception_type(Exception),
+                wait=wait_random_exponential(multiplier=2, min=4, max=max_wait),
+                stop=stop_after_attempt(5),
+                before_sleep=before_sleep_log(logger, logging.WARNING),
+                reraise=True,
+            )
             async def _process_pdf():
-                try:
-                    # Upload file and generate content
-                    response = await self.client.generate_content(
-                        request_text, files=[Path(pdf_path)], model="gemini-3.0-flash"
-                    )
+                response = await self.client.generate_content(
+                    request_text, files=[Path(pdf_path)], model="gemini-3.0-flash"
+                )
+                if response and response.text:
+                    return response.text.strip()
+                # None/empty response from the API → treat as transient and retry
+                raise RuntimeError("Empty response from Gemini")
 
-                    if response and response.text:
-                        return response.text.strip()
-                    else:
-                        logger.error("No response received from Gemini")
-                        return None
-
-                except Exception as e:
-                    logger.error(f"Error during PDF processing: {e}")
-                    return None
-
-            # Execute the async operation
-            response = loop.run_until_complete(_process_pdf())
+            # Execute the async operation. Tenacity raises on final failure.
+            try:
+                response = loop.run_until_complete(_process_pdf())
+            except Exception as inner_e:
+                logger.error(f"Gemini retries exhausted: {inner_e}")
+                return None
 
             if response:
                 logger.info(
@@ -180,10 +196,17 @@ class GeminiAutomator:
         return self.upload_pdf_and_request_review(pdf_path, request_text)
 
     def _handle_rate_limits(self) -> bool:
-        """Handle rate limits by waiting."""
+        """Handle rate limits by waiting.
+
+        Note: the primary backoff path is now tenacity inside
+        `upload_pdf_and_request_review`. This method remains for compatibility
+        but uses an exponential schedule capped by config.max_retry_wait so
+        a repeated call does not sit on a flat 60s sleep.
+        """
         try:
-            logger.warning("Rate limit detected, waiting before retry...")
-            time.sleep(60)  # Wait 1 minute for rate limits
+            wait = min(30, getattr(self.config, "max_retry_wait", 120))
+            logger.warning(f"Rate limit detected, waiting {wait}s before retry...")
+            time.sleep(wait)
             return True
         except Exception as e:
             logger.error(f"Error handling rate limits: {e}")

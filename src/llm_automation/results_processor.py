@@ -22,11 +22,13 @@ class ResultsProcessor:
         self.config = config
         self.llm_service = llm_service
         self.config.setup_directories()
+        run_id = getattr(config, "run_id", 0)
+        suffix = f"_run{run_id}" if run_id and run_id > 0 else ""
         self.consolidated_file = os.path.join(
-            self.config.results_dir, f"all_results_{llm_service}.json"
+            self.config.results_dir, f"all_results_{llm_service}{suffix}.json"
         )
         self.consolidated_csv = os.path.join(
-            self.config.results_dir, f"all_results_{llm_service}.csv"
+            self.config.results_dir, f"all_results_{llm_service}{suffix}.csv"
         )
 
     def load_existing_results(self) -> Dict[str, Dict]:

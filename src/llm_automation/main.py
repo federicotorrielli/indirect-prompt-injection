@@ -16,6 +16,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from config import Config
 from llm_factory import create_llm_automator
 from progress_tracker import ProgressTracker
+from response_validator import validate as validate_response
 from results_processor import ResultsProcessor
 
 # Configure logging
@@ -44,11 +45,17 @@ class PDFReviewAutomator:
         self.processor = ResultsProcessor(config, config.llm_service)
         self.session_start = datetime.now()
 
-        # Initialize progress tracker with model-specific file
+        # Initialize progress tracker with model-specific file.
+        # When run_id > 0 we use a separate progress file per repetition so
+        # the 3x repetition runs (A1) do not stomp on each other.
+        run_suffix = f"_run{config.run_id}" if config.run_id and config.run_id > 0 else ""
         progress_file = os.path.join(
-            config.results_dir, f"automation_progress_{config.llm_service}.json"
+            config.results_dir,
+            f"automation_progress_{config.llm_service}{run_suffix}.json",
         )
-        self.progress_tracker = ProgressTracker(progress_file, config.llm_service)
+        self.progress_tracker = ProgressTracker(
+            progress_file, config.llm_service, run_id=config.run_id
+        )
 
     def initialize(
         self,
@@ -350,7 +357,11 @@ class PDFReviewAutomator:
 
                 # Process the PDF with retry logic
                 success, response, error = self._process_pdf_with_retry(
-                    pdf_file, request_text, max_retries=self.config.max_retries
+                    pdf_file,
+                    request_text,
+                    max_retries=self.config.max_retries,
+                    attack_type=attack_type,
+                    request_type=request_type,
                 )
 
                 # Create result object
@@ -365,6 +376,7 @@ class PDFReviewAutomator:
                     "timestamp": datetime.now().isoformat(),
                     "success": success,
                     "error": error,
+                    "run_id": self.config.run_id,
                 }
 
                 # Save result immediately to consolidated file
@@ -597,9 +609,18 @@ class PDFReviewAutomator:
             self.cleanup()
 
     def _process_pdf_with_retry(
-        self, pdf_file: str, request_text: str, max_retries: int = 3
+        self,
+        pdf_file: str,
+        request_text: str,
+        max_retries: int = 3,
+        attack_type: str = "",
+        request_type: str = "",
     ) -> Tuple[bool, Optional[str], Optional[str]]:
         """Process a PDF with retry logic and page refresh on errors.
+
+        Uses the attack-type-aware ResponseValidator to reject truncated /
+        broken responses (e.g. OpenReview-ID fragments from failed PDF
+        uploads) so they get retried instead of silently stored as successes.
 
         Returns:
             Tuple of (success, response, error_message)
@@ -623,16 +644,31 @@ class PDFReviewAutomator:
                     pdf_file, request_text
                 )
 
-                if response is not None:
+                is_valid, reject_reason = validate_response(
+                    response,
+                    attack_type,
+                    request_type,
+                    min_length_override=getattr(
+                        self.config, "min_response_length", None
+                    ),
+                )
+                if is_valid:
                     logger.info(
                         f"Successfully processed {Path(pdf_file).name} on attempt {attempt + 1}"
                     )
                     return True, response, None
                 else:
-                    last_error = "No response received"
+                    last_error = f"invalid response: {reject_reason}"
                     logger.warning(
-                        f"No response received for {Path(pdf_file).name} on attempt {attempt + 1}"
+                        f"Rejected response for {Path(pdf_file).name} on attempt {attempt + 1}: {reject_reason}"
                     )
+                    # Fall through to backoff + retry
+                    if attempt < max_retries - 1:
+                        backoff_time = 2**attempt
+                        logger.info(
+                            f"Waiting {backoff_time}s before retry after invalid response..."
+                        )
+                        time.sleep(backoff_time)
 
             except Exception as e:
                 last_error = str(e)
@@ -844,6 +880,15 @@ def main():
         default=None,
         help="Limit the number of PDFs to process per directory (default: all)",
     )
+    parser.add_argument(
+        "--run-id",
+        type=int,
+        default=0,
+        help="Repetition index for statistical runs (A1). 0 = legacy single run. "
+        "Positive values (1, 2, 3, ...) write to separate "
+        "all_results_{llm}_run{N}.json and automation_progress_{llm}_run{N}.json "
+        "files so multiple repetitions of the full experiment can run independently.",
+    )
 
     args = parser.parse_args()
 
@@ -852,6 +897,11 @@ def main():
 
     # Override LLM service from command line argument
     config.llm_service = args.llm_service
+    config.run_id = args.run_id
+    if args.run_id and args.run_id > 0:
+        logger.info(
+            f"Run ID = {args.run_id}: results and progress written to run-specific files"
+        )
 
     # Handle OCR mode: auto-enable for Gemini, or use CLI flag
     if args.llm_service == "gemini" or args.ocr_mode:

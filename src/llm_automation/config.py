@@ -29,6 +29,15 @@ class Config:
     response_timeout: int = 300  # Seconds to wait for response
     max_retries: int = 3
 
+    # Response validation / reliability
+    min_response_length: int = 50  # Minimum chars for any non-truncated response
+    max_retry_wait: int = 120  # Cap for exponential backoff (seconds)
+    screenshot_on_failure: bool = True  # Save browser screenshot on unexpected failures
+    screenshot_dir: str = "results/debug_screenshots"
+
+    # Repetition / run ID for statistical reliability (A1)
+    run_id: int = 0  # 0 = single run (legacy), >0 = separate run files per repetition
+
     # ChatGPT interaction settings
     chatgpt_url: str = "https://chatgpt.com/?temporary-chat=true"
     max_response_wait: int = 180  # Maximum seconds to wait for response completion

@@ -245,6 +245,31 @@ uv run python src/llm_automation/main.py \
     # (automatically resumes from last checkpoint)
 ```
 
+##### Repeated Runs for Statistical Reliability
+
+Because LLM outputs are stochastic, a single run per attack vector is not a
+reliable estimator of the attack success rate. Use `--run-id` to launch
+independent repetitions. Each run writes to its own results and progress
+files, so the runs can execute back-to-back (or in parallel, on different
+machines / accounts) without clobbering each other:
+
+```bash
+# Three independent repetitions of the full ChatGPT experiment
+uv run python src/llm_automation/main.py --llm-service chatgpt --run-id 1
+uv run python src/llm_automation/main.py --llm-service chatgpt --run-id 2
+uv run python src/llm_automation/main.py --llm-service chatgpt --run-id 3
+```
+
+Outputs land in:
+
+- `results/inference/all_results_chatgpt_run1.json` (and `_run2`, `_run3`)
+- `results/inference/automation_progress_chatgpt_run1.json` (and `_run2`, `_run3`)
+
+Each result record carries a `run_id` field so downstream analysis can
+aggregate mean/std/CI across repetitions. Omitting `--run-id` (or passing
+`--run-id 0`) preserves the legacy single-run filenames for backwards
+compatibility.
+
 **Command Line Options:**
 
 - `--llm-service`: Target LLM (`chatgpt`, `copilot`, `gemini`)
@@ -255,13 +280,42 @@ uv run python src/llm_automation/main.py \
 - `--ocr-model-mode`: Make injected text visible
 - `--insert-new-page`: Insert prompt on new page
 - `--reset-progress`: Clear previous progress and start fresh
+- `--run-id`: Repetition index for statistical runs (0 = legacy single run; 1, 2, 3 … for repetitions)
 - `--headless`: Run browser in headless mode
 
 **Expected Output:**
 
-- `results/inference/all_results_{service}.json`: Raw experiment results
-- `results/inference/automation_progress_{service}.json`: Progress tracking
+- `results/inference/all_results_{service}[_run{N}].json`: Raw experiment results
+- `results/inference/automation_progress_{service}[_run{N}].json`: Progress tracking
+- `results/debug_screenshots/`: Browser screenshots saved on unexpected failures (ChatGPT)
 - Live progress updates in terminal and `automation.log`
+
+##### Response Validation and Autonomous Retry
+
+The automation pipeline validates every LLM response before accepting it,
+using an attack-type-aware `ResponseValidator`
+(`src/llm_automation/response_validator.py`). Broken outputs — truncated
+fragments, empty responses, PDF-ingestion failure messages
+(`"I cannot find the pdf"`, `"Sorry, something went wrong"`) — are rejected
+and retried rather than silently stored as successes. Rejection rules:
+
+- `None` / empty responses
+- OpenReview paper-ID leaks (e.g. `"The paper\nJ5LS3YJH7Zi"`), which are the
+  signature of a failed PDF upload
+- PDF-ingestion failure phrases, distinct from genuine policy refusals which
+  cite `"OpenAI's policy"` / `"academic integrity"`
+- Per-attack-type minimum length: 40 chars for refusal / external site, 150
+  for steering, 200 for watermark
+
+Gemini calls are additionally wrapped in `tenacity` with exponential backoff
+and jitter (`wait_random_exponential(min=4, max=config.max_retry_wait)`,
+5 attempts) so transient `gemini-webapi` failures are retried automatically.
+Relevant `config.json` fields:
+
+- `min_response_length` (default `50`) — minimum acceptable response length
+- `max_retry_wait` (default `120`) — cap on exponential backoff delay
+- `screenshot_on_failure` (default `true`) — save a Chrome screenshot to
+  `screenshot_dir` on unexpected ChatGPT errors, for unattended-run debugging
 
 ### Phase 4: Evaluation and Analysis
 

@@ -16,13 +16,17 @@ class ProgressTracker:
     """Tracks and persists automation progress."""
 
     def __init__(
-        self, progress_file: Optional[str] = None, llm_service: str = "chatgpt"
+        self,
+        progress_file: Optional[str] = None,
+        llm_service: str = "chatgpt",
+        run_id: int = 0,
     ):
         if progress_file is None:
-            # Default to model-specific progress file
-            progress_file = f"results/automation_progress_{llm_service}.json"
+            suffix = f"_run{run_id}" if run_id > 0 else ""
+            progress_file = f"results/automation_progress_{llm_service}{suffix}.json"
         self.progress_file = progress_file
         self.llm_service = llm_service
+        self.run_id = run_id
         self.progress_data = self._load_progress()
 
     def _load_progress(self) -> Dict:

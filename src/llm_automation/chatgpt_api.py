@@ -65,9 +65,7 @@ class ChatGPTAutomator:
                 options.add_argument("--headless")
 
             # Initialize driver
-            self.driver = uc.Chrome(
-                options=options, version_main=144, use_subprocess=True
-            )
+            self.driver = uc.Chrome(options=options, use_subprocess=True)
             if self.driver:
                 self.driver.set_page_load_timeout(self.config.page_load_timeout)
                 self.driver.implicitly_wait(self.config.implicit_wait)
@@ -1028,6 +1026,7 @@ class ChatGPTAutomator:
 
         except Exception as e:
             logger.error(f"Error in PDF review request: {e}")
+            self._save_debug_screenshot(Path(pdf_path).stem, "pdf_review_error")
             # Try to start new conversation to clean up
             try:
                 self.start_new_conversation()
@@ -1040,6 +1039,27 @@ class ChatGPTAutomator:
     ) -> Optional[str]:
         """Alias for send_pdf_review_request to maintain compatibility with generic interface."""
         return self.send_pdf_review_request(pdf_path, review_request)
+
+    def _save_debug_screenshot(self, pdf_stem: str, tag: str) -> None:
+        """Save a browser screenshot to aid unattended-run debugging.
+
+        No-op if disabled in config or if the driver is not available.
+        """
+        if not getattr(self.config, "screenshot_on_failure", False):
+            return
+        try:
+            if not self.driver:
+                return
+            out_dir = getattr(
+                self.config, "screenshot_dir", "results/debug_screenshots"
+            )
+            os.makedirs(out_dir, exist_ok=True)
+            ts = time.strftime("%Y%m%d_%H%M%S")
+            path = os.path.join(out_dir, f"{pdf_stem}_{tag}_{ts}.png")
+            self.driver.save_screenshot(path)
+            logger.info(f"Saved debug screenshot: {path}")
+        except Exception as e:
+            logger.debug(f"Failed to save debug screenshot: {e}")
 
     def refresh_page(self):
         """Refresh the current page."""
