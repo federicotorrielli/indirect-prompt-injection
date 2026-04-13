@@ -48,7 +48,9 @@ class PDFReviewAutomator:
         # Initialize progress tracker with model-specific file.
         # When run_id > 0 we use a separate progress file per repetition so
         # the 3x repetition runs (A1) do not stomp on each other.
-        run_suffix = f"_run{config.run_id}" if config.run_id and config.run_id > 0 else ""
+        run_suffix = (
+            f"_run{config.run_id}" if config.run_id and config.run_id > 0 else ""
+        )
         progress_file = os.path.join(
             config.results_dir,
             f"automation_progress_{config.llm_service}{run_suffix}.json",

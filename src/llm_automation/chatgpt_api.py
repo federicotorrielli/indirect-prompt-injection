@@ -904,9 +904,7 @@ class ChatGPTAutomator:
             return false;
         """
         try:
-            return bool(
-                self.driver.execute_script(script, send_button_selectors)
-            )
+            return bool(self.driver.execute_script(script, send_button_selectors))
         except Exception as e:
             logger.warning(f"JS send click raised: {e}")
             return False

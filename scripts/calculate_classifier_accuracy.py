@@ -149,8 +149,12 @@ def create_balanced_dataset(
     console.print(f"[cyan]  • Balanced - Using {target_size} samples per class[/cyan]")
 
     np.random.seed(42)
-    accepted_indices = np.random.choice(len(accepted_reviews), target_size, replace=False)
-    rejected_indices = np.random.choice(len(rejected_reviews), target_size, replace=False)
+    accepted_indices = np.random.choice(
+        len(accepted_reviews), target_size, replace=False
+    )
+    rejected_indices = np.random.choice(
+        len(rejected_reviews), target_size, replace=False
+    )
 
     balanced_texts = []
     balanced_labels = []
@@ -167,20 +171,26 @@ def create_balanced_dataset(
     np.random.shuffle(combined)
     balanced_texts, balanced_labels = zip(*combined)
 
-    console.print(f"[green]✅ Created balanced dataset with {len(balanced_texts)} samples[/green]")
+    console.print(
+        f"[green]✅ Created balanced dataset with {len(balanced_texts)} samples[/green]"
+    )
 
     return list(balanced_texts), list(balanced_labels)
 
 
 def evaluate_classifier() -> dict:
     """Evaluate the academic sentiment classifier and return metrics."""
-    console.print("\n[bold cyan]🔬 Academic Sentiment Classifier Evaluation[/bold cyan]\n")
+    console.print(
+        "\n[bold cyan]🔬 Academic Sentiment Classifier Evaluation[/bold cyan]\n"
+    )
 
     # Check if model exists
     model_path = Path(MODEL_PATH)
     if not model_path.exists():
         console.print(f"[red]❌ Model not found at {MODEL_PATH}[/red]")
-        console.print("[yellow]Run 'uv run python src/evaluation/train.py' first[/yellow]")
+        console.print(
+            "[yellow]Run 'uv run python src/evaluation/train.py' first[/yellow]"
+        )
         return {}
 
     # Prepare dataset (same as training to ensure consistent splits)
@@ -191,7 +201,11 @@ def evaluate_classifier() -> dict:
 
     # Split dataset using same random state as training
     train_texts, temp_texts, train_labels, temp_labels = train_test_split(
-        balanced_texts, balanced_labels, test_size=0.2, random_state=42, stratify=balanced_labels
+        balanced_texts,
+        balanced_labels,
+        test_size=0.2,
+        random_state=42,
+        stratify=balanced_labels,
     )
 
     val_texts, test_texts, val_labels, test_labels = train_test_split(
@@ -236,7 +250,9 @@ def evaluate_classifier() -> dict:
 
         for result in batch_results:
             top_pred = max(result, key=lambda x: x["score"])
-            pred_label = label_mapping.get(top_pred["label"], int(top_pred["label"][-1]))
+            pred_label = label_mapping.get(
+                top_pred["label"], int(top_pred["label"][-1])
+            )
             predictions.append(pred_label)
 
     # Calculate metrics
@@ -261,7 +277,9 @@ def evaluate_classifier() -> dict:
     console.print("\n[bold green]📊 Evaluation Results[/bold green]\n")
 
     # Main metrics table
-    metrics_table = Table(title="🎯 Overall Metrics", show_header=True, header_style="bold magenta")
+    metrics_table = Table(
+        title="🎯 Overall Metrics", show_header=True, header_style="bold magenta"
+    )
     metrics_table.add_column("Metric", style="cyan")
     metrics_table.add_column("Value", justify="right", style="green")
     metrics_table.add_row("Accuracy", f"{accuracy:.4f} ({accuracy * 100:.2f}%)")
