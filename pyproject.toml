@@ -3,7 +3,7 @@ name = "indirect-prompt-injection"
 version = "0.1.0"
 description = "Research on indirect prompt injection vulnerabilities in AI-generated peer reviews for scientific manuscripts"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.13,<3.14"
 dependencies = [
     "datasets~=4.8.4",
     "matplotlib~=3.10.8",
@@ -27,14 +27,16 @@ dependencies = [
     "undetected-chromedriver",
     "gemini-webapi~=2.0.0",
     "browser-cookie3~=0.20.1",
-    "rich~=14.3.4",
-    "kernels~=0.13.0",
-    "triton~=3.6.0",
-    "triton-kernels",
+    "rich~=15.0.0",
     "python-dotenv>=1.2.2",
     "huggingface_hub",
     "tenacity~=9.1.4",
+    "sglang @ git+https://github.com/sgl-project/sglang.git@main#subdirectory=python",
+    "sglang-kernel",
 ]
 
-[tool.uv.sources]
-triton-kernels = { git = "https://github.com/triton-lang/triton.git", subdirectory = "python/triton_kernels", rev = "main" }
+[tool.uv]
+prerelease = "allow"
+override-dependencies = [
+  "transformers==5.5.4",
+]
