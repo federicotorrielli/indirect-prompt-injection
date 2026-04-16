@@ -2329,6 +2329,7 @@ def aggregate_self_consistency_results(
     run_end: int,
     evaluation_dir: str,
     output_file: str,
+    evaluated_prefix: str = "all_results",
 ) -> None:
     """
     Aggregate run1..runN evaluated files into uncertainty-aware summary.
@@ -2382,7 +2383,9 @@ def aggregate_self_consistency_results(
         }
         loaded_runs: Dict[int, List[Dict[str, Any]]] = {}
         for run_id in range(run_start, run_end + 1):
-            path = eval_dir / f"all_results_{service}_run{run_id}_evaluated.json"
+            path = (
+                eval_dir / f"{evaluated_prefix}_{service}_run{run_id}_evaluated.json"
+            )
             if not path.exists():
                 console.print(f"[yellow]⚠️  Missing evaluated run file: {path}[/yellow]")
                 continue
@@ -3076,6 +3079,9 @@ Examples:
   # Default self-consistency batch mode (chatgpt+gemini, runs 1..5)
   uv run python src/evaluation/evaluate_results.py
 
+  # Optional collu batch mode
+  uv run python src/evaluation/evaluate_results.py --evaluate-collu-results
+
   # Single-file mode (legacy-compatible)
   uv run python src/evaluation/evaluate_results.py results/inference/all_results_chatgpt_run1.json results/evaluation/all_results_chatgpt_run1_evaluated.json
 
@@ -3126,6 +3132,18 @@ Examples:
         help="Legacy argument; SGLang judge submits all prompts in one call (default: %(default)s)",
     )
     parser.add_argument(
+        "--input-prefix",
+        type=str,
+        default="all_results",
+        help="Input filename prefix in batch mode (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--output-prefix",
+        type=str,
+        default=None,
+        help="Output filename prefix in batch mode (default: input-prefix)",
+    )
+    parser.add_argument(
         "--services",
         nargs="+",
         default=["chatgpt", "gemini"],
@@ -3148,7 +3166,7 @@ Examples:
         "--inference-dir",
         type=str,
         default="results/inference",
-        help="Input directory containing all_results_{service}_runN.json",
+        help="Input directory containing {input-prefix}_{service}_runN.json",
     )
     parser.add_argument(
         "--evaluation-dir",
@@ -3161,6 +3179,29 @@ Examples:
         type=str,
         default="results/evaluation/self_consistency_summary.json",
         help="Cross-run aggregate summary output path",
+    )
+    parser.add_argument(
+        "--evaluate-collu-results",
+        action="store_true",
+        help="Also evaluate collu result runs from --collu-inference-dir",
+    )
+    parser.add_argument(
+        "--collu-inference-dir",
+        type=str,
+        default="results_collu",
+        help="Input directory containing collu run files",
+    )
+    parser.add_argument(
+        "--collu-evaluation-dir",
+        type=str,
+        default="results_collu/evaluation",
+        help="Output directory for evaluated collu run files",
+    )
+    parser.add_argument(
+        "--collu-aggregate-output",
+        type=str,
+        default="results_collu/evaluation/self_consistency_summary.json",
+        help="Cross-run aggregate summary output path for collu runs",
     )
     parser.add_argument(
         "--skip-aggregate",
@@ -3262,59 +3303,89 @@ Examples:
             if args.run_end < args.run_start:
                 raise ValueError("--run-end must be >= --run-start")
 
+            output_prefix = args.output_prefix or args.input_prefix
+            batch_groups = [
+                {
+                    "label": "default",
+                    "inference_dir": args.inference_dir,
+                    "evaluation_dir": args.evaluation_dir,
+                    "aggregate_output": args.aggregate_output,
+                    "input_prefix": args.input_prefix,
+                    "output_prefix": output_prefix,
+                }
+            ]
+            if args.evaluate_collu_results:
+                batch_groups.append(
+                    {
+                        "label": "collu",
+                        "inference_dir": args.collu_inference_dir,
+                        "evaluation_dir": args.collu_evaluation_dir,
+                        "aggregate_output": args.collu_aggregate_output,
+                        "input_prefix": args.input_prefix,
+                        "output_prefix": output_prefix,
+                    }
+                )
+
             evaluated_jobs = 0
             skipped_jobs = 0
-            for service in args.services:
-                for run_id in range(args.run_start, args.run_end + 1):
-                    input_path = (
-                        Path(args.inference_dir)
-                        / f"all_results_{service}_run{run_id}.json"
-                    )
-                    output_path = (
-                        Path(args.evaluation_dir)
-                        / f"all_results_{service}_run{run_id}_evaluated.json"
-                    )
-                    analysis_path = (
-                        Path(args.evaluation_dir)
-                        / f"all_results_{service}_run{run_id}_evaluated_analysis.json"
-                    )
-
-                    if not input_path.exists():
-                        console.print(
-                            f"[yellow]⚠️  Skipping missing input: {input_path}[/yellow]"
+            for group in batch_groups:
+                console.print(
+                    f"[bold magenta]📦 Batch group: {group['label']} "
+                    f"(input={group['inference_dir']}, output={group['evaluation_dir']})[/bold magenta]"
+                )
+                for service in args.services:
+                    for run_id in range(args.run_start, args.run_end + 1):
+                        input_path = (
+                            Path(group["inference_dir"])
+                            / f"{group['input_prefix']}_{service}_run{run_id}.json"
                         )
-                        skipped_jobs += 1
-                        continue
+                        output_path = (
+                            Path(group["evaluation_dir"])
+                            / f"{group['output_prefix']}_{service}_run{run_id}_evaluated.json"
+                        )
+                        analysis_path = (
+                            Path(group["evaluation_dir"])
+                            / f"{group['output_prefix']}_{service}_run{run_id}_evaluated_analysis.json"
+                        )
 
-                    console.print(
-                        f"[bold cyan]▶ Evaluating {service} run {run_id}[/bold cyan]"
-                    )
-                    main(
-                        str(input_path),
-                        str(output_path),
-                        args.model_name,
-                        args.think,
-                        args.batch_size,
-                        str(analysis_path),
-                        second_judge_model=args.second_judge_model,
-                        use_dual_judge_consensus=not args.disable_dual_judge_consensus,
-                        run_academic_classifier=not args.skip_academic_classifier,
-                        academic_classifier_model_path=args.academic_classifier_model_path,
-                    )
-                    evaluated_jobs += 1
+                        if not input_path.exists():
+                            console.print(
+                                f"[yellow]⚠️  Skipping missing input: {input_path}[/yellow]"
+                            )
+                            skipped_jobs += 1
+                            continue
+
+                        console.print(
+                            f"[bold cyan]▶ Evaluating {service} run {run_id} ({group['label']})[/bold cyan]"
+                        )
+                        main(
+                            str(input_path),
+                            str(output_path),
+                            args.model_name,
+                            args.think,
+                            args.batch_size,
+                            str(analysis_path),
+                            second_judge_model=args.second_judge_model,
+                            use_dual_judge_consensus=not args.disable_dual_judge_consensus,
+                            run_academic_classifier=not args.skip_academic_classifier,
+                            academic_classifier_model_path=args.academic_classifier_model_path,
+                        )
+                        evaluated_jobs += 1
 
             console.print(
                 f"[green]✅ Batch evaluation finished. Evaluated: {evaluated_jobs}, Skipped: {skipped_jobs}[/green]"
             )
 
             if not args.skip_aggregate:
-                aggregate_self_consistency_results(
-                    services=args.services,
-                    run_start=args.run_start,
-                    run_end=args.run_end,
-                    evaluation_dir=args.evaluation_dir,
-                    output_file=args.aggregate_output,
-                )
+                for group in batch_groups:
+                    aggregate_self_consistency_results(
+                        services=args.services,
+                        run_start=args.run_start,
+                        run_end=args.run_end,
+                        evaluation_dir=group["evaluation_dir"],
+                        output_file=group["aggregate_output"],
+                        evaluated_prefix=group["output_prefix"],
+                    )
     except KeyboardInterrupt:
         console.print("\n[yellow]⚠️  Evaluation interrupted by user[/yellow]")
     except Exception as e:
