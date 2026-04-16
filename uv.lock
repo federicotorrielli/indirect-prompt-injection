@@ -949,7 +949,7 @@ requires-dist = [
     { name = "scipy", specifier = "~=1.17.1" },
     { name = "seaborn", specifier = "~=0.13.2" },
     { name = "sglang", git = "https://github.com/sgl-project/sglang.git?subdirectory=python&rev=main" },
-    { name = "sglang-kernel", git = "https://github.com/sgl-project/sglang.git?subdirectory=sgl-kernel&rev=main" },
+    { name = "sglang-kernel" },
     { name = "tenacity", specifier = "~=9.1.4" },
     { name = "textblob", specifier = "~=0.20.0" },
     { name = "tqdm", specifier = "~=4.67.3" },
@@ -2981,7 +2981,11 @@ dependencies = [
 [[package]]
 name = "sglang-kernel"
 version = "0.4.1"
-source = { git = "https://github.com/sgl-project/sglang.git?subdirectory=sgl-kernel&rev=main#6da3aba6a5d62f9b9b976553c46b5d45b88b3b13" }
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/62/8d/6923baa7447a758b38a0ed0b2ee5b89bd13b1e35ee14f72114bbbf8fb3e6/sglang_kernel-0.4.1-cp310-abi3-manylinux2014_aarch64.whl", hash = "sha256:c4df0c48f167fa95b77dbdd8f04293b305159e438d8797ca96009e02a7554406", size = 212840645, upload-time = "2026-04-03T09:54:03.644Z" },
+    { url = "https://files.pythonhosted.org/packages/97/26/d4a84be6587b57d20214cc2ee1e7f41b7e3336df357c45a833f25b1f1abf/sglang_kernel-0.4.1-cp310-abi3-manylinux2014_x86_64.whl", hash = "sha256:64ab5df34264cdffc36e25fee429dcafe2e204cae73cc1f9736a4e5ab97aa206", size = 352149358, upload-time = "2026-04-03T09:28:02.942Z" },
+]
 
 [[package]]
 name = "shadowcopy"
