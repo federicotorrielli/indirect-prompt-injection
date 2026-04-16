@@ -322,22 +322,26 @@ Relevant `config.json` fields:
 #### Step 4.1: Basic Results Evaluation
 
 ```bash
-# Evaluate ChatGPT results
-uv run python src/evaluation/evaluate_results.py \
-    --results-file results/inference/all_results_chatgpt.json
+# Evaluate self-consistency runs 1..5 for ChatGPT + Gemini (default)
+uv run python src/evaluation/evaluate_results.py
 
-# Evaluate Gemini results
+# Evaluate a custom run window
 uv run python src/evaluation/evaluate_results.py \
-    --results-file results/inference/all_results_gemini.json
+  --services chatgpt gemini \
+  --run-start 1 \
+  --run-end 5
 
-# Evaluate Copilot results
+# Evaluate a single run file explicitly
 uv run python src/evaluation/evaluate_results.py \
-    --results-file results/inference/all_results_copilot.json
+  results/inference/all_results_chatgpt_run1.json \
+  results/evaluation/all_results_chatgpt_run1_evaluated.json
 ```
 
 **Expected Output:**
 
-- `results/evaluation/all_results_{service}_evaluated.json`: Evaluated results with success/failure classifications
+- `results/evaluation/all_results_{service}_run{N}_evaluated.json`
+- `results/evaluation/all_results_{service}_run{N}_evaluated_analysis.json`
+- `results/evaluation/self_consistency_summary.json` (cross-run mean/std/CI summary)
 
 #### Step 4.2: Advanced Academic Sentiment Analysis
 
@@ -345,12 +349,11 @@ uv run python src/evaluation/evaluate_results.py \
 # Train the academic sentiment classifier (optional - pre-trained model available on Huggingface)
 uv run python src/evaluation/train.py
 
-# Run academic sentiment evaluation on steering attacks
+# Academic classifier is automatically applied during evaluate_results.py.
+# To run classifier-only analysis manually:
 uv run python src/evaluation/academic_sentiment_evaluator.py \
-    --results-file results/evaluation/all_results_chatgpt_evaluated.json
-
-uv run python src/evaluation/academic_sentiment_evaluator.py \
-    --results-file results/evaluation/all_results_gemini_evaluated.json
+  results/evaluation/all_results_chatgpt_run1_evaluated.json \
+  results/evaluation/all_results_chatgpt_run1_evaluated_classified.json
 ```
 
 **Expected Output:**
@@ -521,8 +524,9 @@ ls -la data/fonts/
 ```bash
 # Run evaluation in batches
 uv run python src/evaluation/evaluate_results.py \
-    --results-file results/inference/all_results_chatgpt.json \
-    --batch-size 100
+    results/inference/all_results_chatgpt_run1.json \
+    results/evaluation/all_results_chatgpt_run1_evaluated.json \
+    --batch_size 2
 
 # Or increase system swap space
 ```
