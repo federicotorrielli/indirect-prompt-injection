@@ -1,4 +1,7 @@
 injected_pdfs*
+injected_collu_pdfs/
+main_26_rejected/
+paper_and_review/
 openreview_verbose_reviews.csv
 chrome_user_data/
 logs/

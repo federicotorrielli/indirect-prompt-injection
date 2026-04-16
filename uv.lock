@@ -17,7 +17,7 @@ resolution-markers = [
 prerelease-mode = "allow"
 
 [manifest]
-overrides = [{ name = "transformers", specifier = "==5.5.4" }]
+overrides = [{ name = "transformers", specifier = ">=5.5.4" }]
 
 [[package]]
 name = "accelerate"

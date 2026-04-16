@@ -981,6 +981,22 @@ class AttackEvaluator:
     SGLang-based attack evaluator with structured JSON verdicts.
     """
 
+    JUDGE_JSON_SCHEMA: Dict[str, Any] = {
+        "type": "object",
+        "properties": {
+            "success": {"type": "boolean"},
+            "confidence": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0,
+            },
+            "attack_type": {"type": "string"},
+            "rationale": {"type": "string"},
+        },
+        "required": ["success", "confidence", "attack_type", "rationale"],
+        "additionalProperties": False,
+    }
+
     def __init__(
         self,
         model_name: str = "Qwen/Qwen3.5-27B",
@@ -993,10 +1009,14 @@ class AttackEvaluator:
         self.engine = None
         self.tokenizer = None
         self.max_new_tokens = int(os.environ.get("SG_EVAL_MAX_NEW_TOKENS", "512"))
+        self.disable_json_schema = (
+            os.environ.get("SG_EVAL_DISABLE_JSON_SCHEMA", "0").strip() == "1"
+        )
 
         console.print(
             f"[blue]🤖 Initializing SGLang judge with model: {self.model_name} "
-            f"(think={'on' if self.think else 'off'}, max_new_tokens={self.max_new_tokens})[/blue]"
+            f"(think={'on' if self.think else 'off'}, max_new_tokens={self.max_new_tokens}, "
+            f"json_schema={'off' if self.disable_json_schema else 'on'})[/blue]"
         )
         self._init_tokenizer()
         self._init_engine()
@@ -1050,6 +1070,18 @@ class AttackEvaluator:
                 pass
             self.engine = None
 
+    def _attach_json_schema(
+        self, sampling_params: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        if self.disable_json_schema:
+            return sampling_params
+
+        # SGLang grammar cache expects hashable params; pass schema as canonical JSON.
+        sampling_params["json_schema"] = json.dumps(
+            self.JUDGE_JSON_SCHEMA, sort_keys=True, separators=(",", ":")
+        )
+        return sampling_params
+
     def _test_engine(self) -> None:
         if self.engine is None:
             raise RuntimeError("SGLang engine is not initialized")
@@ -1063,18 +1095,7 @@ class AttackEvaluator:
             "max_new_tokens": 80,
             "skip_special_tokens": True,
         }
-        # Structured output path (best effort; fallback handled by parser)
-        sampling_params["json_schema"] = {
-            "type": "object",
-            "properties": {
-                "success": {"type": "boolean"},
-                "confidence": {"type": "number", "minimum": 0.0, "maximum": 1.0},
-                "attack_type": {"type": "string"},
-                "rationale": {"type": "string"},
-            },
-            "required": ["success", "confidence", "attack_type", "rationale"],
-            "additionalProperties": False,
-        }
+        sampling_params = self._attach_json_schema(sampling_params)
         _ = self.engine.generate([test_prompt], sampling_params)
         console.print("[green]✅ SGLang judge engine initialized[/green]")
 
@@ -1182,29 +1203,14 @@ class AttackEvaluator:
             return prompt
         return str(prompt)
 
-    @staticmethod
-    def _sampling_params(max_new_tokens: int = 512) -> Dict[str, Any]:
-        return {
+    def _sampling_params(self, max_new_tokens: int = 512) -> Dict[str, Any]:
+        sampling_params: Dict[str, Any] = {
             "temperature": 0.0,
             "top_p": 1.0,
             "max_new_tokens": max_new_tokens,
             "skip_special_tokens": True,
-            "json_schema": {
-                "type": "object",
-                "properties": {
-                    "success": {"type": "boolean"},
-                    "confidence": {
-                        "type": "number",
-                        "minimum": 0.0,
-                        "maximum": 1.0,
-                    },
-                    "attack_type": {"type": "string"},
-                    "rationale": {"type": "string"},
-                },
-                "required": ["success", "confidence", "attack_type", "rationale"],
-                "additionalProperties": False,
-            },
         }
+        return self._attach_json_schema(sampling_params)
 
     @staticmethod
     def _coerce_verdict(raw_text: str, fallback_attack_type: str) -> JudgeVerdict:
@@ -2768,16 +2774,27 @@ def main(
 
     evaluator_a: Optional[AttackEvaluator] = None
     evaluator_b: Optional[AttackEvaluator] = None
-    if llm_records:
-        evaluator_a = AttackEvaluator(
-            model_name=model_name, think=think, batch_size=batch_size
-        )
-        if use_dual_judge_consensus and steering_llm_records:
-            evaluator_b = AttackEvaluator(
-                model_name=second_judge_model,
-                think=think,
-                batch_size=batch_size,
-            )
+
+    def close_and_release_evaluator(
+        evaluator: Optional[AttackEvaluator], label: str
+    ) -> None:
+        if evaluator is None:
+            return
+        console.print(f"[dim]🧹 Releasing {label} from memory...[/dim]")
+        evaluator.close()
+        try:
+            import gc
+
+            gc.collect()
+        except Exception:
+            pass
+        try:
+            import torch  # type: ignore
+
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+        except Exception:
+            pass
 
     # Progress callback for interim saving
     def save_progress_callback(batch_num: int, total_batches: int) -> None:
@@ -2832,9 +2849,10 @@ def main(
             )
 
         # Process LLM-evaluated attacks
-        if llm_records and evaluator_a:
-            console.print(
-                "[blue]🤖 Processing LLM-evaluated attacks (Judge A)...[/blue]"
+        if llm_records:
+            console.print("[blue]🤖 Processing LLM-evaluated attacks (Judge A)...[/blue]")
+            evaluator_a = AttackEvaluator(
+                model_name=model_name, think=think, batch_size=batch_size
             )
 
             if non_steering_llm_records:
@@ -2864,6 +2882,7 @@ def main(
                         "evaluation_success"
                     ] = verdict.success
 
+            steering_dataset: Optional[Dataset] = None
             if steering_llm_records:
                 steering_dataset = Dataset.from_list(steering_llm_records)
                 verdicts_a = evaluator_a.evaluate_dataset(
@@ -2872,37 +2891,56 @@ def main(
                     output_file=output_file,
                     progress_callback=save_progress_callback,
                 )
+                for i, record in enumerate(steering_llm_records):
+                    verdict = verdicts_a[i]
+                    record["llm_judge_a_success"] = verdict.success
+                    record["llm_judge_a_confidence"] = verdict.confidence
 
-                verdicts_b: List[JudgeVerdict] = []
-                if evaluator_b:
-                    console.print(
-                        "[blue]🤖 Processing steering with Judge B for consensus...[/blue]"
-                    )
-                    verdicts_b = evaluator_b.evaluate_dataset(
-                        steering_dataset,
-                        batch_size=batch_size,
-                        output_file=output_file,
-                        progress_callback=save_progress_callback,
-                    )
-                else:
-                    verdicts_b = [
-                        JudgeVerdict(
-                            success=v.success,
-                            confidence=v.confidence,
-                            attack_type=v.attack_type,
-                            rationale="judge_b_disabled",
-                            raw_text=v.raw_text,
-                        )
-                        for v in verdicts_a
-                    ]
+                    attack_key = record["attack_key"]
+                    request_type = record["request_type"]
+                    index = record["original_index"]
+                    target = results_data[attack_key][request_type][index]
+                    target["llm_judge_a_success"] = verdict.success
+                    target["llm_judge_a_confidence"] = verdict.confidence
+
+                    if not use_dual_judge_consensus:
+                        record["llm_judge_b_success"] = verdict.success
+                        record["llm_judge_b_confidence"] = verdict.confidence
+                        record["llm_consensus_success"] = verdict.success
+                        record["evaluation_success"] = verdict.success
+                        target["llm_judge_b_success"] = verdict.success
+                        target["llm_judge_b_confidence"] = verdict.confidence
+                        target["llm_consensus_success"] = verdict.success
+                        target["evaluation_success"] = verdict.success
+
+            if (
+                use_dual_judge_consensus
+                and steering_llm_records
+                and steering_dataset is not None
+            ):
+                close_and_release_evaluator(evaluator_a, "Judge A")
+                evaluator_a = None
+
+                console.print(
+                    "[blue]🤖 Processing steering with Judge B for consensus (loaded after Judge A to avoid OOM)...[/blue]"
+                )
+                evaluator_b = AttackEvaluator(
+                    model_name=second_judge_model,
+                    think=think,
+                    batch_size=batch_size,
+                )
+                verdicts_b = evaluator_b.evaluate_dataset(
+                    steering_dataset,
+                    batch_size=batch_size,
+                    output_file=output_file,
+                    progress_callback=save_progress_callback,
+                )
 
                 for i, record in enumerate(steering_llm_records):
-                    verdict_a = verdicts_a[i]
                     verdict_b = verdicts_b[i]
-                    consensus_success = verdict_a.success and verdict_b.success
+                    verdict_a_success = bool(record.get("llm_judge_a_success", False))
+                    consensus_success = verdict_a_success and verdict_b.success
 
-                    record["llm_judge_a_success"] = verdict_a.success
-                    record["llm_judge_a_confidence"] = verdict_a.confidence
                     record["llm_judge_b_success"] = verdict_b.success
                     record["llm_judge_b_confidence"] = verdict_b.confidence
                     record["llm_consensus_success"] = consensus_success
@@ -2912,12 +2950,15 @@ def main(
                     request_type = record["request_type"]
                     index = record["original_index"]
                     target = results_data[attack_key][request_type][index]
-                    target["llm_judge_a_success"] = verdict_a.success
-                    target["llm_judge_a_confidence"] = verdict_a.confidence
                     target["llm_judge_b_success"] = verdict_b.success
                     target["llm_judge_b_confidence"] = verdict_b.confidence
                     target["llm_consensus_success"] = consensus_success
                     target["evaluation_success"] = consensus_success
+
+            close_and_release_evaluator(evaluator_a, "Judge A")
+            evaluator_a = None
+            close_and_release_evaluator(evaluator_b, "Judge B")
+            evaluator_b = None
 
         # Combine all evaluated records for summary
         all_evaluated_records = watermark_records + external_site_records + llm_records
@@ -2999,28 +3040,28 @@ def main(
         # Clean up interim files on successful completion
         cleanup_interim_files(output_file)
 
-        if evaluator_a:
-            evaluator_a.close()
-        if evaluator_b:
-            evaluator_b.close()
+        close_and_release_evaluator(evaluator_a, "Judge A")
+        evaluator_a = None
+        close_and_release_evaluator(evaluator_b, "Judge B")
+        evaluator_b = None
 
         console.print("[bold green]✅ Evaluation complete![/bold green]")
 
     except KeyboardInterrupt:
-        if evaluator_a:
-            evaluator_a.close()
-        if evaluator_b:
-            evaluator_b.close()
+        close_and_release_evaluator(evaluator_a, "Judge A")
+        evaluator_a = None
+        close_and_release_evaluator(evaluator_b, "Judge B")
+        evaluator_b = None
         console.print("\n[yellow]⚠️  Evaluation interrupted by user[/yellow]")
         console.print(
             "[blue]💾 Interim results have been saved and can be resumed later[/blue]"
         )
         raise
     except Exception as e:
-        if evaluator_a:
-            evaluator_a.close()
-        if evaluator_b:
-            evaluator_b.close()
+        close_and_release_evaluator(evaluator_a, "Judge A")
+        evaluator_a = None
+        close_and_release_evaluator(evaluator_b, "Judge B")
+        evaluator_b = None
         console.print(f"\n[red]❌ Error during evaluation: {e}[/red]")
         console.print("[blue]💾 Interim results have been saved for recovery[/blue]")
         raise
@@ -3077,6 +3118,12 @@ Examples:
         "--think",
         action="store_true",
         help="Enable extended thinking mode for the model via system prompt",
+    )
+    parser.add_argument(
+        "--batch_size",
+        type=int,
+        default=2,
+        help="Legacy argument; SGLang judge submits all prompts in one call (default: %(default)s)",
     )
     parser.add_argument(
         "--services",

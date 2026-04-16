@@ -38,3 +38,6 @@ dependencies = [
 
 [tool.uv]
 prerelease = "allow"
+override-dependencies = [
+  "transformers>=5.5.4",
+]
