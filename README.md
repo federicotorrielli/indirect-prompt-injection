@@ -61,15 +61,15 @@ This script:
 - Filters papers published up to November 2022
 - Selects papers with "verbose" reviews (above 75th percentile in review length)
 - Generates analysis visualizations and reports
-- Saves filtered dataset to `dataset/openreview_verbose_reviews.csv`
+- Saves the filtered dataset to `data/analysis/openreview_verbose_reviews.csv`
 
 **Expected Output:**
 
 - `data/analysis/openreview_verbose_reviews.csv`: Filtered dataset
-- `data/analysis/openreview_analysis.png`: Dataset statistics visualization
+- `openreview_analysis.png`: Dataset statistics visualization
 - `data/analysis/dataset_analysis_report.txt`: Analysis summary
 
-#### Step 1.2: Download and Prepare PDFs (Optional)
+#### Step 1.2: Download and Prepare PDFs
 
 **Note**: This step is optional as the project includes pre-processed, hand-refined PDFs in `data/redacted_pdfs/` that are ready for use in experiments.
 
@@ -89,6 +89,21 @@ This script:
 - PDFs in `data/raw_pdfs/`: Conference-anonymized research papers
 
 **Alternative**: Use the pre-processed PDFs in `data/redacted_pdfs/` which have been manually refined and are ready for injection experiments.
+
+#### Step 1.3: Optional Collu Paper Set
+
+If you also want to reproduce the Collu-style experiments supported in this
+repo, you can download the paper set used for that workflow:
+
+```bash
+uv run python src/data_preparation/download_collu_pdfs.py
+```
+
+Expected output:
+
+- `data/pdfs_collu/main_26_rejected/`
+- `data/pdfs_collu/transferability_2/`
+- `data/pdfs_collu/accepted_2_oral/`
 
 ### Phase 2: Prompt Injection
 
@@ -114,19 +129,10 @@ uv run python src/prompt_injection/inject_text.py \
     --injection-locus first \
     --font-size 1.0
 
-# OCR-visible injection (recommended for Gemini)
-uv run python src/prompt_injection/inject_text.py \
-    --attack-type pos_steering_attack \
-    --prompt-type policy_puppetry \
-    --injection-locus first \
-    --font-size 6 \
-    --ocr-model-mode \
-    --insert-new-page
-
 # Inject all attack types and variants
 for attack_type in refusal_attack pos_steering_attack neg_steering_attack watermark_attack external_site_attack; do
     for prompt_type in narrative policy_puppetry; do
-        for injection_locus in first last; do
+        for injection_locus in first last both; do
             echo "Injecting: $attack_type - $prompt_type - $injection_locus"
             uv run python src/prompt_injection/inject_text.py \
                 --attack-type "$attack_type" \
@@ -142,7 +148,7 @@ done
 
 - `--attack-type`: Type of attack (see list above)
 - `--prompt-type`: Variant (`narrative` or `policy_puppetry`)
-- `--injection-locus`: Location (`first` or `last` page)
+- `--injection-locus`: Location (`first`, `last`, or `both`)
 - `--font-size`: Size of injected text (1.0 for invisible, 6+ for visible)
 - `--ocr-model-mode`: Make text visible (useful for debugging)
 - `--insert-new-page`: Add prompt on new page instead of overlay
@@ -150,6 +156,52 @@ done
 **Expected Output:**
 
 - Injected PDFs in `data/injected_pdfs/`: PDFs with embedded malicious prompts
+
+#### Step 2.3: How the Main PDF Injection Works
+
+The main injection pipeline in `src/prompt_injection/inject_text.py` does not
+use PhantomText. Instead, it builds a PDF text overlay in memory and merges it
+into the target document.
+
+Mechanically:
+
+- The prompt is rendered as a full wrapping paragraph using ReportLab, not as a
+  short raw text token sequence
+- In the default mode, the overlay sets the PDF text rendering mode to `3 Tr`,
+  which means the text is present in the PDF content stream but not visually
+  rendered
+- The overlay is then merged into the original PDF with `pypdf`
+- For `first`, the invisible paragraph is merged before the original first page
+  content; for `last`, it is merged onto the last page near the bottom; for
+  `both`, the prompt is injected at both loci
+- With `--insert-new-page`, the injected prompt is placed on a dedicated page
+  rather than overlaid onto an existing one
+- With `--ocr-model-mode`, the script intentionally makes the injected content
+  visible so OCR-style ingestion can be tested separately
+
+This design was chosen because it is more controllable for our experiments:
+
+- It preserves long prompts and line breaks reliably
+- It supports first-page, last-page, dual-locus, and dedicated-new-page attacks
+- It cleanly separates the standard hidden-text experiments from OCR-visible ones
+- It avoids depending on a third-party injection toolkit for the main study
+
+#### Step 2.4: Optional Collu Payload Injection
+
+The repo also includes a separate Collu-style injection path using PhantomText.
+
+```bash
+uv run python src/prompt_injection/inject_collu_payloads.py \
+    --input-dir data/pdfs_collu/main_26_rejected \
+    --output-dir data/injected_collu_pdfs
+```
+
+This produces model-specific payload folders under `data/injected_collu_pdfs/`.
+
+Why this path is different from the main injector:
+
+- `inject_collu_payloads.py` is a faithful reproduction path for the Collu-style
+  setup and uses PhantomText's zero-size injection workflow
 
 ### Phase 3: LLM Automation
 
@@ -171,7 +223,7 @@ No additional setup required - uses web automation.
 
 1. Visit [gemini.google.com](https://gemini.google.com) and log in
 2. Open browser developer tools (F12)
-3. Go to Application/Storage > Cookies > https://gemini.google.com
+3. Go to Application/Storage > Cookies > <https://gemini.google.com>
 4. Find and copy these cookies:
 
    - `__Secure-1PSID`
@@ -206,15 +258,15 @@ GEMINI_SECURE_1PSIDTS=your_1psidts_cookie_value
 # Test specific attack on ChatGPT
 uv run python src/llm_automation/main.py \
     --llm-service chatgpt \
-    --attack-types pos_steering_attack \
-    --injection-loci first
+    --attack-type pos_steering_attack \
+    --injection-locus first
 
 # Test watermark attack on Gemini
 uv run python src/llm_automation/main.py \
     --llm-service gemini \
-    --attack-types watermark_attack \
-    --prompt-types policy_puppetry \
-    --injection-loci first
+    --attack-type watermark_attack \
+    --attack-mode policy \
+    --injection-locus first
 ```
 
 ##### Comprehensive Testing
@@ -254,16 +306,18 @@ files, so the runs can execute back-to-back (or in parallel, on different
 machines / accounts) without clobbering each other:
 
 ```bash
-# Three independent repetitions of the full ChatGPT experiment
+# Five independent repetitions of the full ChatGPT experiment
 uv run python src/llm_automation/main.py --llm-service chatgpt --run-id 1
 uv run python src/llm_automation/main.py --llm-service chatgpt --run-id 2
 uv run python src/llm_automation/main.py --llm-service chatgpt --run-id 3
+uv run python src/llm_automation/main.py --llm-service chatgpt --run-id 4
+uv run python src/llm_automation/main.py --llm-service chatgpt --run-id 5
 ```
 
 Outputs land in:
 
-- `results/inference/all_results_chatgpt_run1.json` (and `_run2`, `_run3`)
-- `results/inference/automation_progress_chatgpt_run1.json` (and `_run2`, `_run3`)
+- `results/inference/all_results_chatgpt_run1.json` (and `_run2` ... `_run5`)
+- `results/inference/automation_progress_chatgpt_run1.json` (and `_run2` ... `_run5`)
 
 Each result record carries a `run_id` field so downstream analysis can
 aggregate mean/std/CI across repetitions. Omitting `--run-id` (or passing
@@ -273,15 +327,17 @@ compatibility.
 **Command Line Options:**
 
 - `--llm-service`: Target LLM (`chatgpt`, `copilot`, `gemini`)
-- `--attack-types`: Space-separated attack types to test
-- `--prompt-types`: Space-separated prompt variants (`narrative`, `policy_puppetry`)
-- `--injection-loci`: Injection locations (`first`, `last`)
-- `--font-size`: Font size for injected text
-- `--ocr-model-mode`: Make injected text visible
-- `--insert-new-page`: Insert prompt on new page
+- `--attack-type`: Filter to one attack type
+- `--attack-mode`: Filter prompt family (`narrative` or `policy`)
+- `--prompt-type`: Filter an exact prompt type (for example `policy_puppetry`)
+- `--injection-locus`: Injection location (`first`, `last`, `both`)
+- `--ocr-mode`: Use OCR PDF directory (auto-enabled for Gemini)
+- `--limit`: Limit PDFs processed per directory
 - `--reset-progress`: Clear previous progress and start fresh
+- `--show-progress-only`: Print progress and exit
+- `--list-attack-types`: List available attack types and current coverage
+- `--dry-run`: Enumerate work without sending requests
 - `--run-id`: Repetition index for statistical runs (0 = legacy single run; 1, 2, 3 … for repetitions)
-- `--headless`: Run browser in headless mode
 
 **Expected Output:**
 
@@ -319,17 +375,31 @@ Relevant `config.json` fields:
 
 ### Phase 4: Evaluation and Analysis
 
-#### Step 4.1: Basic Results Evaluation
+#### Step 4.1: Evaluate Runs
+
+`src/evaluation/evaluate_results.py` is the primary evaluation entrypoint. The
+LLM judges are served through SGLang. By default it evaluates self-consistency
+runs `1..5` for `chatgpt` and `gemini`, using `Qwen/Qwen3.5-27B` as the
+primary judge. Steering attacks are also checked with a second judge
+(`google/gemma-4-31b-it`) unless dual-judge consensus is disabled.
 
 ```bash
 # Evaluate self-consistency runs 1..5 for ChatGPT + Gemini (default)
 uv run python src/evaluation/evaluate_results.py
 
-# Evaluate a custom run window
+# Evaluate only one service / run window
 uv run python src/evaluation/evaluate_results.py \
-  --services chatgpt gemini \
+  --services chatgpt \
   --run-start 1 \
   --run-end 5
+
+# Disable dual-judge steering consensus
+uv run python src/evaluation/evaluate_results.py \
+  --disable_dual_judge_consensus
+
+# Evaluate collu runs too (from results_collu/)
+uv run python src/evaluation/evaluate_results.py \
+  --evaluate-collu-results
 
 # Evaluate a single run file explicitly
 uv run python src/evaluation/evaluate_results.py \
@@ -337,66 +407,67 @@ uv run python src/evaluation/evaluate_results.py \
   results/evaluation/all_results_chatgpt_run1_evaluated.json
 ```
 
-**Expected Output:**
+The evaluator reports:
+
+- Exact rule-based checks for `watermark_attack` and `external_site_attack`
+- LLM-as-a-judge verdicts for refusal and steering attacks
+- For steering attacks: `llm_judge_a_*`, `llm_judge_b_*`, `llm_consensus_success`
+- For steering attacks: `vader_sentiment_success`
+- For steering attacks: `academic_classifier_*` annotations
+
+Expected output artifacts:
 
 - `results/evaluation/all_results_{service}_run{N}_evaluated.json`
 - `results/evaluation/all_results_{service}_run{N}_evaluated_analysis.json`
-- `results/evaluation/self_consistency_summary.json` (cross-run mean/std/CI summary)
+- `results/evaluation/self_consistency_summary.json`
+- `results_collu/evaluation/all_results_{service}_run{N}_evaluated.json` (optional, with `--evaluate-collu-results`)
+- `results_collu/evaluation/all_results_{service}_run{N}_evaluated_analysis.json` (optional, with `--evaluate-collu-results`)
+- `results_collu/evaluation/self_consistency_summary.json` (optional, with `--evaluate-collu-results`)
 
-#### Step 4.2: Advanced Academic Sentiment Analysis
+#### Step 4.2: Academic Sentiment Classifier
+
+The main evaluator already applies the academic classifier to steering attacks.
+Train a fresh checkpoint only if you want to replace the bundled/default one.
 
 ```bash
-# Train the academic sentiment classifier (optional - pre-trained model available on Huggingface)
+# Train the academic sentiment classifier
 uv run python src/evaluation/train.py
 
-# Academic classifier is automatically applied during evaluate_results.py.
-# To run classifier-only analysis manually:
+# Use a locally trained classifier during evaluation
+uv run python src/evaluation/evaluate_results.py \
+  --academic_classifier_model_path models/academic-sentiment-classifier
+
+# Classifier-only pass on an already evaluated file (optional)
 uv run python src/evaluation/academic_sentiment_evaluator.py \
   results/evaluation/all_results_chatgpt_run1_evaluated.json \
-  results/evaluation/all_results_chatgpt_run1_evaluated_classified.json
+  results/evaluation/all_results_chatgpt_run1_evaluated_classified.json \
+  --model_path models/academic-sentiment-classifier
 ```
 
-**Expected Output:**
+Expected classifier artifacts:
 
-- `results/evaluation/all_results_{service}_evaluated_classified.json`: Results with sentiment classifications
-- `models/academic-sentiment-classifier/`: Trained model checkpoints
+- In-place classifier fields inside `*_evaluated.json` from `evaluate_results.py`
+- Optional standalone `*_evaluated_classified.json` from `academic_sentiment_evaluator.py`
+- `models/academic-sentiment-classifier/` if training locally
 
-#### Step 4.3: Statistical Analysis
+#### Step 4.3: Cross-Run Statistics
 
-```bash
-# Comprehensive attack effectiveness analysis
-uv run python scripts/analyze_attack_effectiveness.py \
-    --results-file results/evaluation/all_results_chatgpt_evaluated.json
+The main aggregate artifact is `self_consistency_summary.json`. It summarizes
+performance across repeated stochastic runs and reports:
 
-# Simple output statistics
-uv run python scripts/analyze_outputs.py \
-    --results-file results/evaluation/all_results_gemini_evaluated.json
+- `mean_rate`: arithmetic mean of the per-run success rates
+- `std_dev` and `sem`: dispersion across runs
+- `t_ci_95`: 95% confidence interval over the run means
+- `pooled_rate` and `pooled_wilson_ci_95`: pooled binomial estimate and Wilson interval
 
-# Cross-service comparison (if multiple services tested)
-uv run python scripts/analyze_attack_effectiveness.py \
-    --results-file results/evaluation/all_results_chatgpt_evaluated.json \
-    --compare-with results/evaluation/all_results_gemini_evaluated.json
-```
+The summary is stratified by:
 
-#### Step 4.4: Visualization Generation
+- `overall`
+- `by_attack_type`
+- `by_attack_key`
+- `by_attack_type_request_type`
 
-```bash
-# Create comprehensive visualizations
-uv run python src/evaluation/create_comprehensive_visualizations.py \
-    --results-dir results/evaluation/
-
-# Generate publication-quality plots
-uv run python src/evaluation/create_comprehensive_visualizations.py \
-    --results-dir results/evaluation/ \
-    --output-dir results/visualizations/ \
-    --publication-mode
-```
-
-**Expected Output:**
-
-- Attack success rate visualizations
-- Statistical comparison charts
-- Performance matrices across LLM services
+Use this file as the primary source for reviewer-facing aggregate numbers.
 
 ### Phase 5: Results Management
 
@@ -413,35 +484,23 @@ for service in chatgpt gemini copilot; do
 done
 ```
 
-## 📁 Project Structure
+#### Step 5.2: Maintenance Utilities
 
-```
-indirect-prompt-injection/
-├── 📄 README.md                    # This file
-├── 📄 pyproject.toml               # Python dependencies and project config
-├── 📄 project_proposal.md          # Original research proposal
-├── 🗂️  data/                        # Core datasets and assets
-│   ├── 📊 analysis/                # Dataset analysis outputs
-│   ├── 🔤 fonts/                   # Fonts for PDF injection
-│   ├── 📑 injected_pdfs/           # PDFs with embedded prompts
-│   ├── 📝 prompts/                 # Attack payloads (prompts.json)
-│   └── 📋 redacted_pdfs/           # Conference-anonymized papers
-├── 🗂️  dataset/                     # Processed research datasets
-│   └── 📈 openreview_verbose_reviews.csv
-├── 🗂️  results/                     # Experimental outputs
-│   ├── 🎯 inference/               # Raw automation results
-│   └── 📊 evaluation/              # Processed evaluation results
-├── 🗂️  scripts/                     # Utility and analysis scripts
-│   ├── 🔧 setup_automation.py      # Environment setup
-│   ├── 📈 analyze_attack_effectiveness.py
-│   ├── 🧹 clean_unsuccessful_results.py
-│   └── 🔄 merge_results.py
-├── 🗂️  src/                         # Core source code
-│   ├── 📊 data_preparation/        # Dataset processing
-│   ├── ⚖️  evaluation/              # Results analysis and ML models
-│   ├── 🤖 llm_automation/          # LLM interaction automation
-│   └── 💉 prompt_injection/         # PDF manipulation
-└── 🗂️  logs/                        # Runtime logs and debugging
+Additional repo utilities that are not part of the main reproduction path:
+
+```bash
+# Merge result/progress JSON files from another directory into the local ones
+uv run python scripts/merge_results.py --llm-service gemini
+
+# Migrate legacy non-run-scoped result files to model-specific names
+uv run python scripts/migrate_legacy_files.py
+
+# Evaluate the academic classifier itself on OpenReview
+uv run python scripts/calculate_classifier_accuracy.py
+
+# Publish a local classifier checkpoint to Hugging Face Hub
+uv run python scripts/publish_to_hf.py \
+    --repo YOUR_USERNAME/academic-sentiment-classifier
 ```
 
 ## 🎛️ Configuration
@@ -521,14 +580,24 @@ ls -la data/fonts/
 
 #### 5. Memory Issues During Evaluation
 
-```bash
-# Run evaluation in batches
-uv run python src/evaluation/evaluate_results.py \
-    results/inference/all_results_chatgpt_run1.json \
-    results/evaluation/all_results_chatgpt_run1_evaluated.json \
-    --batch_size 2
+The SGLang-backed evaluator loads the two steering judges sequentially rather
+than at the same time, but large judge models can still be memory-intensive.
+If needed:
 
-# Or increase system swap space
+```bash
+# Evaluate one service / run at a time
+uv run python src/evaluation/evaluate_results.py \
+    --services chatgpt \
+    --run-start 1 \
+    --run-end 1
+
+# Disable dual-judge steering consensus
+uv run python src/evaluation/evaluate_results.py \
+    --disable_dual_judge_consensus
+
+# Disable schema-constrained decoding if your SGLang stack errors in grammar handling
+SG_EVAL_DISABLE_JSON_SCHEMA=1 \
+uv run python src/evaluation/evaluate_results.py
 ```
 
 ### Debug Mode
@@ -543,50 +612,8 @@ export LOG_LEVEL=DEBUG
 # Run with verbose output
 uv run python src/llm_automation/main.py \
     --llm-service chatgpt \
-    --attack-types pos_steering_attack \
-    --debug
+    --attack-type pos_steering_attack
 ```
-
-### Getting Help
-
-1. **Check logs**: `tail -f automation.log`
-2. **Verify setup**: `uv run python scripts/setup_automation.py`
-3. **Test individual components**: Run scripts in isolation
-4. **Review configuration**: Check `src/llm_automation/config.json`
-
-## 📖 Supported LLM Services
-
-### ChatGPT
-
-- **Method**: Web automation via Selenium
-- **URL**: https://chatgpt.com
-- **Authentication**: Manual login required
-- **Pros**: Reliable, no API limits
-- **Cons**: Requires GUI, slower
-
-### Microsoft Copilot
-
-- **Method**: Web automation via Selenium
-- **URL**: https://copilot.microsoft.com
-- **Authentication**: Microsoft account login
-- **Pros**: Free access, good performance
-- **Cons**: Rate limiting, UI changes
-
-### Google Gemini
-
-- **Method**: API via gemini-webapi
-- **URL**: https://gemini.google.com
-- **Authentication**: Cookie-based
-- **Pros**: Faster, more stable
-- **Cons**: Cookie extraction required
-- **Special Note**: Use OCR mode for better results:
-  ```bash
-  uv run python src/prompt_injection/inject_text.py \
-      --ocr-model-mode \
-      --injection-locus first \
-      --font-size 6 \
-      --insert-new-page
-  ```
 
 ## 🔒 Ethical Considerations
 
