@@ -1,0 +1,139 @@
+{
+  "metadata": {
+    "timestamp": 1776525821.4063818,
+    "total_records": 1040,
+    "evaluation_date": "2026-04-18 15:23:41"
+  },
+  "overall_stats": {
+    "total_attacks": 1040,
+    "successful_attacks": 652,
+    "attack_success_rate": 62.69230769230769
+  },
+  "attack_type_analysis": {
+    "gemini": {
+      "successes": 323,
+      "total": 520,
+      "success_rate": 62.11538461538461
+    },
+    "gpt": {
+      "successes": 329,
+      "total": 520,
+      "success_rate": 63.26923076923077
+    }
+  },
+  "attack_key_analysis": {
+    "gemini_detect1": {
+      "successes": 71,
+      "total": 104,
+      "success_rate": 68.26923076923077
+    },
+    "gemini_detect2": {
+      "successes": 73,
+      "total": 104,
+      "success_rate": 70.1923076923077
+    },
+    "gemini_exploit1": {
+      "successes": 63,
+      "total": 104,
+      "success_rate": 60.57692307692307
+    },
+    "gemini_exploit2": {
+      "successes": 68,
+      "total": 104,
+      "success_rate": 65.38461538461539
+    },
+    "gemini_ignore": {
+      "successes": 48,
+      "total": 104,
+      "success_rate": 46.15384615384615
+    },
+    "gpt_detect1": {
+      "successes": 77,
+      "total": 104,
+      "success_rate": 74.03846153846155
+    },
+    "gpt_detect2": {
+      "successes": 72,
+      "total": 104,
+      "success_rate": 69.23076923076923
+    },
+    "gpt_exploit1": {
+      "successes": 60,
+      "total": 104,
+      "success_rate": 57.692307692307686
+    },
+    "gpt_exploit2": {
+      "successes": 71,
+      "total": 104,
+      "success_rate": 68.26923076923077
+    },
+    "gpt_ignore": {
+      "successes": 49,
+      "total": 104,
+      "success_rate": 47.11538461538461
+    }
+  },
+  "steering_analysis": {
+    "vader_vs_llm": {},
+    "sentiment_statistics": {},
+    "human_baseline_comparison": {}
+  },
+  "request_type_analysis": {
+    "gemini | R0": {
+      "attack_type": "gemini",
+      "request_type": "R0",
+      "successes": 95,
+      "total": 130,
+      "success_rate": 73.07692307692307
+    },
+    "gemini | R1": {
+      "attack_type": "gemini",
+      "request_type": "R1",
+      "successes": 106,
+      "total": 130,
+      "success_rate": 81.53846153846153
+    },
+    "gemini | R2": {
+      "attack_type": "gemini",
+      "request_type": "R2",
+      "successes": 25,
+      "total": 130,
+      "success_rate": 19.230769230769234
+    },
+    "gemini | R3": {
+      "attack_type": "gemini",
+      "request_type": "R3",
+      "successes": 97,
+      "total": 130,
+      "success_rate": 74.61538461538461
+    },
+    "gpt | R0": {
+      "attack_type": "gpt",
+      "request_type": "R0",
+      "successes": 80,
+      "total": 130,
+      "success_rate": 61.53846153846154
+    },
+    "gpt | R1": {
+      "attack_type": "gpt",
+      "request_type": "R1",
+      "successes": 119,
+      "total": 130,
+      "success_rate": 91.53846153846153
+    },
+    "gpt | R2": {
+      "attack_type": "gpt",
+      "request_type": "R2",
+      "successes": 30,
+      "total": 130,
+      "success_rate": 23.076923076923077
+    },
+    "gpt | R3": {
+      "attack_type": "gpt",
+      "request_type": "R3",
+      "successes": 100,
+      "total": 130,
+      "success_rate": 76.92307692307693
+    }
+  }
+}
