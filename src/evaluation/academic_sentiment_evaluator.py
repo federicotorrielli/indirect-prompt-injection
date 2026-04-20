@@ -141,7 +141,7 @@ class AcademicSentimentEvaluator:
                 task="text-classification",
                 model=str(self.model_path),  # Pass the path directly
                 device=device_id,
-                return_all_scores=True,
+                top_k=None,
                 truncation=True,
                 max_length=512,  # Ensure we don't exceed model limits
             )
@@ -154,6 +154,23 @@ class AcademicSentimentEvaluator:
         except Exception as e:
             logger.error(f"Failed to load model: {e}")
             raise
+
+    def _normalize_prediction_scores(self, pred: Any) -> List[Dict[str, Any]]:
+        """Handle transformers pipeline output shape differences across versions."""
+        if isinstance(pred, dict):
+            return [pred]
+        if isinstance(pred, list):
+            if not pred:
+                return []
+            if isinstance(pred[0], dict):
+                return pred
+        raise TypeError(f"Unexpected prediction format: {type(pred)!r}")
+
+    def _top_prediction(self, pred: Any) -> Dict[str, Any]:
+        scores = self._normalize_prediction_scores(pred)
+        if not scores:
+            raise ValueError("Empty prediction scores returned by pipeline")
+        return max(scores, key=lambda x: x["score"])
 
     def _test_model(self) -> None:
         """Test the model with sample inputs."""
@@ -171,7 +188,7 @@ class AcademicSentimentEvaluator:
             predictions = self.pipeline(test_texts)
 
             for i, (text, pred) in enumerate(zip(test_texts, predictions)):
-                top_pred = max(pred, key=lambda x: x["score"])
+                top_pred = self._top_prediction(pred)
                 sentiment = self.label_mapping.get(top_pred["label"], top_pred["label"])
                 console.print(
                     f"[dim]Test {i + 1}: {sentiment} (confidence: {top_pred['score']:.3f})[/dim]"
@@ -213,7 +230,7 @@ class AcademicSentimentEvaluator:
 
                 for pred_scores in raw_predictions:
                     # Find the prediction with highest confidence
-                    top_pred = max(pred_scores, key=lambda x: x["score"])
+                    top_pred = self._top_prediction(pred_scores)
 
                     # Map label to sentiment
                     sentiment = self.label_mapping.get(

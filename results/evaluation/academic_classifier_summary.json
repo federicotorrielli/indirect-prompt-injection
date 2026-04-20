@@ -1,0 +1,1040 @@
+{
+  "metadata": {
+    "services": [
+      "chatgpt",
+      "gemini"
+    ],
+    "run_start": 1,
+    "run_end": 5
+  },
+  "services": {
+    "chatgpt": {
+      "runs": {
+        "1": {
+          "overall": {
+            "success": 2346,
+            "total": 2400,
+            "rate": 0.9775,
+            "wilson_ci_95": [
+              0.9707593853798894,
+              0.9827144208808893
+            ]
+          },
+          "by_attack_type": {
+            "pos_steering_attack": {
+              "success": 1188,
+              "total": 1200,
+              "rate": 0.99,
+              "wilson_ci_95": [
+                0.9826022237812596,
+                0.9942704810662883
+              ]
+            },
+            "neg_steering_attack": {
+              "success": 1158,
+              "total": 1200,
+              "rate": 0.965,
+              "wilson_ci_95": [
+                0.9530289065746734,
+                0.9740033541479997
+              ]
+            }
+          },
+          "by_attack_type_request_type": {
+            "pos_steering_attack|standard_request": {
+              "success": 594,
+              "total": 600,
+              "rate": 0.99,
+              "wilson_ci_95": [
+                0.9783561648617456,
+                0.9954091404766082
+              ]
+            },
+            "pos_steering_attack|negative_request": {
+              "success": 594,
+              "total": 600,
+              "rate": 0.99,
+              "wilson_ci_95": [
+                0.9783561648617456,
+                0.9954091404766082
+              ]
+            },
+            "neg_steering_attack|standard_request": {
+              "success": 576,
+              "total": 600,
+              "rate": 0.96,
+              "wilson_ci_95": [
+                0.9411718573082053,
+                0.972975164029841
+              ]
+            },
+            "neg_steering_attack|positive_request": {
+              "success": 582,
+              "total": 600,
+              "rate": 0.97,
+              "wilson_ci_95": [
+                0.9530788824105051,
+                0.980940900260977
+              ]
+            }
+          }
+        },
+        "2": {
+          "overall": {
+            "success": 2346,
+            "total": 2400,
+            "rate": 0.9775,
+            "wilson_ci_95": [
+              0.9707593853798894,
+              0.9827144208808893
+            ]
+          },
+          "by_attack_type": {
+            "pos_steering_attack": {
+              "success": 1186,
+              "total": 1200,
+              "rate": 0.9883333333333333,
+              "wilson_ci_95": [
+                0.9805121178059242,
+                0.9930378907666321
+              ]
+            },
+            "neg_steering_attack": {
+              "success": 1160,
+              "total": 1200,
+              "rate": 0.9666666666666667,
+              "wilson_ci_95": [
+                0.9549284503155333,
+                0.9754265066821315
+              ]
+            }
+          },
+          "by_attack_type_request_type": {
+            "pos_steering_attack|standard_request": {
+              "success": 593,
+              "total": 600,
+              "rate": 0.9883333333333333,
+              "wilson_ci_95": [
+                0.9761156900024708,
+                0.9943374884469769
+              ]
+            },
+            "pos_steering_attack|negative_request": {
+              "success": 593,
+              "total": 600,
+              "rate": 0.9883333333333333,
+              "wilson_ci_95": [
+                0.9761156900024708,
+                0.9943374884469769
+              ]
+            },
+            "neg_steering_attack|standard_request": {
+              "success": 585,
+              "total": 600,
+              "rate": 0.975,
+              "wilson_ci_95": [
+                0.9591638663098295,
+                0.9847922970283705
+              ]
+            },
+            "neg_steering_attack|positive_request": {
+              "success": 575,
+              "total": 600,
+              "rate": 0.9583333333333334,
+              "wilson_ci_95": [
+                0.9392144251607042,
+                0.9716204692884363
+              ]
+            }
+          }
+        },
+        "3": {
+          "overall": {
+            "success": 2347,
+            "total": 2400,
+            "rate": 0.9779166666666667,
+            "wilson_ci_95": [
+              0.9712287547261084,
+              0.9830770531108141
+            ]
+          },
+          "by_attack_type": {
+            "pos_steering_attack": {
+              "success": 1190,
+              "total": 1200,
+              "rate": 0.9916666666666667,
+              "wilson_ci_95": [
+                0.9847280920921215,
+                0.9954673090304181
+              ]
+            },
+            "neg_steering_attack": {
+              "success": 1157,
+              "total": 1200,
+              "rate": 0.9641666666666666,
+              "wilson_ci_95": [
+                0.9520814533771845,
+                0.9732894592079927
+              ]
+            }
+          },
+          "by_attack_type_request_type": {
+            "pos_steering_attack|standard_request": {
+              "success": 597,
+              "total": 600,
+              "rate": 0.995,
+              "wilson_ci_95": [
+                0.9854035328577914,
+                0.9982981531472804
+              ]
+            },
+            "pos_steering_attack|negative_request": {
+              "success": 593,
+              "total": 600,
+              "rate": 0.9883333333333333,
+              "wilson_ci_95": [
+                0.9761156900024708,
+                0.9943374884469769
+              ]
+            },
+            "neg_steering_attack|standard_request": {
+              "success": 580,
+              "total": 600,
+              "rate": 0.9666666666666667,
+              "wilson_ci_95": [
+                0.9490755207798911,
+                0.9783200081137791
+              ]
+            },
+            "neg_steering_attack|positive_request": {
+              "success": 577,
+              "total": 600,
+              "rate": 0.9616666666666667,
+              "wilson_ci_95": [
+                0.9431362384858536,
+                0.9743229097410987
+              ]
+            }
+          }
+        },
+        "4": {
+          "overall": {
+            "success": 2349,
+            "total": 2400,
+            "rate": 0.97875,
+            "wilson_ci_95": [
+              0.9721691052909736,
+              0.9838007056982365
+            ]
+          },
+          "by_attack_type": {
+            "pos_steering_attack": {
+              "success": 1189,
+              "total": 1200,
+              "rate": 0.9908333333333333,
+              "wilson_ci_95": [
+                0.983660148123339,
+                0.9948739048617048
+              ]
+            },
+            "neg_steering_attack": {
+              "success": 1160,
+              "total": 1200,
+              "rate": 0.9666666666666667,
+              "wilson_ci_95": [
+                0.9549284503155333,
+                0.9754265066821315
+              ]
+            }
+          },
+          "by_attack_type_request_type": {
+            "pos_steering_attack|standard_request": {
+              "success": 595,
+              "total": 600,
+              "rate": 0.9916666666666667,
+              "wilson_ci_95": [
+                0.9806419835738326,
+                0.9964354486534273
+              ]
+            },
+            "pos_steering_attack|negative_request": {
+              "success": 594,
+              "total": 600,
+              "rate": 0.99,
+              "wilson_ci_95": [
+                0.9783561648617456,
+                0.9954091404766082
+              ]
+            },
+            "neg_steering_attack|standard_request": {
+              "success": 582,
+              "total": 600,
+              "rate": 0.97,
+              "wilson_ci_95": [
+                0.9530788824105051,
+                0.980940900260977
+              ]
+            },
+            "neg_steering_attack|positive_request": {
+              "success": 578,
+              "total": 600,
+              "rate": 0.9633333333333334,
+              "wilson_ci_95": [
+                0.9451079894023278,
+                0.9756632857135307
+              ]
+            }
+          }
+        },
+        "5": {
+          "overall": {
+            "success": 2348,
+            "total": 2400,
+            "rate": 0.9783333333333334,
+            "wilson_ci_95": [
+              0.9716986564292516,
+              0.9834391529838148
+            ]
+          },
+          "by_attack_type": {
+            "pos_steering_attack": {
+              "success": 1189,
+              "total": 1200,
+              "rate": 0.9908333333333333,
+              "wilson_ci_95": [
+                0.983660148123339,
+                0.9948739048617048
+              ]
+            },
+            "neg_steering_attack": {
+              "success": 1159,
+              "total": 1200,
+              "rate": 0.9658333333333333,
+              "wilson_ci_95": [
+                0.9539778879144142,
+                0.9747157209457548
+              ]
+            }
+          },
+          "by_attack_type_request_type": {
+            "pos_steering_attack|standard_request": {
+              "success": 595,
+              "total": 600,
+              "rate": 0.9916666666666667,
+              "wilson_ci_95": [
+                0.9806419835738326,
+                0.9964354486534273
+              ]
+            },
+            "pos_steering_attack|negative_request": {
+              "success": 594,
+              "total": 600,
+              "rate": 0.99,
+              "wilson_ci_95": [
+                0.9783561648617456,
+                0.9954091404766082
+              ]
+            },
+            "neg_steering_attack|standard_request": {
+              "success": 583,
+              "total": 600,
+              "rate": 0.9716666666666667,
+              "wilson_ci_95": [
+                0.9550956994119757,
+                0.9822362101484124
+              ]
+            },
+            "neg_steering_attack|positive_request": {
+              "success": 576,
+              "total": 600,
+              "rate": 0.96,
+              "wilson_ci_95": [
+                0.9411718573082053,
+                0.972975164029841
+              ]
+            }
+          }
+        }
+      },
+      "overall": {
+        "run_values": [
+          0.9775,
+          0.9775,
+          0.9779166666666667,
+          0.97875,
+          0.9783333333333334
+        ],
+        "mean_rate": 0.978,
+        "std_dev": 0.0005432668671002162,
+        "sem": 0.0002429563289518855,
+        "t_ci_95": [
+          0.9773255532308296,
+          0.9786744467691704
+        ],
+        "pooled_success": 11736,
+        "pooled_total": 12000,
+        "pooled_rate": 0.978,
+        "pooled_wilson_ci_95": [
+          0.9752184922434959,
+          0.9804755582344777
+        ]
+      },
+      "by_attack_type": {
+        "pos_steering_attack": {
+          "run_values": [
+            0.99,
+            0.9883333333333333,
+            0.9916666666666667,
+            0.9908333333333333,
+            0.9908333333333333
+          ],
+          "mean_rate": 0.9903333333333333,
+          "std_dev": 0.001263812574008621,
+          "sem": 0.0005651941652604521,
+          "t_ci_95": [
+            0.9887643543305703,
+            0.9919023123360963
+          ],
+          "pooled_success": 5942,
+          "pooled_total": 6000,
+          "pooled_rate": 0.9903333333333333,
+          "pooled_wilson_ci_95": [
+            0.9875248099863638,
+            0.9925143702611628
+          ]
+        },
+        "neg_steering_attack": {
+          "run_values": [
+            0.965,
+            0.9666666666666667,
+            0.9641666666666666,
+            0.9666666666666667,
+            0.9658333333333333
+          ],
+          "mean_rate": 0.9656666666666667,
+          "std_dev": 0.0010865337342004665,
+          "sem": 0.0004859126579037862,
+          "t_ci_95": [
+            0.9643177731283258,
+            0.9670155602050076
+          ],
+          "pooled_success": 5794,
+          "pooled_total": 6000,
+          "pooled_rate": 0.9656666666666667,
+          "pooled_wilson_ci_95": [
+            0.9607531942469352,
+            0.9699842189453115
+          ]
+        }
+      },
+      "by_attack_type_request_type": {
+        "pos_steering_attack|standard_request": {
+          "run_values": [
+            0.99,
+            0.9883333333333333,
+            0.995,
+            0.9916666666666667,
+            0.9916666666666667
+          ],
+          "mean_rate": 0.9913333333333333,
+          "std_dev": 0.002472066162365237,
+          "sem": 0.0011055415967851404,
+          "t_ci_95": [
+            0.9882643498606577,
+            0.9944023168060089
+          ],
+          "pooled_success": 2974,
+          "pooled_total": 3000,
+          "pooled_rate": 0.9913333333333333,
+          "pooled_wilson_ci_95": [
+            0.9873311665782036,
+            0.9940787719485149
+          ]
+        },
+        "pos_steering_attack|negative_request": {
+          "run_values": [
+            0.99,
+            0.9883333333333333,
+            0.9883333333333333,
+            0.99,
+            0.99
+          ],
+          "mean_rate": 0.9893333333333333,
+          "std_dev": 0.000912870929175298,
+          "sem": 0.00040824829046387246,
+          "t_ci_95": [
+            0.9882000360790055,
+            0.990466630587661
+          ],
+          "pooled_success": 2968,
+          "pooled_total": 3000,
+          "pooled_rate": 0.9893333333333333,
+          "pooled_wilson_ci_95": [
+            0.9849809096407924,
+            0.9924341444685855
+          ]
+        },
+        "neg_steering_attack|standard_request": {
+          "run_values": [
+            0.96,
+            0.975,
+            0.9666666666666667,
+            0.97,
+            0.9716666666666667
+          ],
+          "mean_rate": 0.9686666666666667,
+          "std_dev": 0.005700877125495696,
+          "sem": 0.0025495097567963952,
+          "t_ci_95": [
+            0.9615892275817999,
+            0.9757441057515335
+          ],
+          "pooled_success": 2906,
+          "pooled_total": 3000,
+          "pooled_rate": 0.9686666666666667,
+          "pooled_wilson_ci_95": [
+            0.9618082395220909,
+            0.9743263422747656
+          ]
+        },
+        "neg_steering_attack|positive_request": {
+          "run_values": [
+            0.97,
+            0.9583333333333334,
+            0.9616666666666667,
+            0.9633333333333334,
+            0.96
+          ],
+          "mean_rate": 0.9626666666666667,
+          "std_dev": 0.0045030853620354186,
+          "sem": 0.002013840995599089,
+          "t_ci_95": [
+            0.9570762440628836,
+            0.9682570892704497
+          ],
+          "pooled_success": 2888,
+          "pooled_total": 3000,
+          "pooled_rate": 0.9626666666666667,
+          "pooled_wilson_ci_95": [
+            0.9552695948101199,
+            0.9688803337347144
+          ]
+        }
+      }
+    },
+    "gemini": {
+      "runs": {
+        "1": {
+          "overall": {
+            "success": 2228,
+            "total": 2400,
+            "rate": 0.9283333333333333,
+            "wilson_ci_95": [
+              0.9173148067109703,
+              0.9379828135648416
+            ]
+          },
+          "by_attack_type": {
+            "pos_steering_attack": {
+              "success": 1192,
+              "total": 1200,
+              "rate": 0.9933333333333333,
+              "wilson_ci_95": [
+                0.9868999684000438,
+                0.9966181289974875
+              ]
+            },
+            "neg_steering_attack": {
+              "success": 1036,
+              "total": 1200,
+              "rate": 0.8633333333333333,
+              "wilson_ci_95": [
+                0.842735254411049,
+                0.8816125335371328
+              ]
+            }
+          },
+          "by_attack_type_request_type": {
+            "pos_steering_attack|standard_request": {
+              "success": 600,
+              "total": 600,
+              "rate": 1.0,
+              "wilson_ci_95": [
+                0.9936380666717896,
+                1.0
+              ]
+            },
+            "pos_steering_attack|negative_request": {
+              "success": 592,
+              "total": 600,
+              "rate": 0.9866666666666667,
+              "wilson_ci_95": [
+                0.9739123243054401,
+                0.9932287272551018
+              ]
+            },
+            "neg_steering_attack|standard_request": {
+              "success": 591,
+              "total": 600,
+              "rate": 0.985,
+              "wilson_ci_95": [
+                0.9717400774599938,
+                0.992088847211642
+              ]
+            },
+            "neg_steering_attack|positive_request": {
+              "success": 445,
+              "total": 600,
+              "rate": 0.7416666666666667,
+              "wilson_ci_95": [
+                0.7051822030210436,
+                0.7750761958703214
+              ]
+            }
+          }
+        },
+        "2": {
+          "overall": {
+            "success": 2215,
+            "total": 2400,
+            "rate": 0.9229166666666667,
+            "wilson_ci_95": [
+              0.9115567636838396,
+              0.9329248361021032
+            ]
+          },
+          "by_attack_type": {
+            "pos_steering_attack": {
+              "success": 1191,
+              "total": 1200,
+              "rate": 0.9925,
+              "wilson_ci_95": [
+                0.9858074482282013,
+                0.9960493010318342
+              ]
+            },
+            "neg_steering_attack": {
+              "success": 1024,
+              "total": 1200,
+              "rate": 0.8533333333333334,
+              "wilson_ci_95": [
+                0.8321893768045062,
+                0.8722222334937259
+              ]
+            }
+          },
+          "by_attack_type_request_type": {
+            "pos_steering_attack|standard_request": {
+              "success": 599,
+              "total": 600,
+              "rate": 0.9983333333333333,
+              "wilson_ci_95": [
+                0.9906202004134312,
+                0.9997057393694524
+              ]
+            },
+            "pos_steering_attack|negative_request": {
+              "success": 592,
+              "total": 600,
+              "rate": 0.9866666666666667,
+              "wilson_ci_95": [
+                0.9739123243054401,
+                0.9932287272551018
+              ]
+            },
+            "neg_steering_attack|standard_request": {
+              "success": 588,
+              "total": 600,
+              "rate": 0.98,
+              "wilson_ci_95": [
+                0.9653696080652147,
+                0.9885229359397033
+              ]
+            },
+            "neg_steering_attack|positive_request": {
+              "success": 436,
+              "total": 600,
+              "rate": 0.7266666666666667,
+              "wilson_ci_95": [
+                0.6896479393148026,
+                0.7608013175764087
+              ]
+            }
+          }
+        },
+        "3": {
+          "overall": {
+            "success": 2213,
+            "total": 2400,
+            "rate": 0.9220833333333334,
+            "wilson_ci_95": [
+              0.9106723107097974,
+              0.9321452859238578
+            ]
+          },
+          "by_attack_type": {
+            "pos_steering_attack": {
+              "success": 1191,
+              "total": 1200,
+              "rate": 0.9925,
+              "wilson_ci_95": [
+                0.9858074482282013,
+                0.9960493010318342
+              ]
+            },
+            "neg_steering_attack": {
+              "success": 1022,
+              "total": 1200,
+              "rate": 0.8516666666666667,
+              "wilson_ci_95": [
+                0.830434882141822,
+                0.8706540318814182
+              ]
+            }
+          },
+          "by_attack_type_request_type": {
+            "pos_steering_attack|standard_request": {
+              "success": 599,
+              "total": 600,
+              "rate": 0.9983333333333333,
+              "wilson_ci_95": [
+                0.9906202004134312,
+                0.9997057393694524
+              ]
+            },
+            "pos_steering_attack|negative_request": {
+              "success": 592,
+              "total": 600,
+              "rate": 0.9866666666666667,
+              "wilson_ci_95": [
+                0.9739123243054401,
+                0.9932287272551018
+              ]
+            },
+            "neg_steering_attack|standard_request": {
+              "success": 585,
+              "total": 600,
+              "rate": 0.975,
+              "wilson_ci_95": [
+                0.9591638663098295,
+                0.9847922970283705
+              ]
+            },
+            "neg_steering_attack|positive_request": {
+              "success": 437,
+              "total": 600,
+              "rate": 0.7283333333333334,
+              "wilson_ci_95": [
+                0.6913714390630236,
+                0.7623899447170938
+              ]
+            }
+          }
+        },
+        "4": {
+          "overall": {
+            "success": 2214,
+            "total": 2400,
+            "rate": 0.9225,
+            "wilson_ci_95": [
+              0.9111144921563102,
+              0.9325351060534887
+            ]
+          },
+          "by_attack_type": {
+            "pos_steering_attack": {
+              "success": 1190,
+              "total": 1200,
+              "rate": 0.9916666666666667,
+              "wilson_ci_95": [
+                0.9847280920921215,
+                0.9954673090304181
+              ]
+            },
+            "neg_steering_attack": {
+              "success": 1024,
+              "total": 1200,
+              "rate": 0.8533333333333334,
+              "wilson_ci_95": [
+                0.8321893768045062,
+                0.8722222334937259
+              ]
+            }
+          },
+          "by_attack_type_request_type": {
+            "pos_steering_attack|standard_request": {
+              "success": 600,
+              "total": 600,
+              "rate": 1.0,
+              "wilson_ci_95": [
+                0.9936380666717896,
+                1.0
+              ]
+            },
+            "pos_steering_attack|negative_request": {
+              "success": 590,
+              "total": 600,
+              "rate": 0.9833333333333333,
+              "wilson_ci_95": [
+                0.9695944296370503,
+                0.9909223681456795
+              ]
+            },
+            "neg_steering_attack|standard_request": {
+              "success": 583,
+              "total": 600,
+              "rate": 0.9716666666666667,
+              "wilson_ci_95": [
+                0.9550956994119757,
+                0.9822362101484124
+              ]
+            },
+            "neg_steering_attack|positive_request": {
+              "success": 441,
+              "total": 600,
+              "rate": 0.735,
+              "wilson_ci_95": [
+                0.6982717120459301,
+                0.768738179289811
+              ]
+            }
+          }
+        },
+        "5": {
+          "overall": {
+            "success": 2211,
+            "total": 2400,
+            "rate": 0.92125,
+            "wilson_ci_95": [
+              0.9097882154388801,
+              0.9313653780424874
+            ]
+          },
+          "by_attack_type": {
+            "pos_steering_attack": {
+              "success": 1190,
+              "total": 1200,
+              "rate": 0.9916666666666667,
+              "wilson_ci_95": [
+                0.9847280920921215,
+                0.9954673090304181
+              ]
+            },
+            "neg_steering_attack": {
+              "success": 1021,
+              "total": 1200,
+              "rate": 0.8508333333333333,
+              "wilson_ci_95": [
+                0.8295579606232006,
+                0.8698696052625438
+              ]
+            }
+          },
+          "by_attack_type_request_type": {
+            "pos_steering_attack|standard_request": {
+              "success": 600,
+              "total": 600,
+              "rate": 1.0,
+              "wilson_ci_95": [
+                0.9936380666717896,
+                1.0
+              ]
+            },
+            "pos_steering_attack|negative_request": {
+              "success": 590,
+              "total": 600,
+              "rate": 0.9833333333333333,
+              "wilson_ci_95": [
+                0.9695944296370503,
+                0.9909223681456795
+              ]
+            },
+            "neg_steering_attack|standard_request": {
+              "success": 585,
+              "total": 600,
+              "rate": 0.975,
+              "wilson_ci_95": [
+                0.9591638663098295,
+                0.9847922970283705
+              ]
+            },
+            "neg_steering_attack|positive_request": {
+              "success": 436,
+              "total": 600,
+              "rate": 0.7266666666666667,
+              "wilson_ci_95": [
+                0.6896479393148026,
+                0.7608013175764087
+              ]
+            }
+          }
+        }
+      },
+      "overall": {
+        "run_values": [
+          0.9283333333333333,
+          0.9229166666666667,
+          0.9220833333333334,
+          0.9225,
+          0.92125
+        ],
+        "mean_rate": 0.9234166666666667,
+        "std_dev": 0.002816740630192592,
+        "sem": 0.0012596847048192464,
+        "t_ci_95": [
+          0.9199197819260885,
+          0.9269135514072449
+        ],
+        "pooled_success": 11081,
+        "pooled_total": 12000,
+        "pooled_rate": 0.9234166666666667,
+        "pooled_wilson_ci_95": [
+          0.9185219155417262,
+          0.928040404974066
+        ]
+      },
+      "by_attack_type": {
+        "pos_steering_attack": {
+          "run_values": [
+            0.9933333333333333,
+            0.9925,
+            0.9925,
+            0.9916666666666667,
+            0.9916666666666667
+          ],
+          "mean_rate": 0.9923333333333334,
+          "std_dev": 0.0006972166887783726,
+          "sem": 0.00031180478223115116,
+          "t_ci_95": [
+            0.9914677632578597,
+            0.9931989034088071
+          ],
+          "pooled_success": 5954,
+          "pooled_total": 6000,
+          "pooled_rate": 0.9923333333333333,
+          "pooled_wilson_ci_95": [
+            0.9897895887339074,
+            0.994247032085669
+          ]
+        },
+        "neg_steering_attack": {
+          "run_values": [
+            0.8633333333333333,
+            0.8533333333333334,
+            0.8516666666666667,
+            0.8533333333333334,
+            0.8508333333333333
+          ],
+          "mean_rate": 0.8545,
+          "std_dev": 0.005055250296034338,
+          "sem": 0.002260776661041743,
+          "t_ci_95": [
+            0.8482240839889481,
+            0.860775916011052
+          ],
+          "pooled_success": 5127,
+          "pooled_total": 6000,
+          "pooled_rate": 0.8545,
+          "pooled_wilson_ci_95": [
+            0.8453510234881756,
+            0.8631953179076401
+          ]
+        }
+      },
+      "by_attack_type_request_type": {
+        "pos_steering_attack|standard_request": {
+          "run_values": [
+            1.0,
+            0.9983333333333333,
+            0.9983333333333333,
+            1.0,
+            1.0
+          ],
+          "mean_rate": 0.9993333333333333,
+          "std_dev": 0.000912870929175298,
+          "sem": 0.00040824829046387246,
+          "t_ci_95": [
+            0.9982000360790055,
+            1.0
+          ],
+          "pooled_success": 2998,
+          "pooled_total": 3000,
+          "pooled_rate": 0.9993333333333333,
+          "pooled_wilson_ci_95": [
+            0.9975723154564594,
+            0.9998171607396225
+          ]
+        },
+        "pos_steering_attack|negative_request": {
+          "run_values": [
+            0.9866666666666667,
+            0.9866666666666667,
+            0.9866666666666667,
+            0.9833333333333333,
+            0.9833333333333333
+          ],
+          "mean_rate": 0.9853333333333333,
+          "std_dev": 0.001825741858350596,
+          "sem": 0.0008164965809277449,
+          "t_ci_95": [
+            0.9830667388246779,
+            0.9875999278419887
+          ],
+          "pooled_success": 2956,
+          "pooled_total": 3000,
+          "pooled_rate": 0.9853333333333333,
+          "pooled_wilson_ci_95": [
+            0.9803689934008458,
+            0.9890562918738504
+          ]
+        },
+        "neg_steering_attack|standard_request": {
+          "run_values": [
+            0.985,
+            0.98,
+            0.975,
+            0.9716666666666667,
+            0.975
+          ],
+          "mean_rate": 0.9773333333333333,
+          "std_dev": 0.005217491947499504,
+          "sem": 0.0023333333333333305,
+          "t_ci_95": [
+            0.9708559999999999,
+            0.9838106666666666
+          ],
+          "pooled_success": 2932,
+          "pooled_total": 3000,
+          "pooled_rate": 0.9773333333333334,
+          "pooled_wilson_ci_95": [
+            0.9713652722495945,
+            0.9820804753557388
+          ]
+        },
+        "neg_steering_attack|positive_request": {
+          "run_values": [
+            0.7416666666666667,
+            0.7266666666666667,
+            0.7283333333333334,
+            0.735,
+            0.7266666666666667
+          ],
+          "mean_rate": 0.7316666666666667,
+          "std_dev": 0.006561673228343172,
+          "sem": 0.0029344694769431663,
+          "t_ci_95": [
+            0.7235205793986724,
+            0.739812753934661
+          ],
+          "pooled_success": 2195,
+          "pooled_total": 3000,
+          "pooled_rate": 0.7316666666666667,
+          "pooled_wilson_ci_95": [
+            0.7155219167927688,
+            0.7472188615492051
+          ]
+        }
+      }
+    }
+  }
+}
